@@ -99,9 +99,9 @@ Everything below must be done **before** hackathon day (April 14).
 - [ ] Smoke test: run `claude` inside this repo, ask it to summarize `CLAUDE.md`
 
 **GitHub & Repo:**
-- [ ] Confirm `CLAUDE.md` is in repo root
-- [ ] Confirm folder structure exists: `content/`, `css/`, `js/`, `docs/`, `worker/`
-- [ ] Invite Yair as collaborator
+- [x] Confirm `CLAUDE.md` is in repo root ✓ Done
+- [x] Confirm folder structure exists: `content/`, `css/`, `js/`, `docs/`, `worker/` ✓ Done
+- [x] Invite Yair as collaborator ✓ Done
 
 **GoDaddy:**
 - [ ] Verify login — confirm you can edit DNS for levyam.com
