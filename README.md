@@ -93,10 +93,10 @@ Everything below must be done **before** hackathon day (April 14).
 - [ ] Obtain custom HTTP event ingest endpoint URL → save to `.env`
 
 **Claude Code:**
-- [ ] Install Claude Code on your machine ([setup guide](https://code.claude.com/docs/en/setup))
-- [ ] Authenticate with Anthropic account (Pro plan minimum)
-- [ ] Run `claude doctor` — verify all checks pass
-- [ ] Smoke test: run `claude` inside this repo, ask it to summarize `CLAUDE.md`
+- [x] Install Claude Code on your machine ([setup guide](https://code.claude.com/docs/en/setup)) ✓ Done
+- [x] Authenticate with Anthropic account (Pro plan minimum) ✓ Done
+- [x] Run `claude doctor` — verify all checks pass ✓ Done
+- [x] Smoke test: run `claude` inside this repo, ask it to summarize `CLAUDE.md` ✓ Done
 
 **GitHub & Repo:**
 - [x] Confirm `CLAUDE.md` is in repo root ✓ Done
