@@ -114,8 +114,9 @@ This is the most important pre-hackathon task. If this passes, Yair walks in on 
 - [x] Deploy Worker — live at `https://lev-yam-webhook.orcohenwork.workers.dev` ✓ Done
 - [x] All secrets set in Cloudflare (SUPABASE_URL, SUPABASE_ANON_KEY, DYNATRACE_INGEST_URL, DYNATRACE_API_TOKEN) ✓ Done
 - [x] Supabase `levyam-b2b` table confirmed reachable ✓ Done
-- [ ] Set `GROW_WEBHOOK_KEY` secret once received from Grow (`echo "KEY" | npx wrangler secret put GROW_WEBHOOK_KEY` from `worker/`)
-- [ ] Run `./test-webhook.sh` — confirm Supabase row + Dynatrace event
+- [x] Set `GROW_WEBHOOK_KEY` secret ✓ Done
+- [x] Run `./test-webhook.sh` — HTTP 200, Supabase row confirmed ✓ Done
+- [ ] Verify Dynatrace `New Lev Yam Purchase` event appeared
 - [ ] Update Grow webhook `notifyUrl` to `https://lev-yam-webhook.orcohenwork.workers.dev`
 
 ### Moran — Content & Brand
