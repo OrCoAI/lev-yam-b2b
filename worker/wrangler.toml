@@ -1,0 +1,11 @@
+name = "lev-yam-webhook"
+main = "index.js"
+compatibility_date = "2024-09-23"
+
+# Secrets (never put real values here — set via: npx wrangler secret put SECRET_NAME)
+# Required secrets:
+#   GROW_WEBHOOK_KEY
+#   SUPABASE_URL
+#   SUPABASE_ANON_KEY
+#   DYNATRACE_INGEST_URL
+#   DYNATRACE_API_TOKEN

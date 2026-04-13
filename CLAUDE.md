@@ -63,6 +63,26 @@ Do not build any section without confirming structure with Or first.
 
 ---
 
+## Worker deployment (Sprint 2 — already scaffolded)
+
+`worker/` is fully scaffolded. On hackathon day, Yair runs:
+
+```bash
+cd worker
+npm install
+npx wrangler deploy
+# Then set each secret:
+npx wrangler secret put GROW_WEBHOOK_KEY
+npx wrangler secret put SUPABASE_URL
+npx wrangler secret put SUPABASE_ANON_KEY
+npx wrangler secret put DYNATRACE_INGEST_URL
+npx wrangler secret put DYNATRACE_API_TOKEN
+```
+
+After deploy, test with `./test-webhook.sh` from the repo root. Expected: HTTP 200, new row in `levyam-b2b` table, Dynatrace event fires.
+
+---
+
 ## Payments integration
 
 Full plan is in `docs/grow-plan.md`. Read it before touching Sprint 2.
