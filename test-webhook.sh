@@ -13,7 +13,7 @@ if [ -f .env ]; then
 fi
 
 # --- CONFIGURE THESE ---
-WORKER_URL="${WORKER_URL:-https://lev-yam-webhook.YOUR_SUBDOMAIN.workers.dev}"
+WORKER_URL="${WORKER_URL:-https://lev-yam-webhook.orcohenwork.workers.dev}"
 WEBHOOK_KEY="${GROW_WEBHOOK_KEY:-YOUR_GROW_WEBHOOK_KEY}"
 # -----------------------
 

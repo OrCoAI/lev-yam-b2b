@@ -60,7 +60,7 @@ npm install
 npx wrangler deploy
 ```
 
-This gives you the live URL: `https://lev-yam-webhook.YOUR_SUBDOMAIN.workers.dev`
+Live URL: `https://lev-yam-webhook.orcohenwork.workers.dev` ✓ Deployed
 
 ### Worker code — `worker/index.js`
 
@@ -210,7 +210,7 @@ setInterval(updateFeed, 5000);
 Before the live 10 ₪ payment, run this to confirm the Worker is working:
 
 ```bash
-curl -X POST https://lev-yam-webhook.YOUR_SUBDOMAIN.workers.dev \
+curl -X POST https://lev-yam-webhook.orcohenwork.workers.dev \
   -H "Content-Type: application/json" \
   -d '{
     "webhookKey": "YOUR_GROW_WEBHOOK_KEY",

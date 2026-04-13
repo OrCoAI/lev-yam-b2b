@@ -111,27 +111,12 @@ Everything below must be done **before** hackathon day (April 14).
 
 This is the most important pre-hackathon task. If this passes, Yair walks in on April 12 knowing the plumbing works.
 
-- [ ] Deploy a hello-world Cloudflare Worker using `npm create cloudflare@latest`
-- [ ] Get the live `workers.dev` URL
-- [ ] Send a dummy Grow-shaped webhook POST using curl:
-
-```bash
-curl -X POST https://your-worker.workers.dev/webhook \
-  -H "Content-Type: application/json" \
-  -d '{
-    "webhookKey": "YOUR_KEY",
-    "transactionCode": "TEST001",
-    "fullName": "Or Test",
-    "paymentSum": 10,
-    "paymentDate": "13/04/26",
-    "paymentDesc": "Company Offsite Day"
-  }'
-```
-
-- [ ] Confirm a row appears in the Supabase `purchases` table
-- [ ] Confirm Dynatrace alert fires
-- [ ] Full flow verified: POST → Supabase row → Dynatrace alert ✓
-- [ ] Update Grow webhook `notifyUrl` with the live Worker URL
+- [x] Deploy Worker — live at `https://lev-yam-webhook.orcohenwork.workers.dev` ✓ Done
+- [x] All secrets set in Cloudflare (SUPABASE_URL, SUPABASE_ANON_KEY, DYNATRACE_INGEST_URL, DYNATRACE_API_TOKEN) ✓ Done
+- [x] Supabase `levyam-b2b` table confirmed reachable ✓ Done
+- [ ] Set `GROW_WEBHOOK_KEY` secret once received from Grow (`echo "KEY" | npx wrangler secret put GROW_WEBHOOK_KEY` from `worker/`)
+- [ ] Run `./test-webhook.sh` — confirm Supabase row + Dynatrace event
+- [ ] Update Grow webhook `notifyUrl` to `https://lev-yam-webhook.orcohenwork.workers.dev`
 
 ### Moran — Content & Brand
 
