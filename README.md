@@ -1,6 +1,6 @@
 # לב ים (Lev Yam) — B2B Landing Page
 
-A standalone B2B landing page for Lev Yam, selling company offsite days and deep work days to businesses and professionals.  
+A standalone B2B landing page for Lev Yam, selling company offsite days to businesses.  
 Built during a 4-hour hackathon on **April 14, 2026**, using [Claude Code](https://code.claude.com/) as the primary development tool.
 
 ---
@@ -73,27 +73,28 @@ Everything below must be done **before** hackathon day (April 14).
 ### Or — Accounts & Infrastructure
 
 **Cloudflare:**
-- [ ] Create free Cloudflare account at cloudflare.com (no credit card needed)
-- [ ] Note Account ID → save to `.env`
+- [x] Create free Cloudflare account at cloudflare.com ✓ Done
+- [x] Note Account ID → save to `.env` ✓ Done
 
 **Supabase:**
-- [ ] Create free Supabase project at supabase.com
-- [ ] Create `purchases` table with columns: `id`, `full_name`, `payment_sum`, `package`, `payment_date`, `transaction_code`, `created_at`
-- [ ] Note project URL and anon key → save to `.env`
+- [x] Create free Supabase project at supabase.com ✓ Done
+- [x] Create `levyam-b2b` table with columns: `id`, `full_name`, `payment_sum`, `package`, `payment_date`, `transaction_code`, `created_at` ✓ Done
+- [ ] TODO: Review and finalize exact columns based on Grow webhook payload
+- [x] Note project URL and anon key → save to `.env` ✓ Done
 
 **Grow Payments:**
-- [ ] Create static payment pages for each B2B package in the Grow dashboard
-- [ ] Note each page URL → add to `content/packages.md`
+- [ ] Create static payment page for Company Offsite Day in the Grow dashboard
+- [ ] Note the page URL → add to `content/packages.md`
 - [x] Email [email protected] to enable webhooks for all one-time transactions ✓ Done
 - [x] Confirm `webhookKey` from Grow support → save to `.env` ✓ Done
 - [ ] Note: webhook `notifyUrl` will be the Cloudflare Worker URL (set after Worker is deployed)
 
 **Dynatrace:**
-- [ ] Create Dynatrace account and workspace
-- [ ] Obtain custom HTTP event ingest endpoint URL → save to `.env`
+- [x] Create Dynatrace account and workspace ✓ Done
+- [x] Obtain custom HTTP event ingest endpoint URL → save to `.env` ✓ Done
 
 **Claude Code:**
-- [x] Install Claude Code on your machine ([setup guide](https://code.claude.com/docs/en/setup)) ✓ Done
+- [x] Install Claude Code on your machine ✓ Done
 - [x] Authenticate with Anthropic account (Pro plan minimum) ✓ Done
 - [x] Run `claude doctor` — verify all checks pass ✓ Done
 - [x] Smoke test: run `claude` inside this repo, ask it to summarize `CLAUDE.md` ✓ Done
@@ -104,7 +105,7 @@ Everything below must be done **before** hackathon day (April 14).
 - [x] Invite Yair as collaborator ✓ Done
 
 **GoDaddy:**
-- [ ] Verify login — confirm you can edit DNS for levyam.com
+- [x] Verify login — confirm you can edit DNS for levyam.com ✓ Done
 
 ### Or — Pre-Hackathon End-to-End Test (complete before April 13)
 

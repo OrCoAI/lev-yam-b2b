@@ -92,7 +92,7 @@ export default {
       transaction_code: body.transactionCode || body.data?.transactionId || '',
     };
 
-    await fetch(`${env.SUPABASE_URL}/rest/v1/purchases`, {
+    await fetch(`${env.SUPABASE_URL}/rest/v1/levyam-b2b`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -140,7 +140,9 @@ npx wrangler secret put DYNATRACE_API_TOKEN
 
 ## Part 3 — Supabase schema (already created by Or)
 
-Table: `purchases`
+Table: `levyam-b2b`
+
+Note: columns to be reviewed and finalized based on exact Grow webhook payload before hackathon day.
 
 | Column | Type | Notes |
 |--------|------|-------|
@@ -166,7 +168,7 @@ const SUPABASE_ANON_KEY = 'your-anon-key'; // safe to expose — RLS protects da
 
 async function fetchPurchases() {
   const res = await fetch(
-    `${SUPABASE_URL}/rest/v1/purchases?select=full_name,package,payment_sum,created_at&order=created_at.desc&limit=10`,
+    `${SUPABASE_URL}/rest/v1/levyam-b2b?select=full_name,package,payment_sum,created_at&order=created_at.desc&limit=10`,
     { headers: { 'apikey': SUPABASE_ANON_KEY } }
   );
   return res.json();
