@@ -8,7 +8,7 @@ Built during a 4-hour hackathon on **April 14, 2026**, using [Claude Code](https
 ## Goal
 
 A live landing page on levyam.com with a successful **10 ₪ test payment end-to-end**:  
-Page → Grow Payment Page → Webhook → Cloudflare Worker → Supabase + Dynatrace alert.
+Page → Grow Payment Page → Webhook → Cloudflare Worker → Supabase.
 
 ---
 
@@ -19,7 +19,7 @@ Page → Grow Payment Page → Webhook → Cloudflare Worker → Supabase + Dyna
 |------|------|-------------|
 | **Or** | Team Lead & Project Owner | Environment setup, Grow/Cloudflare/Supabase accounts, content prep, pre-hackathon end-to-end test. Drives the day. |
 | **Moran** | Marketing & Content Creator | Writes all page copy, selects images, defines brand tone. Delivers final content to the repo before the hackathon. Reviews the live page on hackathon day. |
-| **Yair** | Software Engineer | Joins on hackathon day. Drives the technical build — page, Worker, Supabase wiring, Dynatrace, deployment. No pre-hackathon tasks. |
+| **Yair** | Software Engineer | Joins on hackathon day. Drives the technical build — page, Worker, Supabase wiring, deployment. No pre-hackathon tasks. |
 
 ---
 
@@ -35,7 +35,6 @@ Payment succeeds → Grow POSTs webhook to Cloudflare Worker
 Cloudflare Worker:
   1. Verifies webhookKey
   2. Writes purchase row to Supabase (name, amount, package, date)
-  3. Fires Dynatrace custom event (alert)
         ↓
 Landing page polls Supabase every 5s
   → Updates live purchase feed
@@ -150,8 +149,8 @@ Yair joins fresh on hackathon day. Everything he needs is in the repo:
 | 0:00–0:15 | Kickoff | Align on plan, confirm tools work, open everything | Everyone |
 | 0:15–1:30 | Sprint 1: Page | Build full landing page — all sections, RTL Hebrew, responsive | Yair builds · Moran reviews · Or observes |
 | 1:30–1:45 | Break | Moran reviews content on screen, flags fixes | Moran |
-| 1:45–2:45 | Sprint 2: Payments + Worker | Full Worker logic (verify → Supabase → Dynatrace), wire Grow notifyUrl, live feed + progress bar on page | Yair builds · Or supports |
-| 2:45–3:15 | Sprint 3: Monitoring | Dynatrace alert verification, polish | Yair builds |
+| 1:45–2:45 | Sprint 2: Payments + Worker | Full Worker logic (verify → Supabase), wire Grow notifyUrl, live feed + progress bar on page | Yair builds · Or supports |
+| 2:45–3:15 | Sprint 3: Polish | UI polish, edge cases, final content review | Yair builds · Moran reviews |
 | 3:15–3:45 | Test & Fix | End-to-end 10 ₪ test payment, fix bugs | Everyone |
 | 3:45–4:00 | Deploy & Celebrate | Push live to levyam.com 🎉 | Everyone |
 
@@ -185,13 +184,13 @@ lev-yam-b2b/
 
 **`CLAUDE.md`** — Claude Code reads this automatically at session start. Contains full project context so Yair can start building from minute one with no explanation needed.
 
-**`docs/grow-plan.md`** — Step-by-step implementation plan for Sprint 2. Covers Grow redirect setup, Cloudflare Worker code, Supabase schema, Dynatrace wiring, and the live feed polling pattern.
+**`docs/grow-plan.md`** — Step-by-step implementation plan for Sprint 2. Covers Grow redirect setup, Cloudflare Worker code, Supabase schema, and the live feed polling pattern.
 
-**`worker/index.js`** — The Cloudflare Worker. Receives Grow's webhook POST, verifies the `webhookKey`, writes to Supabase, fires Dynatrace. Scaffolded and tested before hackathon day.
+**`worker/index.js`** — The Cloudflare Worker. Receives Grow's webhook POST, verifies the `webhookKey`, writes to Supabase. Scaffolded and tested before hackathon day.
 
 **`content/`** — Everything Moran produces. Claude Code reads copy and images directly from here during the build.
 
-**`.env`** — Credentials for Cloudflare, Supabase, Grow webhookKey, Dynatrace endpoint. Never committed. Each team member creates from `.env.example`.
+**`.env`** — Credentials for Cloudflare, Supabase, Grow webhookKey. Never committed. Each team member creates from `.env.example`.
 
 ---
 
