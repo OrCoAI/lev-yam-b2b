@@ -1,0 +1,687 @@
+/* ── Reset & Base ─────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --orange: #f49834;
+  --cream: #fff7ea;
+  --blue: #2c92bf;
+  --blue-dark: #1a6a8f;
+  --text: #2a2a2a;
+  --text-light: #5a5a5a;
+  --white: #ffffff;
+  --radius: 6px;
+  --shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.12);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Heebo', sans-serif;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.7;
+  color: var(--text);
+  background: var(--cream);
+  -webkit-font-smoothing: antialiased;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+ul {
+  list-style: none;
+}
+
+/* ── Typography ──────────────────────────────── */
+h1, h2, h3, h4 {
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+h1 {
+  font-size: clamp(2rem, 5vw, 3.25rem);
+  font-weight: 900;
+}
+
+h2 {
+  font-size: clamp(1.5rem, 4vw, 2.25rem);
+  color: var(--blue);
+  margin-bottom: 1.5rem;
+}
+
+h3 {
+  font-size: 1.25rem;
+  margin-bottom: 0.75rem;
+}
+
+p + p {
+  margin-top: 1rem;
+}
+
+/* ── Layout ──────────────────────────────────── */
+.container {
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 1.25rem;
+}
+
+section {
+  padding: 4rem 0;
+}
+
+/* ── Buttons ─────────────────────────────────── */
+.btn {
+  display: inline-block;
+  padding: 0.75rem 2rem;
+  font-family: 'Heebo', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  border: 2px solid transparent;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+}
+
+.btn-orange {
+  background: var(--orange);
+  color: var(--white);
+  border-color: var(--orange);
+}
+
+.btn-orange:hover {
+  background: transparent;
+  color: var(--orange);
+}
+
+.btn-blue {
+  background: var(--blue);
+  color: var(--white);
+  border-color: var(--blue);
+}
+
+.btn-blue:hover {
+  background: transparent;
+  color: var(--blue);
+}
+
+.btn-outline {
+  background: transparent;
+  color: var(--blue);
+  border-color: var(--blue);
+}
+
+.btn-outline:hover {
+  background: var(--blue);
+  color: var(--white);
+}
+
+/* ── Nav ─────────────────────────────────────── */
+.nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  background: rgba(255, 247, 234, 0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(44, 146, 191, 0.1);
+  padding: 0.75rem 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.nav-logo {
+  height: 44px;
+}
+
+.nav .btn {
+  padding: 0.5rem 1.25rem;
+  font-size: 0.9rem;
+}
+
+/* ── Hero ────────────────────────────────────── */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 6rem 1.25rem 4rem;
+  background: linear-gradient(160deg, var(--blue) 0%, var(--blue-dark) 50%, #14506b 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  right: 0;
+  height: 80px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 80'%3E%3Cpath fill='%23fff7ea' d='M0,40 C360,80 720,0 1080,40 C1260,60 1360,50 1440,40 L1440,80 L0,80 Z'/%3E%3C/svg%3E") no-repeat bottom center;
+  background-size: cover;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 1;
+  max-width: 700px;
+}
+
+.hero-logo {
+  width: 160px;
+  margin: 0 auto 2rem;
+  filter: brightness(0) invert(1);
+}
+
+.hero h1 {
+  color: var(--white);
+  margin-bottom: 1.5rem;
+  text-shadow: 0 2px 20px rgba(0, 0, 0, 0.2);
+}
+
+.hero-subtitle {
+  color: var(--orange);
+  font-size: 1.2rem;
+  font-weight: 500;
+  margin-bottom: 2rem;
+}
+
+.hero .btn {
+  font-size: 1.1rem;
+  padding: 0.85rem 2.5rem;
+}
+
+/* wave decoration in hero */
+.hero-wave {
+  position: absolute;
+  bottom: 60px;
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0.15;
+  z-index: 0;
+}
+
+/* ── Story ───────────────────────────────────── */
+.story {
+  background: var(--cream);
+}
+
+.story-text {
+  max-width: 780px;
+  margin: 0 auto;
+  font-size: 1.1rem;
+  line-height: 1.9;
+  color: var(--text);
+}
+
+.story-text p {
+  margin-bottom: 1.25rem;
+}
+
+.story-highlight {
+  border-right: 4px solid var(--orange);
+  padding-right: 1.25rem;
+  margin: 2rem 0;
+  font-weight: 500;
+  font-size: 1.15rem;
+  color: var(--blue-dark);
+}
+
+/* ── Audience ────────────────────────────────── */
+.audience {
+  background: var(--white);
+}
+
+.audience-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.25rem;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.audience-card {
+  padding: 1.5rem;
+  border: 1px solid rgba(44, 146, 191, 0.15);
+  border-radius: var(--radius);
+  background: var(--cream);
+  transition: border-color 0.2s;
+}
+
+.audience-card:hover {
+  border-color: var(--orange);
+}
+
+.audience-card p {
+  font-size: 1.05rem;
+  line-height: 1.7;
+}
+
+/* ── Packages ────────────────────────────────── */
+.packages {
+  background: var(--cream);
+}
+
+.packages-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+.package-card {
+  background: var(--white);
+  border: 2px solid rgba(44, 146, 191, 0.12);
+  border-radius: var(--radius);
+  padding: 2rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.package-card:hover {
+  border-color: var(--blue);
+  box-shadow: var(--shadow-lg);
+}
+
+.package-card.featured {
+  border-color: var(--orange);
+  position: relative;
+}
+
+.package-badge {
+  position: absolute;
+  top: -14px;
+  right: 1.5rem;
+  background: var(--orange);
+  color: var(--white);
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 0.25rem 1rem;
+  border-radius: var(--radius);
+}
+
+.package-name {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--blue);
+  margin-bottom: 0.25rem;
+}
+
+.package-title {
+  font-size: 1rem;
+  color: var(--text-light);
+  margin-bottom: 1rem;
+}
+
+.package-meta {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 1.25rem;
+  font-size: 0.9rem;
+  color: var(--text-light);
+}
+
+.package-price {
+  font-size: 1.75rem;
+  font-weight: 900;
+  color: var(--text);
+  margin-bottom: 0.25rem;
+}
+
+.package-price-note {
+  font-size: 0.85rem;
+  color: var(--text-light);
+  margin-bottom: 1.5rem;
+}
+
+.package-includes {
+  flex: 1;
+  margin-bottom: 1.5rem;
+}
+
+.package-includes h4 {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 0.75rem;
+}
+
+.include-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 0;
+  font-size: 0.95rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+.include-item:last-child {
+  border-bottom: none;
+}
+
+.include-yes {
+  color: var(--blue);
+  font-weight: 700;
+}
+
+.include-no {
+  color: #ccc;
+  text-decoration: line-through;
+  opacity: 0.6;
+}
+
+.package-card .btn {
+  width: 100%;
+  margin-top: auto;
+}
+
+/* ── Incentives ──────────────────────────────── */
+.incentives {
+  background: var(--blue);
+  color: var(--white);
+}
+
+.incentives h2 {
+  color: var(--white);
+}
+
+.incentives-intro {
+  font-size: 1.1rem;
+  max-width: 780px;
+  margin: 0 auto 2rem;
+  opacity: 0.9;
+}
+
+.incentives-list {
+  max-width: 700px;
+  margin: 0 auto;
+  counter-reset: incentive;
+}
+
+.incentive-item {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  padding: 1.25rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.incentive-item:last-child {
+  border-bottom: none;
+}
+
+.incentive-num {
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  background: var(--orange);
+  color: var(--white);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.incentive-text strong {
+  color: var(--orange);
+}
+
+/* ── Progress ────────────────────────────────── */
+.progress-section {
+  background: var(--cream);
+  text-align: center;
+}
+
+.progress-wrapper {
+  max-width: 600px;
+  margin: 0 auto 2rem;
+}
+
+.progress-bar-bg {
+  width: 100%;
+  height: 20px;
+  background: rgba(44, 146, 191, 0.15);
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 0.75rem;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--blue), var(--orange));
+  border-radius: 10px;
+  width: 0%;
+  transition: width 0.6s ease;
+}
+
+.progress-label {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--blue);
+}
+
+.progress-milestone {
+  font-size: 0.95rem;
+  color: var(--text-light);
+  margin-top: 0.5rem;
+}
+
+/* ── Live Feed ───────────────────────────────── */
+.feed-wrapper {
+  max-width: 600px;
+  margin: 2rem auto 0;
+}
+
+.feed-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-light);
+  margin-bottom: 1rem;
+}
+
+.purchase-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  background: var(--white);
+  border-radius: var(--radius);
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+  box-shadow: var(--shadow);
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.purchase-dot {
+  width: 8px;
+  height: 8px;
+  background: var(--orange);
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.purchase-name {
+  font-weight: 700;
+  color: var(--blue);
+}
+
+.feed-empty {
+  color: var(--text-light);
+  font-size: 0.9rem;
+}
+
+/* ── Impact ──────────────────────────────────── */
+.impact {
+  background: var(--white);
+}
+
+.impact-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.impact-card {
+  padding: 2rem 1.5rem;
+  background: var(--cream);
+  border-radius: var(--radius);
+  border-right: 4px solid var(--orange);
+}
+
+.impact-card p {
+  font-size: 1.05rem;
+  line-height: 1.8;
+}
+
+/* ── Policy ──────────────────────────────────── */
+.policy {
+  background: var(--cream);
+}
+
+.policy-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.policy-item {
+  padding: 1.25rem 1.5rem;
+  background: var(--white);
+  border-radius: var(--radius);
+}
+
+.policy-item strong {
+  color: var(--blue);
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
+.policy-item p {
+  font-size: 0.95rem;
+  color: var(--text-light);
+}
+
+/* ── Custom ──────────────────────────────────── */
+.custom {
+  background: var(--blue);
+  color: var(--white);
+  text-align: center;
+  padding: 3.5rem 0;
+}
+
+.custom h2 {
+  color: var(--white);
+  margin-bottom: 1rem;
+}
+
+.custom p {
+  font-size: 1.1rem;
+  margin-bottom: 1.5rem;
+  opacity: 0.9;
+}
+
+.custom .btn-orange:hover {
+  background: var(--white);
+  color: var(--orange);
+  border-color: var(--white);
+}
+
+/* ── Footer ──────────────────────────────────── */
+.footer {
+  background: #1a2a36;
+  color: rgba(255, 255, 255, 0.7);
+  text-align: center;
+  padding: 2rem 1.25rem;
+  font-size: 0.85rem;
+}
+
+.footer-logo {
+  height: 48px;
+  margin: 0 auto 1rem;
+  filter: brightness(0) invert(1);
+  opacity: 0.7;
+}
+
+.footer-tagline {
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+  opacity: 0.6;
+}
+
+/* ── Wave Divider (SVG in HTML, styled here) ── */
+.wave-divider {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin: -1px 0;
+}
+
+/* ── Responsive ──────────────────────────────── */
+@media (min-width: 640px) {
+  .audience-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .impact-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .policy-grid {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+}
+
+@media (min-width: 768px) {
+  section {
+    padding: 5rem 0;
+  }
+
+  .packages-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .hero {
+    min-height: 90vh;
+  }
+
+  .hero-logo {
+    width: 200px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .container {
+    padding: 0 2rem;
+  }
+}
