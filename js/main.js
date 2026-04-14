@@ -101,7 +101,7 @@ async function updateFeed() {
     } else {
       feed.innerHTML = purchases.map((p) => {
         return `<div class="purchase-item">
-          <span class="purchase-dot"></span>
+          <img src="content/brand/icons-16.png" class="purchase-icon" alt="">
           <span class="purchase-name">${p.package || 'חבילה'}</span>
         </div>`;
       }).join('');
