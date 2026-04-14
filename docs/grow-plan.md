@@ -80,13 +80,18 @@ export default {
       return new Response('Unauthorized', { status: 401 });
     }
 
-    // 2. Write to Supabase
+    // 2. Write to Supabase — store all Grow payload fields except webhookKey
     const purchase = {
       full_name: body.fullName || body.data?.fullName || 'Unknown',
       payment_sum: body.paymentSum || body.data?.sum || 0,
-      package: body.paymentDesc || body.data?.description || '',
+      payment_type: body.paymentType || body.data?.paymentType || '',
       payment_date: body.paymentDate || body.data?.paymentDate || '',
+      package: body.paymentDesc || body.data?.description || '',
+      payer_phone: body.payerPhone || body.data?.payerPhone || '',
+      payer_email: body.payerEmail || body.data?.payerEmail || '',
       transaction_code: body.transactionCode || body.data?.transactionId || '',
+      purchase_page_key: body.purchasePageKey || body.data?.purchasePageKey || '',
+      purchase_page_title: body.purchasePageTitle || body.data?.purchasePageTitle || '',
     };
 
     await fetch(`${env.SUPABASE_URL}/rest/v1/levyam-b2b`, {
@@ -124,11 +129,16 @@ Note: columns to be reviewed and finalized based on exact Grow webhook payload b
 | Column | Type | Notes |
 |--------|------|-------|
 | `id` | uuid | auto, primary key |
-| `full_name` | text | buyer name from Grow |
-| `payment_sum` | numeric | amount in ₪ |
-| `package` | text | which package was bought |
-| `payment_date` | text | as returned by Grow |
-| `transaction_code` | text | Grow transaction ID |
+| `full_name` | text | `fullName` — buyer name |
+| `payment_sum` | numeric | `paymentSum` — amount in ₪ |
+| `payment_type` | text | `paymentType` — e.g. "רגיל" |
+| `payment_date` | text | `paymentDate` — as returned by Grow |
+| `package` | text | `paymentDesc` — which package was bought |
+| `payer_phone` | text | `payerPhone` |
+| `payer_email` | text | `payerEmail` |
+| `transaction_code` | text | `transactionCode` — Grow transaction ID |
+| `purchase_page_key` | text | `purchasePageKey` |
+| `purchase_page_title` | text | `purchasePageTitle` |
 | `created_at` | timestamptz | auto |
 
 Enable Row Level Security → add policy: allow anon SELECT and INSERT.

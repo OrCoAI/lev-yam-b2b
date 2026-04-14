@@ -77,7 +77,7 @@ Everything below must be done **before** hackathon day (April 14).
 **Supabase:**
 - [x] Create free Supabase project at supabase.com ✓ Done
 - [x] Create `levyam-b2b` table with columns: `id`, `full_name`, `payment_sum`, `package`, `payment_date`, `transaction_code`, `created_at` ✓ Done
-- [ ] TODO: Review and finalize exact columns based on Grow webhook payload
+- [x] Review and finalize exact columns based on Grow webhook payload ✓ Done
 - [x] Note project URL and anon key → save to `.env` ✓ Done
 
 **Grow Payments:**
