@@ -82,11 +82,11 @@ Everything below must be done **before** hackathon day (April 14).
 - [x] Note project URL and anon key → save to `.env` ✓ Done
 
 **Grow Payments:**
-- [ ] Create static payment page for Company Offsite Day in the Grow dashboard
-- [ ] Note the page URL → add to `content/packages.md`
+- [x] Create static payment pages for all 3 packages in Grow dashboard ✓ Done
+- [x] Payment page URLs saved to `.env` (GROW_URL_TEAM_RESET, GROW_URL_FOCUS_SESSION, GROW_URL_MOMENTUM_BOOSTER) ✓ Done
 - [x] Email [email protected] to enable webhooks for all one-time transactions ✓ Done
 - [x] Confirm `webhookKey` from Grow support → save to `.env` ✓ Done
-- [ ] Note: webhook `notifyUrl` will be the Cloudflare Worker URL (set after Worker is deployed)
+- [x] webhook `notifyUrl` set to `https://lev-yam-webhook.orcohenwork.workers.dev` ✓ Done
 
 **Claude Code:**
 - [x] Install Claude Code on your machine ✓ Done
