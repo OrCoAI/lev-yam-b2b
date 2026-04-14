@@ -107,20 +107,17 @@ Everything below must be done **before** hackathon day (April 14).
 This is the most important pre-hackathon task. If this passes, Yair walks in on April 12 knowing the plumbing works.
 
 - [x] Deploy Worker — live at `https://lev-yam-webhook.orcohenwork.workers.dev` ✓ Done
-- [x] All secrets set in Cloudflare (SUPABASE_URL, SUPABASE_ANON_KEY, DYNATRACE_INGEST_URL, DYNATRACE_API_TOKEN) ✓ Done
+- [x] All secrets set in Cloudflare (GROW_WEBHOOK_KEY, SUPABASE_URL, SUPABASE_ANON_KEY) ✓ Done
 - [x] Supabase `levyam-b2b` table confirmed reachable ✓ Done
-- [x] Set `GROW_WEBHOOK_KEY` secret ✓ Done
 - [x] Run `./test-webhook.sh` — HTTP 200, Supabase row confirmed ✓ Done
-- [ ] Verify Dynatrace `New Lev Yam Purchase` event appeared
-- [ ] Update Grow webhook `notifyUrl` to `https://lev-yam-webhook.orcohenwork.workers.dev`
+- [x] Grow webhook `notifyUrl` set to live Worker URL ✓ Done
 
 ### Moran — Content & Brand
 
-- [ ] Define B2B packages — names, prices, what's included, target audience (→ `content/packages.md`)
-- [ ] Write all page copy in business tone (→ `content/copy.md`)
-- [ ] Select high-quality photos — hero, venue shots, Nimer portrait (→ `content/images/`)
-- [ ] Confirm brand elements — logo, colors, fonts (→ `content/brand/`)
-- [ ] Commit all content to the repo (Or can help with this)
+- [x] Define B2B packages → `content/packages.md` ✓ Done
+- [x] Write all page copy → `content/copy.md` ✓ Done
+- [ ] Select high-quality photos — hero, venue shots, Nimer portrait → `content/images/`
+- [ ] Confirm brand elements — logo, colors, fonts → `content/brand/`
 
 ### Yair — No pre-hackathon tasks
 
@@ -134,13 +131,14 @@ Yair joins fresh on hackathon day. Everything he needs is in the repo:
 
 ## Final Check — April 13 Evening
 
-- [ ] All credentials in `.env`
-- [ ] All content committed in `content/`
-- [ ] `CLAUDE.md` is in repo root and up to date
-- [ ] `docs/grow-plan.md` written and ready
-- [ ] End-to-end dummy webhook test passed
-- [ ] Grow `notifyUrl` updated with live Worker URL
-- [ ] Claude Code runs inside the repo and understands the project
+- [x] All credentials in `.env` ✓ Done
+- [ ] Images in `content/images/` (Moran)
+- [ ] Brand files in `content/brand/` (Moran)
+- [x] `CLAUDE.md` is in repo root and up to date ✓ Done
+- [x] `docs/grow-plan.md` written and ready ✓ Done
+- [x] End-to-end dummy webhook test passed ✓ Done
+- [x] Grow `notifyUrl` updated with live Worker URL ✓ Done
+- [x] Claude Code runs inside the repo and understands the project ✓ Done
 - [ ] Quick sync with Yair to walk through the hackathon plan
 
 ---

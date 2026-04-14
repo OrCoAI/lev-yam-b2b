@@ -1,7 +1,7 @@
 #!/bin/bash
 # Pre-hackathon end-to-end test
 # Run this after deploying the Worker to verify the full flow:
-# POST → Supabase row → Dynatrace alert
+# POST → Supabase row
 #
 # Usage:
 #   chmod +x test-webhook.sh
@@ -37,10 +37,9 @@ if [ "$RESPONSE" = "200" ]; then
   echo "✓ Worker responded OK"
   echo ""
   echo "Now verify:"
-  echo "  1. Supabase → check 'purchases' table for a new row (fullName: Or Test)"
-  echo "  2. Dynatrace → check for 'New Lev Yam Purchase' event"
+  echo "  1. Supabase → check 'levyam-b2b' table for a new row (fullName: Or Test)"
   echo ""
-  echo "If both pass → end-to-end test PASSED. Update Grow notifyUrl with: $WORKER_URL"
+  echo "If it passes → end-to-end test PASSED."
 else
   echo "✗ Worker returned $RESPONSE — check Worker logs in Cloudflare dashboard"
 fi
