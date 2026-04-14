@@ -247,6 +247,33 @@ section {
   color: var(--blue-dark);
 }
 
+.story-expandable {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.45s ease;
+}
+
+.story-expandable.open {
+  max-height: 1200px;
+}
+
+.story-toggle {
+  background: none;
+  border: none;
+  color: var(--blue);
+  font-family: 'Heebo', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 0.5rem 0;
+  margin-top: 0.25rem;
+  transition: color 0.2s;
+}
+
+.story-toggle:hover {
+  color: var(--orange);
+}
+
 /* ── Audience ────────────────────────────────── */
 .audience {
   background: var(--white);
@@ -272,6 +299,12 @@ section {
   border-color: var(--orange);
 }
 
+.audience-icon {
+  font-size: 2.25rem;
+  display: block;
+  margin-bottom: 0.75rem;
+}
+
 .audience-card p {
   font-size: 1.05rem;
   line-height: 1.7;
@@ -292,39 +325,59 @@ section {
   background: var(--white);
   border: 2px solid rgba(44, 146, 191, 0.12);
   border-radius: var(--radius);
-  padding: 2rem 1.5rem;
+  padding: 0;
   display: flex;
   flex-direction: column;
-  transition: border-color 0.2s, box-shadow 0.2s;
+  overflow: hidden;
+  transition: box-shadow 0.2s, transform 0.2s;
 }
 
 .package-card:hover {
-  border-color: var(--blue);
   box-shadow: var(--shadow-lg);
+  transform: translateY(-3px);
 }
 
 .package-card.featured {
   border-color: var(--orange);
-  position: relative;
 }
 
-.package-badge {
-  position: absolute;
-  top: -14px;
-  right: 1.5rem;
-  background: var(--orange);
+.package-header {
+  padding: 1.5rem;
   color: var(--white);
-  font-size: 0.8rem;
+}
+
+.pkg-blue  { background: var(--blue); }
+.pkg-orange { background: var(--orange); }
+.pkg-dark  { background: var(--blue-dark); }
+
+.package-badge {
+  display: inline-block;
+  background: rgba(255, 255, 255, 0.25);
+  color: var(--white);
+  font-size: 0.78rem;
   font-weight: 700;
-  padding: 0.25rem 1rem;
+  padding: 0.2rem 0.75rem;
   border-radius: var(--radius);
+  margin-bottom: 0.5rem;
 }
 
 .package-name {
-  font-size: 1.1rem;
+  font-size: 1.25rem;
   font-weight: 700;
-  color: var(--blue);
-  margin-bottom: 0.25rem;
+  color: var(--white);
+  margin-bottom: 0.2rem;
+}
+
+.package-participants {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.package-body {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
 }
 
 .package-title {
@@ -390,7 +443,7 @@ section {
   opacity: 0.6;
 }
 
-.package-card .btn {
+.package-body .btn {
   width: 100%;
   margin-top: auto;
 }
@@ -405,11 +458,37 @@ section {
   color: var(--white);
 }
 
+.incentives .progress-wrapper {
+  max-width: 600px;
+  margin: 0 auto 2rem;
+  text-align: center;
+}
+
+.incentives .progress-bar-bg {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.incentives .progress-bar-fill {
+  background: linear-gradient(90deg, var(--orange), #f7c97c);
+}
+
+.incentives .progress-label {
+  color: var(--white);
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-top: 0.75rem;
+}
+
+.incentives .progress-milestone {
+  color: rgba(255, 255, 255, 0.7);
+}
+
 .incentives-intro {
   font-size: 1.1rem;
   max-width: 780px;
   margin: 0 auto 2rem;
   opacity: 0.9;
+  text-align: center;
 }
 
 .incentives-list {
@@ -448,12 +527,7 @@ section {
   color: var(--orange);
 }
 
-/* ── Progress ────────────────────────────────── */
-.progress-section {
-  background: var(--cream);
-  text-align: center;
-}
-
+/* ── Progress (standalone — shared classes) ──── */
 .progress-wrapper {
   max-width: 600px;
   margin: 0 auto 2rem;
@@ -592,29 +666,35 @@ section {
   color: var(--text-light);
 }
 
-/* ── Custom ──────────────────────────────────── */
-.custom {
-  background: var(--blue);
+/* ── Sticky WhatsApp button ──────────────────── */
+.whatsapp-sticky {
+  position: fixed;
+  bottom: 1.5rem;
+  left: 1.5rem;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--orange);
   color: var(--white);
-  text-align: center;
-  padding: 3.5rem 0;
+  font-family: 'Heebo', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  padding: 0.75rem 1.25rem;
+  border-radius: 50px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s, box-shadow 0.2s;
+  text-decoration: none;
 }
 
-.custom h2 {
-  color: var(--white);
-  margin-bottom: 1rem;
+.whatsapp-sticky:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
 }
 
-.custom p {
-  font-size: 1.1rem;
-  margin-bottom: 1.5rem;
-  opacity: 0.9;
-}
-
-.custom .btn-orange:hover {
-  background: var(--white);
-  color: var(--orange);
-  border-color: var(--white);
+.sticky-icon {
+  font-size: 1.3rem;
+  line-height: 1;
 }
 
 /* ── Footer ──────────────────────────────────── */

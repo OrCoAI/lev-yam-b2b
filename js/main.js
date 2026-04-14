@@ -18,11 +18,26 @@ const PROGRESS_GOAL = 100000; // 100,000 NIS target
 /* ── Initialize ──────────────────────────────── */
 document.addEventListener('DOMContentLoaded', () => {
   wireGrowButtons();
+  initStoryAccordion();
   if (SUPABASE_URL !== 'REPLACE_WITH_SUPABASE_URL') {
     updateFeed();
     setInterval(updateFeed, 5000);
   }
 });
+
+/* ── Story Accordion ─────────────────────────── */
+function initStoryAccordion() {
+  const toggle = document.getElementById('story-toggle');
+  const expandable = document.getElementById('story-expandable');
+  if (!toggle || !expandable) return;
+
+  toggle.addEventListener('click', () => {
+    const isOpen = expandable.classList.contains('open');
+    expandable.classList.toggle('open');
+    toggle.textContent = isOpen ? 'קראו עוד ↓' : 'קראו פחות ↑';
+    toggle.setAttribute('aria-expanded', String(!isOpen));
+  });
+}
 
 /* ── Wire Grow CTA buttons ───────────────────── */
 function wireGrowButtons() {
