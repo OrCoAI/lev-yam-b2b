@@ -12,7 +12,7 @@ Jisr az-Zarqa, Israel. The page sells two products to businesses and professiona
 company offsite days and deep work days.
 
 **Live goal:** `levyam.com` with a working 10 ₪ test payment end-to-end:
-Page → Grow Payment Page → Webhook → Cloudflare Worker → Supabase + Dynatrace alert.
+Page → Grow Payment Page → Webhook → Cloudflare Worker → Supabase.
 
 This is a 4-hour hackathon build. Speed and working software beat perfection.
 
@@ -40,7 +40,6 @@ Set `dir="rtl"` on `<html>`. Mirror layouts accordingly — flex-row becomes fle
 | Styles | Plain CSS in `css/style.css` | No Tailwind, no Bootstrap. Full RTL control. |
 | JS | Plain JS in `js/main.js` | Interactions + Supabase polling (live feed + progress bar) |
 | Payments | Grow Payments | See `docs/grow-plan.md` for exact integration approach |
-| Monitoring | Dynatrace | Analytics snippet + webhook-triggered alert |
 | Hosting | Static file on levyam.com via GoDaddy | DNS already configured |
 | Webhook endpoint | Cloudflare Worker | Deployed separately on workers.dev |
 
@@ -75,11 +74,9 @@ npx wrangler deploy
 npx wrangler secret put GROW_WEBHOOK_KEY
 npx wrangler secret put SUPABASE_URL
 npx wrangler secret put SUPABASE_ANON_KEY
-npx wrangler secret put DYNATRACE_INGEST_URL
-npx wrangler secret put DYNATRACE_API_TOKEN
 ```
 
-After deploy, test with `./test-webhook.sh` from the repo root. Expected: HTTP 200, new row in `levyam-b2b` table, Dynatrace event fires.
+After deploy, test with `./test-webhook.sh` from the repo root. Expected: HTTP 200, new row in `levyam-b2b` table.
 
 ---
 
@@ -91,18 +88,10 @@ The short version:
 - Grow Payments is an Israeli gateway (grow.co.il)
 - Each package CTA button is a direct link to a pre-built Grow static payment page (redirect)
 - On successful payment, Grow POSTs a webhook to the Cloudflare Worker
-- The Worker verifies the webhookKey, writes the purchase to Supabase, and fires a Dynatrace alert
+- The Worker verifies the webhookKey and writes the purchase to Supabase
 - The landing page polls Supabase every 5 seconds to update the live purchase feed and progress bar
 
 Credentials are in `.env`. Never hardcode them. Read from environment.
-
----
-
-## Monitoring (Dynatrace)
-
-- Add Dynatrace analytics JS snippet to `<head>` of `index.html`
-- Configure a custom event or synthetic monitor for payment webhook receipt
-- Goal: a visible alert in Dynatrace within 30 seconds of a test payment
 
 ---
 

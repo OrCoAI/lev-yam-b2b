@@ -58,9 +58,8 @@ Landing page polls Supabase every 5s
 |-------|------|---------|
 | **Page** | Static HTML/CSS/JS | Lightweight, no framework, fast to deploy |
 | **Payments** | [Grow Payments](https://grow.co.il/) — static payment page | Pre-built hosted page per package, redirect integration |
-| **Webhook receiver** | [Cloudflare Worker](https://workers.cloudflare.com/) | Receives Grow webhook, verifies, routes to Supabase + Dynatrace |
+| **Webhook receiver** | [Cloudflare Worker](https://workers.cloudflare.com/) | Receives Grow webhook, verifies, writes to Supabase |
 | **Database** | [Supabase](https://supabase.com/) (Postgres) | Stores purchases. Powers live feed + progress bar. Future CRM foundation. |
-| **Monitoring** | [Dynatrace](https://www.dynatrace.com/) | Real-time purchase alert triggered by Worker |
 | **Domain** | levyam.com via GoDaddy | DNS management |
 | **Dev tool** | [Claude Code](https://code.claude.com/) | AI-powered coding agent — builds the page from terminal |
 
@@ -88,10 +87,6 @@ Everything below must be done **before** hackathon day (April 14).
 - [x] Email [email protected] to enable webhooks for all one-time transactions ✓ Done
 - [x] Confirm `webhookKey` from Grow support → save to `.env` ✓ Done
 - [ ] Note: webhook `notifyUrl` will be the Cloudflare Worker URL (set after Worker is deployed)
-
-**Dynatrace:**
-- [x] Create Dynatrace account and workspace ✓ Done
-- [x] Obtain custom HTTP event ingest endpoint URL → save to `.env` ✓ Done
 
 **Claude Code:**
 - [x] Install Claude Code on your machine ✓ Done

@@ -43,24 +43,6 @@ export default {
       return new Response('Supabase write failed', { status: 500 });
     }
 
-    // 4. Fire Dynatrace alert
-    await fetch(env.DYNATRACE_INGEST_URL, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Api-Token ${env.DYNATRACE_API_TOKEN}`,
-      },
-      body: JSON.stringify({
-        eventType: 'CUSTOM_INFO',
-        title: 'New Lev Yam Purchase',
-        properties: {
-          customer: purchase.full_name,
-          amount: String(purchase.payment_sum),
-          package: purchase.package,
-        },
-      }),
-    });
-
     return new Response('OK', { status: 200 });
   },
 };

@@ -17,7 +17,6 @@ Payment succeeds → Grow POSTs webhook to Cloudflare Worker
 Worker:
   1. Verify webhookKey
   2. Write row to Supabase
-  3. Fire Dynatrace alert
       ↓
 Landing page polls Supabase every 5s → updates feed + progress bar
 ```
@@ -46,8 +45,6 @@ CLOUDFLARE_ACCOUNT_ID=...
 GROW_WEBHOOK_KEY=...
 SUPABASE_URL=https://xxxx.supabase.co
 SUPABASE_ANON_KEY=...
-DYNATRACE_INGEST_URL=https://xxxx.live.dynatrace.com/api/v2/events/ingest
-DYNATRACE_API_TOKEN=...
 ```
 
 ### Deploy the Worker
@@ -103,24 +100,6 @@ export default {
       body: JSON.stringify(purchase),
     });
 
-    // 3. Fire Dynatrace alert
-    await fetch(env.DYNATRACE_INGEST_URL, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Api-Token ${env.DYNATRACE_API_TOKEN}`,
-      },
-      body: JSON.stringify({
-        eventType: 'CUSTOM_INFO',
-        title: 'New Lev Yam Purchase',
-        properties: {
-          customer: purchase.full_name,
-          amount: String(purchase.payment_sum),
-          package: purchase.package,
-        },
-      }),
-    });
-
     return new Response('OK', { status: 200 });
   },
 };
@@ -132,8 +111,6 @@ export default {
 npx wrangler secret put GROW_WEBHOOK_KEY
 npx wrangler secret put SUPABASE_URL
 npx wrangler secret put SUPABASE_ANON_KEY
-npx wrangler secret put DYNATRACE_INGEST_URL
-npx wrangler secret put DYNATRACE_API_TOKEN
 ```
 
 ---
@@ -224,10 +201,9 @@ curl -X POST https://lev-yam-webhook.orcohenwork.workers.dev \
 
 Expected:
 - Response: `OK` (200)
-- Supabase: new row in `purchases` table
-- Dynatrace: "New Lev Yam Purchase" event visible
+- Supabase: new row in `levyam-b2b` table
 
-If all three pass → do the live 10 ₪ payment. 🎉
+If both pass → do the live 10 ₪ payment. 🎉
 
 ---
 
