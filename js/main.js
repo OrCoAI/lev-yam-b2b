@@ -100,11 +100,9 @@ async function updateFeed() {
       feed.innerHTML = '<p class="feed-empty">היו הראשונים להצטרף!</p>';
     } else {
       feed.innerHTML = purchases.map((p) => {
-        const firstName = (p.full_name || '').split(' ')[0] || 'אנונימי';
         return `<div class="purchase-item">
           <span class="purchase-dot"></span>
-          <span class="purchase-name">${firstName}</span>
-          <span>${p.package || ''}</span>
+          <span class="purchase-name">${p.package || 'חבילה'}</span>
         </div>`;
       }).join('');
     }
