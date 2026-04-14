@@ -27,8 +27,13 @@ RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" -X POST "$WORKER_URL" \
     \"transactionCode\": \"PRETEST_$(date +%s)\",
     \"fullName\": \"Or Test\",
     \"paymentSum\": 10,
+    \"paymentType\": \"רגיל\",
     \"paymentDate\": \"$(date +%d/%m/%y)\",
-    \"paymentDesc\": \"Company Offsite Day\"
+    \"paymentDesc\": \"Company Offsite Day\",
+    \"payerPhone\": \"0500000000\",
+    \"payerEmail\": \"[email protected]\",
+    \"purchasePageKey\": \"TESTPAGE001\",
+    \"purchasePageTitle\": \"Company Offsite Day\"
   }")
 
 echo "Response status: $RESPONSE"
