@@ -133,31 +133,6 @@ section {
   color: var(--white);
 }
 
-/* ── Nav ─────────────────────────────────────── */
-.nav {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 100;
-  background: rgba(255, 247, 234, 0.92);
-  backdrop-filter: blur(12px);
-  border-bottom: 1px solid rgba(44, 146, 191, 0.1);
-  padding: 0.75rem 1.25rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.nav-logo {
-  height: 52px;
-  width: auto;
-}
-
-.nav .btn {
-  padding: 0.5rem 1.25rem;
-  font-size: 0.9rem;
-}
 
 /* ── Hero ────────────────────────────────────── */
 .hero {
@@ -166,9 +141,9 @@ section {
   align-items: center;
   justify-content: center;
   text-align: center;
-  padding: 6rem 1.25rem 4rem;
+  padding: 4rem 1.25rem;
   background:
-    linear-gradient(160deg, rgba(44,146,191,0.78) 0%, rgba(26,106,143,0.88) 50%, rgba(20,80,107,0.92) 100%),
+    linear-gradient(160deg, rgba(20,60,80,0.45) 0%, rgba(20,60,80,0.55) 100%),
     url('../content/brand/cover-1211*683px-1.jpg') center / cover no-repeat;
   position: relative;
   overflow: hidden;
@@ -192,9 +167,8 @@ section {
 }
 
 .hero-logo {
-  width: 160px;
+  width: 180px;
   margin: 0 auto 2rem;
-  filter: brightness(0) invert(1);
 }
 
 .hero h1 {
