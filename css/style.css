@@ -257,12 +257,24 @@ section {
   background: var(--white);
 }
 
-.audience-frame {
-  position: relative;
-  padding: 2.5rem 3rem;
+.audience-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  max-width: 800px;
+  margin: 0 auto;
 }
 
-.audience-frame-img {
+.audience-card {
+  position: relative;
+  padding: 2rem 2.25rem;
+  background: transparent;
+  min-height: 140px;
+  display: flex;
+  align-items: center;
+}
+
+.audience-card-frame {
   position: absolute;
   inset: 0;
   width: 100%;
@@ -272,34 +284,12 @@ section {
   z-index: 0;
 }
 
-.audience-inner {
+.audience-card p {
   position: relative;
   z-index: 1;
-}
-
-.audience-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 1.25rem;
-  max-width: 800px;
-  margin: 0 auto;
-}
-
-.audience-card {
-  padding: 1.5rem;
-  border: 1px solid rgba(44, 146, 191, 0.15);
-  border-radius: var(--radius);
-  background: var(--cream);
-  transition: border-color 0.2s;
-}
-
-.audience-card:hover {
-  border-color: var(--orange);
-}
-
-.audience-card p {
   font-size: 1.05rem;
   line-height: 1.7;
+  margin: 0;
 }
 
 /* ── Packages ────────────────────────────────── */
