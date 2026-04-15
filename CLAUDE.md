@@ -8,13 +8,12 @@ This is the authoritative context for every session.
 ## What we're building
 
 A standalone B2B landing page for **Lev Yam** (לב ים — "Heart of the Sea"), a beachfront venue in
-Jisr az-Zarqa, Israel. The page sells two products to businesses and professionals:
-company offsite days and deep work days.
+Jisr az-Zarqa, Israel. The page sells offsite to hi-tech companies in three packages,
 
-**Live goal:** `levyam.com` with a working 10 ₪ test payment end-to-end:
+**Live goal:** Working website with the following flow
 Page → Grow Payment Page → Webhook → Cloudflare Worker → Supabase.
 
-This is a 4-hour hackathon build. Speed and working software beat perfection.
+Have a perfect, high quality website.
 
 ---
 

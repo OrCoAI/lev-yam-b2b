@@ -115,7 +115,7 @@ This is the most important pre-hackathon task. If this passes, Yair walks in on 
 
 - [x] Define B2B packages → `content/packages.md` ✓ Done
 - [x] Write all page copy → `content/copy.md` ✓ Done
-- [ ] Select high-quality photos — hero, venue shots, Nimer portrait → `content/images/`
+- [ ] Define Animations and styling
 - [x] Confirm brand elements — logo, colors, fonts → `content/brand/` ✓ Done
 
 ### Yair — No pre-hackathon tasks
@@ -131,7 +131,6 @@ Yair joins fresh on hackathon day. Everything he needs is in the repo:
 ## Final Check — April 13 Evening
 
 - [x] All credentials in `.env` ✓ Done
-- [ ] Images in `content/images/` (Moran)
 - [x] Brand files in `content/brand/` ✓ Done
 - [x] `CLAUDE.md` is in repo root and up to date ✓ Done
 - [x] `docs/grow-plan.md` written and ready ✓ Done
