@@ -19,11 +19,27 @@ const PROGRESS_GOAL = 100000; // 100,000 NIS target
 document.addEventListener('DOMContentLoaded', () => {
   wireGrowButtons();
   initStoryAccordion();
+  initPackageAccordions();
   if (SUPABASE_URL !== 'REPLACE_WITH_SUPABASE_URL') {
     updateFeed();
     setInterval(updateFeed, 5000);
   }
 });
+
+/* ── Package Accordions ──────────────────────── */
+function initPackageAccordions() {
+  document.querySelectorAll('.pkg-accordion-toggle').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const targetId = btn.getAttribute('data-target');
+      const accordion = document.getElementById(targetId);
+      if (!accordion) return;
+      const isOpen = accordion.classList.contains('open');
+      accordion.classList.toggle('open');
+      btn.textContent = isOpen ? 'מידע נוסף ↓' : 'סגור ↑';
+      btn.setAttribute('aria-expanded', String(!isOpen));
+    });
+  });
+}
 
 /* ── Story Accordion ─────────────────────────── */
 function initStoryAccordion() {
@@ -90,7 +106,7 @@ async function updateFeed() {
 
   const counter = document.getElementById('spots-counter');
   if (counter) {
-    counter.textContent = `${purchases.length} צוותים וארגונים כבר הצטרפו`;
+    counter.textContent = `הצטרפו ל-${purchases.length} צוותים וארגונים שכבר הבטיחו את מקומם ב׳לב ים׳ במחיר מוקדם`;
   }
 
   // Live feed
