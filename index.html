@@ -14,10 +14,24 @@
 
 <!-- ── Hero ─────────────────────────────────── -->
 <section class="hero" id="hero">
-  <video class="hero-video" autoplay muted loop playsinline>
-    <source src="content/images/WhatsApp Video 2026-03-17 at 10.28.02.mp4" type="video/mp4">
+  <video class="hero-video" autoplay muted loop playsinline preload="auto" id="hero-video">
+    <source src="content/images/Video HERO.mp4" type="video/mp4">
   </video>
   <div class="hero-overlay"></div>
+  <button class="volume-btn" id="volume-btn" aria-label="הפעל שמע">
+    <!-- Muted icon -->
+    <svg class="vol-icon vol-off" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M11 5L6 9H2v6h4l5 4V5z" fill="currentColor"/>
+      <line x1="23" y1="9" x2="17" y2="15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      <line x1="17" y1="9" x2="23" y2="15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+    </svg>
+    <!-- Unmuted icon -->
+    <svg class="vol-icon vol-on" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M11 5L6 9H2v6h4l5 4V5z" fill="currentColor"/>
+      <path d="M15.54 8.46a5 5 0 0 1 0 7.07" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      <path d="M19.07 4.93a10 10 0 0 1 0 14.14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+    </svg>
+  </button>
   <div class="hero-content">
     <img src="content/brand/Logo-fin-(1080_1080pxl)-13.png" alt="לב ים" class="hero-logo">
     <h1>כל חברת הייטק בישראל<br>צריכה להיות פה.</h1>
@@ -31,19 +45,67 @@
 <!-- ── Progress Bar ──────────────────────────── -->
 <section class="progress-section">
   <div class="container">
-    <div class="progress-wrapper">
-      <div class="progress-bar-bg">
-        <div class="progress-bar-fill" id="progress-bar-fill"></div>
-      </div>
-      <div class="progress-label" id="progress-label">0 ₪ מתוך 100,000 ₪</div>
-      <div id="spots-counter" class="progress-spots-bold">היו הראשונים להצטרף</div>
+
+    <!-- Tagline header -->
+    <div class="progress-tagline">
+      <p class="progress-tagline-main">מחפשים רגע של אמת?</p>
+      <p class="progress-tagline-main">זקוקים לשדרוג גרסה? רוצים לחזור להוביל?</p>
     </div>
+
+    <!-- Bar track — LTR from here on -->
+    <div class="progress-track-wrapper" dir="ltr">
+
+      <!-- Bar row: icon | middle | icon -->
+      <div class="progress-bar-row">
+        <img src="content/brand/icons-4.png" class="progress-bar-icon" alt="">
+
+        <div class="progress-bar-middle">
+          <!-- Dates above bar -->
+          <div class="progress-dates">
+            <span class="bar-date">16.04</span>
+            <span class="bar-date">16.05</span>
+          </div>
+
+          <!-- Bar + floating sun marker -->
+          <div class="progress-bar-outer">
+            <div class="progress-bar-bg">
+              <div class="progress-bar-fill" id="progress-bar-fill"></div>
+            </div>
+            <div class="progress-sun-marker" id="progress-sun">☀️</div>
+          </div>
+
+          <!-- Milestone ticks below bar -->
+          <div class="progress-milestones-row">
+            <span class="pmile pmile-edge-start">0%</span>
+            <span class="pmile pmile-mid" style="left:50%">50%</span>
+            <span class="pmile pmile-mid" style="left:70%">70%</span>
+            <span class="pmile pmile-edge-end">100%</span>
+            <span class="pmile pmile-live" id="pmile-live"></span>
+          </div>
+        </div>
+
+        <img src="content/brand/icons-16.png" class="progress-bar-icon" alt="">
+      </div>
+
+    </div>
+
+    <!-- Below bar: amount + team count + bonus text -->
+    <div class="progress-footer">
+      <strong class="progress-raised" id="progress-label">0 ₪</strong>
+      <span class="progress-teamcount" id="spots-counter">היו הראשונים להצטרף</span>
+      <span class="progress-bonus">ביעד — כולם מקבלים 5% הנחה!</span>
+    </div>
+
   </div>
 </section>
 
 <!-- ── Packages ─────────────────────────────── -->
 <section class="packages" id="packages">
   <div class="container">
+    <div class="packages-header">
+      <p class="packages-heading-line">מספר המקומות ב'לב ים' מוגבל, כדי לשמור על הקסם והייחודיות.</p>
+      <p class="packages-heading-line">באיזה הרכב אתם באים?</p>
+    </div>
     <div class="packages-grid">
 
       <!-- Team Reset (Lite) -->
@@ -51,7 +113,7 @@
         <div class="pkg-top">
           <div class="pkg-participants">8–14 משתתפים</div>
           <div class="pkg-name">Team Reset <span class="pkg-tier">(Lite)</span></div>
-          <div class="pkg-tagline">מפגש צוות ממוקד שמייצר קרקע יציבה</div>
+          <div class="pkg-tagline">מפגש צוות אמיתי<br>בלב הטבע הפראי של מישור החוף</div>
         </div>
         <div class="pkg-accordion" id="pkg-acc-1">
           <ul class="pkg-items">
@@ -78,7 +140,7 @@
         <div class="pkg-top">
           <div class="pkg-participants">15–25 משתתפים</div>
           <div class="pkg-name">Focus Session <span class="pkg-tier">(Classic)</span></div>
-          <div class="pkg-tagline">סדנאות אינטימיות שמחזירות בהירות, כיוון ותנועה</div>
+          <div class="pkg-tagline">תוכן איכותי ואוכל אמיתי<br>שמחזירים בהירות ותנועה</div>
         </div>
         <div class="pkg-accordion" id="pkg-acc-2">
           <ul class="pkg-items">
@@ -104,7 +166,7 @@
         <div class="pkg-top">
           <div class="pkg-participants">26–40 משתתפים</div>
           <div class="pkg-name">Momentum Booster <span class="pkg-tier">(Gold)</span></div>
-          <div class="pkg-tagline">חוויה מלאה שמחדשת אנרגיה ומשמעות לעשייה</div>
+          <div class="pkg-tagline">אירוע של פשטות יוקרתית<br>לחידוש אנרגיה ומשמעות</div>
         </div>
         <div class="pkg-accordion" id="pkg-acc-3">
           <ul class="pkg-items">
@@ -130,22 +192,19 @@
   </div>
 </section>
 
-<!-- ── Incentives ─────────────────────────────── -->
-<section class="incentives" id="incentives">
-  <div class="container">
-    <h2>ככל שמתקדמים יחד — כולם מרוויחים</h2>
-    <ul class="incentives-list">
-      <li class="incentive-item"><span><strong>נעילת מחיר:</strong> מצטרפים עכשיו ונועלים את המחיר לכל שנת 2026.</span></li>
-      <li class="incentive-item"><span><strong>הכוח שלכם כקבוצה:</strong> ברגע שנגיע רף ה-100,000 ₪, כולם מקבלים 5% הנחה.</span></li>
-      <li class="incentive-item"><span><strong>שני מקומות ליום הקהילה של 'לב ים':</strong> עם תשלום המקדמה. אחד מיועד למנהל.ת חוויית העובד שמוביל.ה את התהליך והשני כצ'ופר לעובד או חבר צוות מתוך הארגון — כדי שתגיעו לחוות, להרגיש את המקום, לנשום, לדמיין ולתכנן.</span></li>
-    </ul>
-  </div>
-</section>
-
 <!-- ── Impact ───────────────────────────────── -->
 <section class="impact" id="impact">
   <div class="container">
-    <h2>הסכום שיגויס יאפשר: יצירת מציאות חדשה</h2>
+
+    <!-- Quote above section title -->
+    <div class="impact-banner">
+      <img src="content/brand/icons-16.png" class="impact-banner-icon" alt="">
+      <p class="impact-banner-text">מעטים המקומות שכמו נבראו מסיבה מסויימת,<br>ואם הם נבראו פעמיים – בטח יש לכך סיבה</p>
+      <img src="content/brand/icons-16.png" class="impact-banner-icon" alt="">
+    </div>
+
+    <h2>הסכום שיגויס יאפשר — יצירת מציאות חדשה</h2>
+    <p class="impact-intro">הרגע היקר-מפז של שקט עבורכם, לטובת חשיבה אסטרטגית או התארגנות מחדש, מקדם חזון של חיבור אנושי חיובי ושגשוג משותף, ומבטיח שה-DNA של נדיבות ואחריות ימשיך לפעום ולהדהד גם הרחק מעבר לקו המים.</p>
     <ul class="impact-list">
       <li><strong>אתם משקיעים</strong> בשינוי הנרטיב על ג׳יסר א זרקא ובבניית גשר של חיים משותפים שמשנה תודעה הלכה למעשה ומייצר שגשוג כלכלי-חברתי אמיתי.</li>
       <li><strong>אתם משקיעים</strong> בצמיחה מבוקרת ושיפור מתמיד של החוויה של מרחב 'לב ים', ובא.נשים שמעזים לבחור לא להיכנע לזרם החזק, להוביל ולקחת שליטה על הסיפור שלהם — למען עתיד ישראל.</li>
@@ -160,14 +219,14 @@
     <div class="policy-grid">
       <div class="policy-item">
         <strong>מחוייבות בלי לחץ</strong>
-        <p>משלמים מקדמה (כ-30%) — כהתחייבות לעצמכם, ומגיעים כשזה מרגיש נכון. כשהגיע הזמן שלכם לצאת מהמרחב המוגן של הגוף אל המרחב המוגן של הנפש.</p>
+        <p>משלמים מקדמה (30%) — כהתחייבות לעצמכם, ומגיעים כשזה מרגיש נכון. כשהגיע הזמן שלכם לצאת מהמרחב המוגן של הגוף אל המרחב המוגן של הנפש.</p>
       </div>
       <div class="policy-item">
         <strong>ביטחון מעל הכל</strong>
         <p>במקרה של הנחיות כוחות הביטחון המונעות את קיום מפגש/אירוע, נדחה ונתאם למועד חדש.</p>
       </div>
       <div class="policy-item">
-        <strong>ביטול</strong>
+        <strong>מדיניות ביטולים</strong>
         <p>ניתן לבטל את ההשתתפות עד 7 ימים לפני המועד המתואם והסכום יישמר כקרדיט לפעילות עתידית ב'לב ים'.</p>
       </div>
     </div>
@@ -177,7 +236,7 @@
 <!-- ── Why ──────────────────────────────────── -->
 <section class="story" id="why">
   <div class="container">
-    <h2>למה</h2>
+    <h2>למה להגיע ללב ים בג׳יסר א-זרקא</h2>
     <div class="story-text">
       <p>כי זה מה שכל מי שמגיע לפה אומר. גם כשאני בעצמי לפעמים לא תופסת כמה המרחב הזה - &#39;ביצ&#39;האב&#39; דאז ו&#39;לב ים&#39; היום - חשוב לאנושות. לאנושיות.</p>
       <p>לא תיארתי לעצמי שב2026 התרנגולים המשוטטים על החול הרך, המים באלפי גוונים של כחול והחיוכים הלבביים של הדייגים עדיין יהיו מרחב מוגן לנפש שלי, ושל כל מי שמעז להוציא את הלב מהמקלט ולהגיע לפה.</p>
@@ -193,13 +252,20 @@
   </div>
 </section>
 
-<!-- ── Sticky WhatsApp CTA ────────────────────── -->
+<!-- ── Sticky WhatsApp (left) ─────────────────── -->
 <a href="https://wa.me/972506669138?text=%D7%90%D7%A0%D7%99%20%D7%A8%D7%95%D7%A6%D7%94%20%D7%9C%D7%94%D7%92%D7%99%D7%A2%20%D7%9C%D7%9C%D7%91%20%D7%99%D7%9D"
-   class="whatsapp-sticky"
+   class="sticky-wa"
    target="_blank"
    rel="noopener noreferrer"
-   aria-label="רוצים משהו אחר? דברו איתנו בוואטסאפ">
-  <span class="sticky-text">רוצים משהו אחר?</span>
+   aria-label="דברו איתנו בוואטסאפ">
+  <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="sticky-wa-icon" aria-hidden="true">
+    <path fill="currentColor" d="M20.52 3.449C18.245 1.16 15.205 0 12.013 0 5.457 0 .104 5.336.101 11.893c0 2.096.548 4.14 1.591 5.945L0 24l6.335-1.652a11.96 11.96 0 0 0 5.68 1.445h.005c6.554 0 11.906-5.337 11.91-11.894 0-3.179-1.24-6.166-3.41-8.45zm-8.507 18.3h-.004a9.928 9.928 0 0 1-5.042-1.372l-.362-.214-3.754.981 1.004-3.649-.235-.375a9.862 9.862 0 0 1-1.519-5.27c.003-5.453 4.453-9.887 9.924-9.887 2.65 0 5.138 1.03 7.009 2.9a9.822 9.822 0 0 1 2.906 6.99c-.003 5.455-4.455 9.896-9.927 9.896zm5.44-7.402c-.299-.149-1.768-.87-2.042-.969-.273-.099-.472-.149-.67.15-.2.298-.77.969-.944 1.168-.174.199-.347.224-.646.075-.299-.15-1.261-.463-2.402-1.476-.888-.788-1.487-1.761-1.661-2.059-.174-.298-.018-.459.13-.607.135-.135.299-.349.449-.524.15-.175.199-.299.299-.498.1-.2.05-.374-.025-.524-.074-.15-.67-1.612-.917-2.207-.242-.58-.488-.5-.67-.51l-.57-.01c-.199 0-.522.075-.795.374-.273.3-1.043 1.018-1.043 2.481s1.068 2.878 1.217 3.077c.15.199 2.1 3.205 5.089 4.494.71.307 1.265.49 1.697.627.713.228 1.362.195 1.875.118.572-.085 1.763-.72 2.012-1.414.248-.695.248-1.29.174-1.414-.075-.124-.273-.199-.573-.348z"/>
+  </svg>
+</a>
+
+<!-- ── Sticky packages CTA (right) ───────────── -->
+<a href="#packages" class="sticky-cta" aria-label="אני רוצה לבוא">
+  אני רוצה לבוא
 </a>
 
 <!-- ── Footer ───────────────────────────────── -->

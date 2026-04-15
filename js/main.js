@@ -20,11 +20,62 @@ document.addEventListener('DOMContentLoaded', () => {
   wireGrowButtons();
   initStoryAccordion();
   initPackageAccordions();
+  initVolumeToggle();
   if (SUPABASE_URL !== 'REPLACE_WITH_SUPABASE_URL') {
     updateFeed();
     setInterval(updateFeed, 5000);
   }
 });
+
+/* ── Volume toggle ───────────────────────────── */
+function initVolumeToggle() {
+  const video = document.getElementById('hero-video');
+  const btn   = document.getElementById('volume-btn');
+  if (!video || !btn) return;
+
+  // Browsers block autoplay with audio — video must start muted.
+  // We unmute on the very first user interaction with the page (click or touch).
+  // The volume button also toggles mute/unmute directly.
+  let unmuteHandled = false;
+
+  const unmuteOnFirstInteraction = () => {
+    if (unmuteHandled) return;
+    unmuteHandled = true;
+    video.muted = false;
+    video.volume = 1;
+    setUnmuted();
+    document.removeEventListener('click',      unmuteOnFirstInteraction);
+    document.removeEventListener('touchstart', unmuteOnFirstInteraction);
+  };
+
+  document.addEventListener('click',      unmuteOnFirstInteraction);
+  document.addEventListener('touchstart', unmuteOnFirstInteraction);
+
+  btn.addEventListener('click', (e) => {
+    e.stopPropagation(); // handled separately — don't double-fire the global listener
+    if (video.muted) {
+      unmuteHandled = true;
+      video.muted = false;
+      video.volume = 1;
+      document.removeEventListener('click',      unmuteOnFirstInteraction);
+      document.removeEventListener('touchstart', unmuteOnFirstInteraction);
+      setUnmuted();
+    } else {
+      video.muted = true;
+      setMuted();
+    }
+  });
+
+  function setUnmuted() {
+    btn.classList.add('unmuted');
+    btn.setAttribute('aria-label', 'השתק');
+  }
+
+  function setMuted() {
+    btn.classList.remove('unmuted');
+    btn.setAttribute('aria-label', 'הפעל שמע');
+  }
+}
 
 /* ── Package Accordions ──────────────────────── */
 function initPackageAccordions() {
@@ -93,20 +144,36 @@ async function updateFeed() {
   // Progress bar
   const totalRaised = purchases.reduce((sum, p) => sum + (Number(p.payment_sum) || 0), 0);
   const pct = Math.min((totalRaised / PROGRESS_GOAL) * 100, 100);
+  const pctRounded = Math.round(pct);
 
   const barFill = document.getElementById('progress-bar-fill');
-  if (barFill) {
-    barFill.style.width = pct + '%';
-  }
+  if (barFill) barFill.style.width = pct + '%';
 
+  // Amount label
   const label = document.getElementById('progress-label');
-  if (label) {
-    label.textContent = `${totalRaised.toLocaleString('he-IL')} ₪ מתוך ${PROGRESS_GOAL.toLocaleString('he-IL')} ₪`;
-  }
+  if (label) label.textContent = `${totalRaised.toLocaleString('he-IL')} ₪`;
 
+  // Team count
   const counter = document.getElementById('spots-counter');
   if (counter) {
-    counter.textContent = `הצטרפו ל-${purchases.length} צוותים וארגונים שכבר הבטיחו את מקומם ב׳לב ים׳ במחיר מוקדם`;
+    counter.textContent = purchases.length > 0
+      ? `הצטרפו ${purchases.length} צוותים וארגונים שכבר הבטיחו את מקומם`
+      : 'היו הראשונים להצטרף';
+  }
+
+  // Sun marker position
+  const sun = document.getElementById('progress-sun');
+  if (sun) {
+    sun.style.left = pct + '%';
+    sun.style.display = pct > 0 ? '' : 'none';
+  }
+
+  // Live % milestone
+  const liveMile = document.getElementById('pmile-live');
+  if (liveMile) {
+    liveMile.textContent = pctRounded + '%';
+    liveMile.style.left = pct + '%';
+    liveMile.style.display = pct > 0 ? '' : 'none';
   }
 
   // Live feed
