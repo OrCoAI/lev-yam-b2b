@@ -285,7 +285,18 @@ section {
 /* ── Progress Section ────────────────────────── */
 .progress-section {
   background: transparent;
-  padding: 1.75rem 0 1.5rem;
+  padding: 2rem 0 2rem;
+}
+
+/* Card container */
+.progress-card {
+  background: linear-gradient(135deg, rgba(44,146,191,0.05) 0%, rgba(255,255,255,0.95) 50%, rgba(244,152,52,0.05) 100%);
+  border: 1px solid rgba(44,146,191,0.18);
+  border-radius: 20px;
+  padding: 2rem 2rem 1.75rem;
+  box-shadow: 0 4px 32px rgba(44,146,191,0.1), 0 1px 4px rgba(0,0,0,0.04);
+  max-width: 860px;
+  margin: 0 auto;
 }
 
 /* Tagline header above bar */
@@ -340,18 +351,33 @@ section {
 /* Footer below bar: amount + teamcount + bonus */
 .progress-footer {
   text-align: center;
-  margin-top: 1.25rem;
+  margin-top: 1.5rem;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.2rem;
+  gap: 0.35rem;
+}
+
+/* Amount + goal on one row */
+.progress-amount-row {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  justify-content: center;
 }
 
 .progress-raised {
-  font-size: 1.75rem;
+  font-size: 2rem;
   font-weight: 900;
-  color: var(--text);
-  letter-spacing: -0.5px;
+  color: var(--blue-dark);
+  letter-spacing: -1px;
+  line-height: 1;
+}
+
+.progress-goal-label {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text-light);
 }
 
 .progress-teamcount {
@@ -361,68 +387,93 @@ section {
 
 .progress-bonus {
   font-size: 0.82rem;
-  color: var(--text-light);
-  margin-top: 0.1rem;
+  font-weight: 600;
+  color: var(--orange);
+  background: #fff5e8;
+  border: 1px solid rgba(244,152,52,0.3);
+  border-radius: 20px;
+  padding: 0.2rem 0.75rem;
+  margin-top: 0.15rem;
 }
 
 /* Dates above bar */
 .progress-dates {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 0.4rem;
+  margin-bottom: 0.5rem;
 }
 
 .bar-date {
-  font-size: 0.85rem;
+  font-size: 0.82rem;
   font-weight: 700;
-  color: var(--text);
+  color: var(--text-light);
+  letter-spacing: 0.02em;
 }
 
 /* Bar outer — position context for sun marker */
 .progress-bar-outer {
   position: relative;
-  padding: 12px 0;
+  padding: 10px 0;
 }
 
 /* Bar track */
 .progress-bar-bg {
   width: 100%;
-  height: 22px;
-  background: rgba(44, 146, 191, 0.12);
-  border-radius: 11px;
+  height: 28px;
+  background: rgba(44, 146, 191, 0.1);
+  border-radius: 14px;
   overflow: hidden;
+  box-shadow: inset 0 2px 6px rgba(0,0,0,0.1), inset 0 1px 2px rgba(44,146,191,0.15);
 }
 
 /* Wave fill */
-@keyframes wave-shimmer {
-  0%   { background-position: 0% center; }
-  100% { background-position: 200% center; }
+/* One-directional wave: gradient starts and ends with same deep blue → seamless loop */
+@keyframes wave-flow {
+  from { background-position: 0% center; }
+  to   { background-position: 100% center; }
 }
 
 @keyframes shimmer-sweep {
   0%   { transform: translateX(-100%); }
-  100% { transform: translateX(400%); }
+  100% { transform: translateX(500%); }
+}
+
+@keyframes glow-pulse {
+  0%, 100% { box-shadow: 0 0 8px 3px rgba(244,152,52,0.55); }
+  50%       { box-shadow: 0 0 18px 7px rgba(244,152,52,0.85); }
 }
 
 .progress-bar-fill {
   height: 100%;
   width: 0%;
-  border-radius: 11px;
-  transition: width 0.8s ease;
-  background: linear-gradient(90deg, #2C92BF 0%, #5dc4e8 30%, #a8dff0 50%, #f6c06a 75%, #F49834 100%);
+  border-radius: 14px;
+  transition: width 0.9s cubic-bezier(0.4, 0, 0.2, 1);
+  /* Seamlessly tileable: same deep-blue at 0% and 100% so loop is invisible */
+  background: linear-gradient(90deg,
+    #1a6a8f 0%,
+    #2C92BF 12%,
+    #5dc4e8 26%,
+    #a8dff0 38%,
+    #fde89b 50%,
+    #f6c06a 62%,
+    #F49834 75%,
+    #e07824 88%,
+    #1a6a8f 100%
+  );
   background-size: 200% 100%;
-  animation: wave-shimmer 5s ease-in-out infinite alternate;
+  animation: wave-flow 5s linear infinite;
   position: relative;
   overflow: hidden;
+  box-shadow: 0 2px 12px rgba(44,146,191,0.35);
 }
 
 .progress-bar-fill::after {
   content: '';
   position: absolute;
   inset: 0;
-  width: 40%;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent);
-  animation: shimmer-sweep 2.5s ease-in-out infinite;
+  width: 35%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+  animation: shimmer-sweep 3s ease-in-out infinite;
 }
 
 /* Sun marker — floats above bar at current % */
@@ -431,25 +482,27 @@ section {
   top: 50%;
   left: 0%;
   transform: translate(-50%, -50%);
-  font-size: 1.4rem;
+  font-size: 1.6rem;
   line-height: 1;
-  filter: drop-shadow(0 0 6px rgba(244, 152, 52, 0.7));
-  transition: left 0.8s ease;
+  transition: left 0.9s cubic-bezier(0.4, 0, 0.2, 1);
   display: none;
   pointer-events: none;
   z-index: 2;
+  filter: drop-shadow(0 0 8px rgba(244, 152, 52, 0.8));
+  animation: glow-pulse 2s ease-in-out infinite;
 }
 
 /* Milestone ticks */
 .progress-milestones-row {
   position: relative;
   height: 1.6rem;
-  margin-top: 0.3rem;
+  margin-top: 0.4rem;
 }
 
 .pmile {
   position: absolute;
-  font-size: 0.78rem;
+  font-size: 0.76rem;
+  font-weight: 500;
   color: var(--text-light);
   transform: translateX(-50%);
   white-space: nowrap;
@@ -470,15 +523,16 @@ section {
 }
 
 .pmile-live {
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   font-weight: 700;
   color: var(--orange);
   background: #fff5e8;
-  padding: 0.1rem 0.4rem;
-  border-radius: 4px;
-  border: 1px solid var(--orange);
+  padding: 0.1rem 0.45rem;
+  border-radius: 5px;
+  border: 1px solid rgba(244,152,52,0.5);
   transform: translateX(-50%);
   display: none;
+  box-shadow: 0 1px 4px rgba(244,152,52,0.2);
 }
 
 /* ── Packages header ─────────────────────────── */
@@ -1051,10 +1105,29 @@ section {
     padding: 1.1rem 1.1rem;
   }
 
-  /* Progress bar: full width */
-  .progress-wrapper {
-    max-width: 100%;
-    padding: 0 0.25rem;
+  /* Progress bar: compact on mobile */
+  .progress-card {
+    padding: 1.5rem 1rem 1.25rem;
+    border-radius: 14px;
+  }
+
+  /* Hide mid milestones — too crowded on narrow bar */
+  .pmile-mid {
+    display: none;
+  }
+
+  /* Shrink side icons so bar gets more room */
+  .progress-bar-icon {
+    height: 28px;
+  }
+
+  .progress-amount-row {
+    flex-direction: column;
+    gap: 0.1rem;
+  }
+
+  .progress-raised {
+    font-size: 1.6rem;
   }
 
   /* Impact banner: smaller icons on mobile */

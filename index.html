@@ -45,57 +45,62 @@
 <!-- ── Progress Bar ──────────────────────────── -->
 <section class="progress-section">
   <div class="container">
+    <div class="progress-card">
 
-    <!-- Tagline header -->
-    <div class="progress-tagline">
-      <p class="progress-tagline-main">מחפשים רגע של אמת?</p>
-      <p class="progress-tagline-main">זקוקים לשדרוג גרסה? רוצים לחזור להוביל?</p>
-    </div>
+      <!-- Tagline header -->
+      <div class="progress-tagline">
+        <p class="progress-tagline-main">מחפשים רגע של אמת?</p>
+        <p class="progress-tagline-main">זקוקים לשדרוג גרסה? רוצים לחזור להוביל?</p>
+      </div>
 
-    <!-- Bar track — LTR from here on -->
-    <div class="progress-track-wrapper" dir="ltr">
+      <!-- Bar track — LTR from here on -->
+      <div class="progress-track-wrapper" dir="ltr">
 
-      <!-- Bar row: icon | middle | icon -->
-      <div class="progress-bar-row">
-        <img src="content/brand/icons-4.png" class="progress-bar-icon" alt="">
+        <!-- Bar row: icon | middle | icon -->
+        <div class="progress-bar-row">
+          <img src="content/brand/icons-4.png" class="progress-bar-icon" alt="">
 
-        <div class="progress-bar-middle">
-          <!-- Dates above bar -->
-          <div class="progress-dates">
-            <span class="bar-date">16.04</span>
-            <span class="bar-date">16.05</span>
-          </div>
-
-          <!-- Bar + floating sun marker -->
-          <div class="progress-bar-outer">
-            <div class="progress-bar-bg">
-              <div class="progress-bar-fill" id="progress-bar-fill"></div>
+          <div class="progress-bar-middle">
+            <!-- Dates above bar -->
+            <div class="progress-dates">
+              <span class="bar-date">16.04</span>
+              <span class="bar-date">16.05</span>
             </div>
-            <div class="progress-sun-marker" id="progress-sun">☀️</div>
+
+            <!-- Bar + floating sun marker -->
+            <div class="progress-bar-outer">
+              <div class="progress-bar-bg">
+                <div class="progress-bar-fill" id="progress-bar-fill"></div>
+              </div>
+              <div class="progress-sun-marker" id="progress-sun">☀️</div>
+            </div>
+
+            <!-- Milestone ticks below bar -->
+            <div class="progress-milestones-row">
+              <span class="pmile pmile-edge-start">0 ₪</span>
+              <span class="pmile pmile-mid" style="left:50%">50K</span>
+              <span class="pmile pmile-mid" style="left:70%">70K</span>
+              <span class="pmile pmile-edge-end">100K ₪</span>
+              <span class="pmile pmile-live" id="pmile-live"></span>
+            </div>
           </div>
 
-          <!-- Milestone ticks below bar -->
-          <div class="progress-milestones-row">
-            <span class="pmile pmile-edge-start">0%</span>
-            <span class="pmile pmile-mid" style="left:50%">50%</span>
-            <span class="pmile pmile-mid" style="left:70%">70%</span>
-            <span class="pmile pmile-edge-end">100%</span>
-            <span class="pmile pmile-live" id="pmile-live"></span>
-          </div>
+          <img src="content/brand/icons-16.png" class="progress-bar-icon" alt="">
         </div>
 
-        <img src="content/brand/icons-16.png" class="progress-bar-icon" alt="">
+      </div>
+
+      <!-- Below bar: amount + team count + bonus text -->
+      <div class="progress-footer">
+        <div class="progress-amount-row">
+          <strong class="progress-raised" id="progress-label">0 ₪</strong>
+          <span class="progress-goal-label">מתוך 100,000 ₪</span>
+        </div>
+        <span class="progress-teamcount" id="spots-counter">היו הראשונים להצטרף</span>
+        <span class="progress-bonus">ביעד — כולם מקבלים 5% הנחה!</span>
       </div>
 
     </div>
-
-    <!-- Below bar: amount + team count + bonus text -->
-    <div class="progress-footer">
-      <strong class="progress-raised" id="progress-label">0 ₪</strong>
-      <span class="progress-teamcount" id="spots-counter">היו הראשונים להצטרף</span>
-      <span class="progress-bonus">ביעד — כולם מקבלים 5% הנחה!</span>
-    </div>
-
   </div>
 </section>
 
