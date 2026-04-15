@@ -1,3 +1,6 @@
+// paymentDesc slugs as set in the Grow dashboard for each package
+const VALID_PACKAGES = new Set(['b2b-lite', 'b2b-classic', 'b2b-gold']);
+
 export default {
   async fetch(request, env) {
     if (request.method !== 'POST') {
@@ -16,21 +19,24 @@ export default {
       return new Response('Unauthorized', { status: 401 });
     }
 
-    // 2. Build purchase row — store all Grow payload fields except webhookKey
+    // 2. Only accept the three known packages
+    if (!VALID_PACKAGES.has(body.paymentDesc)) {
+      return new Response('Unknown package', { status: 400 });
+    }
+
+    // 3. Build purchase row
     const purchase = {
-      full_name: body.fullName || body.data?.fullName || 'Unknown',
-      payment_sum: body.paymentSum || body.data?.sum || 0,
-      payment_type: body.paymentType || body.data?.paymentType || '',
-      payment_date: body.paymentDate || body.data?.paymentDate || '',
-      package: body.paymentDesc || body.data?.description || '',
-      payer_phone: body.payerPhone || body.data?.payerPhone || '',
-      payer_email: body.payerEmail || body.data?.payerEmail || '',
-      transaction_code: body.transactionCode || body.data?.transactionId || '',
-      purchase_page_key: body.purchasePageKey || body.data?.purchasePageKey || '',
-      purchase_page_title: body.purchasePageTitle || body.data?.purchasePageTitle || '',
+      full_name: body.fullName || 'Unknown',
+      payment_sum: Number(body.paymentSum) || 0,
+      payment_type: body.paymentType || '',
+      payment_date: body.paymentDate || '',
+      package: body.paymentDesc,
+      payer_phone: body.payerPhone || '',
+      payer_email: body.payerEmail || '',
+      transaction_code: body.transactionCode || '',
     };
 
-    // 3. Write to Supabase
+    // 4. Write to Supabase
     const supabaseRes = await fetch(`${env.SUPABASE_URL}/rest/v1/levyam-b2b`, {
       method: 'POST',
       headers: {

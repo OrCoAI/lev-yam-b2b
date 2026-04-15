@@ -62,6 +62,9 @@ Live URL: `https://lev-yam-webhook.orcohenwork.workers.dev` ✓ Deployed
 ### Worker code — `worker/index.js`
 
 ```javascript
+// paymentDesc slugs as set in the Grow dashboard for each package
+const VALID_PACKAGES = new Set(['b2b-lite', 'b2b-classic', 'b2b-gold']);
+
 export default {
   async fetch(request, env) {
     if (request.method !== 'POST') {
@@ -75,26 +78,30 @@ export default {
       return new Response('Invalid JSON', { status: 400 });
     }
 
-    // 1. Verify webhookKey
+    // 1. Verify webhookKey — always first, return 401 if wrong
     if (body.webhookKey !== env.GROW_WEBHOOK_KEY) {
       return new Response('Unauthorized', { status: 401 });
     }
 
-    // 2. Write to Supabase — store all Grow payload fields except webhookKey
+    // 2. Only accept the three known packages
+    if (!VALID_PACKAGES.has(body.paymentDesc)) {
+      return new Response('Unknown package', { status: 400 });
+    }
+
+    // 3. Build purchase row
     const purchase = {
-      full_name: body.fullName || body.data?.fullName || 'Unknown',
-      payment_sum: body.paymentSum || body.data?.sum || 0,
-      payment_type: body.paymentType || body.data?.paymentType || '',
-      payment_date: body.paymentDate || body.data?.paymentDate || '',
-      package: body.paymentDesc || body.data?.description || '',
-      payer_phone: body.payerPhone || body.data?.payerPhone || '',
-      payer_email: body.payerEmail || body.data?.payerEmail || '',
-      transaction_code: body.transactionCode || body.data?.transactionId || '',
-      purchase_page_key: body.purchasePageKey || body.data?.purchasePageKey || '',
-      purchase_page_title: body.purchasePageTitle || body.data?.purchasePageTitle || '',
+      full_name: body.fullName || 'Unknown',
+      payment_sum: Number(body.paymentSum) || 0,
+      payment_type: body.paymentType || '',
+      payment_date: body.paymentDate || '',
+      package: body.paymentDesc,
+      payer_phone: body.payerPhone || '',
+      payer_email: body.payerEmail || '',
+      transaction_code: body.transactionCode || '',
     };
 
-    await fetch(`${env.SUPABASE_URL}/rest/v1/levyam-b2b`, {
+    // 4. Write to Supabase
+    const supabaseRes = await fetch(`${env.SUPABASE_URL}/rest/v1/levyam-b2b`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -104,6 +111,12 @@ export default {
       },
       body: JSON.stringify(purchase),
     });
+
+    if (!supabaseRes.ok) {
+      const err = await supabaseRes.text();
+      console.error('Supabase error:', err);
+      return new Response('Supabase write failed', { status: 500 });
+    }
 
     return new Response('OK', { status: 200 });
   },
@@ -130,15 +143,13 @@ Note: columns to be reviewed and finalized based on exact Grow webhook payload b
 |--------|------|-------|
 | `id` | uuid | auto, primary key |
 | `full_name` | text | `fullName` — buyer name |
-| `payment_sum` | numeric | `paymentSum` — amount in ₪ |
+| `payment_sum` | numeric | `paymentSum` — cast from string to number |
 | `payment_type` | text | `paymentType` — e.g. "רגיל" |
 | `payment_date` | text | `paymentDate` — as returned by Grow |
-| `package` | text | `paymentDesc` — which package was bought |
+| `package` | text | `paymentDesc` — package slug: `b2b-lite` / `b2b-classic` / `b2b-gold` |
 | `payer_phone` | text | `payerPhone` |
 | `payer_email` | text | `payerEmail` |
 | `transaction_code` | text | `transactionCode` — Grow transaction ID |
-| `purchase_page_key` | text | `purchasePageKey` |
-| `purchase_page_title` | text | `purchasePageTitle` |
 | `created_at` | timestamptz | auto |
 
 Enable Row Level Security → add policy: allow anon SELECT and INSERT.
@@ -219,26 +230,43 @@ If both pass → do the live 10 ₪ payment. 🎉
 
 ## Grow webhook payload reference
 
-Note: Grow sends different formats depending on system type. Handle both:
+Confirmed from a real test transaction on 15/04/26:
 
-**Static payment page (legacy system):**
 ```json
 {
-  "webhookKey": "ABC1234",
-  "transactionCode": "ABCD1234",
-  "paymentSum": 500,
+  "webhookKey": "...",
+  "identifyParam": "",
+  "transactionCode": "LtD5y5bIMQi1O0onrB+g6g==",
+  "transactionType": "אשראי",
+  "paymentSum": "0.15",
+  "paymentsNum": 0,
+  "allPaymentNum": "1",
+  "firstPaymentSum": 0,
+  "periodicalPaymentSum": 0,
   "paymentType": "רגיל",
-  "paymentDate": "14/04/26",
-  "paymentDesc": "Company Offsite Day",
-  "fullName": "Full Name",
-  "payerPhone": "0500000000",
-  "payerEmail": "[email protected]",
-  "purchasePageKey": "ABCD1234",
-  "purchasePageTitle": "Company Offsite Day"
+  "paymentDate": "15/4/26",
+  "asmachta": "477443216",
+  "paymentDesc": "b2b-lite",
+  "fullName": "Or Cohen",
+  "payerPhone": "0506663467",
+  "payerEmail": "orcohenwork@gmail.com",
+  "cardSuffix": "4547",
+  "cardBrand": "Mastercard",
+  "cardType": "Local",
+  "cardBin": "552517",
+  "paymentSource": "Payment Links",
+  "ip": "212.199.111.82",
+  "invoiceURL": "",
+  "invoiceName": "",
+  "invoiceLicenseNumber": ""
 }
 ```
 
-The Worker code above handles both formats via the `||` fallbacks on each field.
+Notes:
+- `paymentSum` arrives as a **string**, not a number — cast with `Number()`
+- `purchasePageKey` and `purchasePageTitle` are **not sent** by Grow
+- `paymentDesc` is the package slug set in the Grow dashboard: `b2b-lite` / `b2b-classic` / `b2b-gold`
+- `webhookKey` is the security check — never store it
 
 ---
 
