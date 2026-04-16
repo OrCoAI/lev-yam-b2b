@@ -108,7 +108,7 @@ h3 {
 }
 
 section {
-  padding: 1.75rem 0;
+  padding: 1.25rem 0;
 }
 
 /* ── Buttons ─────────────────────────────────── */
@@ -293,27 +293,30 @@ section {
   background: linear-gradient(135deg, rgba(44,146,191,0.05) 0%, rgba(255,255,255,0.95) 50%, rgba(244,152,52,0.05) 100%);
   border: 1px solid rgba(44,146,191,0.18);
   border-radius: 20px;
-  padding: 2rem 2rem 1.75rem;
+  padding: 1.75rem 1.75rem 1.5rem;
   box-shadow: 0 4px 32px rgba(44,146,191,0.1), 0 1px 4px rgba(0,0,0,0.04);
+  max-width: 760px;
   margin: 0 auto;
 }
 
 /* Tagline header above bar */
 .progress-tagline {
   text-align: center;
-  margin-bottom: 1.75rem;
+  margin-bottom: 1.5rem;
+  padding: 0;
 }
 
-/* First line — big punchy question */
 .progress-tagline-main {
-  font-size: clamp(2rem, 5vw, 3rem);
-  font-weight: 900;
-  color: var(--blue);
-  line-height: 1.2;
-  letter-spacing: -0.03em;
+  font-size: clamp(1rem, 2.5vw, 1.35rem);
+  font-weight: 700;
+  color: var(--blue-dark);
+  line-height: 1.45;
+  max-width: 600px;
+  margin: 0 auto;
+  text-align: center;
 }
 
-/* Second line — quieter follow-on */
+/* Second line — quieter follow-on (kept for safety) */
 .progress-tagline-main + .progress-tagline-main {
   font-size: clamp(1rem, 2.5vw, 1.35rem);
   font-weight: 400;
@@ -346,14 +349,13 @@ section {
   min-width: 0;
 }
 
-/* Footer below bar: amount + teamcount — single row on desktop */
+/* Footer below bar */
 .progress-footer {
-  margin-top: 1.5rem;
+  margin-top: 1.25rem;
   display: flex;
-  flex-direction: row;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 1rem;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
 }
 
 /* Amount + goal on one row */
@@ -383,11 +385,26 @@ section {
   color: var(--text-light);
 }
 
+.progress-cta-text {
+  font-size: clamp(1rem, 2vw, 1.25rem);
+  font-weight: 700;
+  color: var(--blue-dark);
+  text-align: center;
+  margin: 0;
+}
+
+.progress-limit-note {
+  font-size: 0.82rem;
+  color: var(--text-light);
+  text-align: center;
+  margin: 0;
+}
+
 /* Dates above bar */
 .progress-dates {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.6rem;
 }
 
 .bar-date {
@@ -469,26 +486,33 @@ section {
   animation: shimmer-sweep 5s ease-in-out infinite;
 }
 
-/* Sun marker — floats above bar at current % */
+/* Pinwheel marker — spins slowly at leading edge of bar */
+@keyframes spin-slow {
+  from { transform: translate(-50%, -50%) rotate(0deg); }
+  to   { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
 .progress-sun-marker {
   position: absolute;
   top: 50%;
   left: 0%;
   transform: translate(-50%, -50%);
-  font-size: 1.6rem;
-  line-height: 1;
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
   transition: left 0.9s cubic-bezier(0.4, 0, 0.2, 1);
   display: none;
   pointer-events: none;
   z-index: 2;
-  filter: drop-shadow(0 0 8px rgba(244, 152, 52, 0.8));
+  filter: drop-shadow(0 2px 6px rgba(0,0,0,0.25));
+  animation: spin-slow 18s linear infinite;
 }
 
 /* Milestone ticks */
 .progress-milestones-row {
   position: relative;
-  height: 1.6rem;
-  margin-top: 0.4rem;
+  height: 1.2rem;
+  margin-top: 0.3rem;
 }
 
 .pmile {
@@ -555,27 +579,96 @@ section {
 /* ── Story ───────────────────────────────────── */
 .story {
   background: transparent;
+  padding: 2rem 0 2.5rem;
+}
+
+.story h2 {
+  font-size: 2rem;
+  margin-bottom: 1.25rem;
 }
 
 .story-text {
-  max-width: 780px;
+  max-width: 720px;
   margin: 0 auto;
   font-size: 1.1rem;
-  line-height: 1.9;
+  line-height: 1.85;
   color: var(--text);
 }
 
-.story-text p {
+.story-text > p {
   margin-bottom: 1rem;
+}
+
+.story-text > p:first-child {
+  font-size: 1.25rem;
+  font-weight: 500;
+  color: var(--blue-dark);
+}
+
+.story-text > p:nth-child(2),
+.story-text > p:nth-child(3) {
+  font-size: 1.15rem;
 }
 
 .story-highlight {
   border-right: 4px solid var(--orange);
-  padding-right: 1.25rem;
+  padding: 0.5rem 1rem;
   margin: 1.25rem 0;
   font-weight: 500;
-  font-size: 1.15rem;
+  font-size: 1.1rem;
+  line-height: 1.85;
   color: var(--blue-dark);
+  background: rgba(255,255,255,0.5);
+  border-radius: 0 6px 6px 0;
+}
+
+.story-cta-block {
+  text-align: center;
+  margin: 1.5rem 0 1.75rem;
+}
+
+.story-cta-note {
+  margin-top: 0.5rem;
+  font-size: 0.82rem;
+  color: #999;
+  letter-spacing: 0.01em;
+}
+
+.story-read-more-toggle {
+  display: block;
+  margin: 0 0 1rem auto;
+  background: none;
+  border: none;
+  color: var(--orange);
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 400;
+  cursor: pointer;
+  padding: 0;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: opacity 0.2s;
+}
+
+.story-read-more-toggle:hover {
+  opacity: 0.7;
+}
+
+.story-read-more-content {
+  display: none;
+  overflow: hidden;
+}
+
+.story-read-more-content.is-open {
+  display: block;
+}
+
+.story-read-more-content p {
+  margin-bottom: 1rem;
+}
+
+.story-read-more-content p:last-child {
+  margin-bottom: 0;
 }
 
 
@@ -652,10 +745,11 @@ section {
 }
 
 .pkg-name {
-  font-size: clamp(1.2rem, 4vw, 1.6rem);
+  font-size: clamp(0.9rem, 2vw, 1.15rem);
   font-weight: 900;
   color: var(--pkg-color, var(--blue));
   margin-bottom: 0;
+  line-height: 1.3;
 }
 
 .pkg-tier {
@@ -709,8 +803,8 @@ section {
 
 .pkg-item {
   display: flex;
-  align-items: center;
-  gap: 0.75rem;
+  align-items: baseline;
+  gap: 0.5rem;
   padding: 0.45rem 0;
   font-size: 0.92rem;
   border-bottom: 1px solid rgba(0, 0, 0, 0.05);
@@ -720,19 +814,23 @@ section {
   border-bottom: none;
 }
 
-.pkg-mark {
-  flex-shrink: 0;
-  font-weight: 900;
-  font-size: 0.85rem;
-  width: 1.4rem;
-  text-align: center;
+.pkg-label {
+  flex: 0 0 5.5rem;
+  font-weight: 600;
+  color: #888;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
 }
 
-.pkg-yes .pkg-mark { color: var(--pkg-color, var(--blue)); }
-.pkg-yes { color: var(--text); }
+.pkg-value {
+  flex: 1;
+  color: var(--text);
+}
 
-.pkg-no .pkg-mark { color: #bbb; }
-.pkg-no { color: #bbb; }
+.pkg-item.pkg-empty .pkg-value {
+  color: #ccc;
+}
 
 .pkg-footer {
   padding: 1.25rem 1.5rem 1rem;
@@ -1013,20 +1111,25 @@ section {
 
 
 /* ── Responsive ──────────────────────────────── */
-@media (min-width: 640px) {
-  .policy-grid {
-    grid-template-columns: 1fr 1fr 1fr;
-  }
-}
-
 @media (min-width: 768px) {
   section {
-    padding: 2.5rem 0;
+    padding: 1.75rem 0;
   }
 
   .packages-grid {
     grid-template-columns: repeat(3, 1fr);
     align-items: stretch;
+  }
+
+  .pkg-top {
+    min-height: 8rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .policy-grid {
+    grid-template-columns: 1fr 1fr 1fr;
   }
 
   .hero {
@@ -1040,6 +1143,10 @@ section {
 }
 
 @media (min-width: 1024px) {
+  section {
+    padding: 2.5rem 0;
+  }
+
   .container {
     padding: 0 2rem;
   }
@@ -1057,8 +1164,14 @@ section {
   }
 
   .hero-logo {
-    width: 140px;
-    margin-bottom: 1.5rem;
+    width: 130px;
+    margin-bottom: 1.25rem;
+  }
+
+  /* Hero h1: slightly tighter so long titles don't overflow */
+  .hero h1 {
+    font-size: clamp(1.6rem, 7vw, 2.4rem);
+    margin-bottom: 1.25rem;
   }
 
   /* Hero CTAs: stack vertically and go full-width */
@@ -1075,9 +1188,19 @@ section {
     padding: 0.85rem 1.5rem;
   }
 
+  /* Packages: extra gap so the featured badge (top: -1.3rem) has breathing room */
+  .packages-grid {
+    gap: 2.25rem;
+  }
+
   /* Packages: mobile card padding */
   .pkg-top {
     padding: 1.25rem 1.25rem 1rem;
+  }
+
+  /* Narrow label column so content isn't cramped on 375px phones */
+  .pkg-label {
+    flex: 0 0 4.5rem;
   }
 
   .pkg-footer {
@@ -1103,6 +1226,12 @@ section {
     border-radius: 14px;
   }
 
+  /* Shrink spinning pinwheel on narrow bar */
+  .progress-sun-marker {
+    width: 30px;
+    height: 30px;
+  }
+
   /* Hide mid milestones — too crowded on narrow bar */
   .pmile-mid {
     display: none;
@@ -1110,29 +1239,16 @@ section {
 
   /* Shrink side icons so bar gets more room */
   .progress-bar-icon {
-    height: 20px;
+    height: 22px;
   }
 
-  .progress-amount-row {
-    flex-direction: row;
-    flex-wrap: nowrap;
-    gap: 0.3rem;
-    justify-content: center;
+  /* Impact banner: hide duplicate icon, tighter layout */
+  .impact-banner-icon + .impact-banner-icon {
+    display: none;
   }
 
-  .progress-raised {
-    font-size: 1.25rem;
-    white-space: nowrap;
-  }
-
-  .progress-goal-label {
-    font-size: 0.8rem;
-    white-space: nowrap;
-  }
-
-  /* Impact banner: smaller icons on mobile */
   .impact-banner-icon {
-    height: 32px;
+    height: 30px;
   }
 
   .impact-banner {

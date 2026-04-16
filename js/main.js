@@ -13,18 +13,32 @@ const GROW_URLS = {
 };
 
 /* ── Progress Bar Config ─────────────────────── */
-const PROGRESS_GOAL = 100000; // 100,000 NIS target
+const PROGRESS_GOAL = 50; // 50 teams target
 
 /* ── Initialize ──────────────────────────────── */
 document.addEventListener('DOMContentLoaded', () => {
   wireGrowButtons();
   initPackageAccordions();
+  initStoryReadMore();
   initVolumeToggle();
   if (SUPABASE_URL !== 'REPLACE_WITH_SUPABASE_URL') {
     updateFeed();
     setInterval(updateFeed, 5000);
   }
 });
+
+/* ── Story read-more accordion ──────────────── */
+function initStoryReadMore() {
+  const btn     = document.getElementById('story-read-more-btn');
+  const content = document.getElementById('story-read-more-content');
+  if (!btn || !content) return;
+
+  btn.addEventListener('click', () => {
+    const isOpen = content.classList.toggle('is-open');
+    btn.setAttribute('aria-expanded', isOpen);
+    btn.textContent = isOpen ? 'סגור ↑' : 'לקרוא עוד ↓';
+  });
+}
 
 /* ── Volume toggle ───────────────────────────── */
 function initVolumeToggle() {
@@ -78,15 +92,18 @@ function initVolumeToggle() {
 
 /* ── Package Accordions ──────────────────────── */
 function initPackageAccordions() {
-  document.querySelectorAll('.pkg-accordion-toggle').forEach((btn) => {
+  const allToggles    = document.querySelectorAll('.pkg-accordion-toggle');
+  const allAccordions = document.querySelectorAll('.pkg-accordion');
+
+  allToggles.forEach((btn) => {
     btn.addEventListener('click', () => {
-      const targetId = btn.getAttribute('data-target');
-      const accordion = document.getElementById(targetId);
-      if (!accordion) return;
-      const isOpen = accordion.classList.contains('open');
-      accordion.classList.toggle('open');
-      btn.textContent = isOpen ? 'מידע נוסף ↓' : 'סגור ↑';
-      btn.setAttribute('aria-expanded', String(!isOpen));
+      const anyOpen = document.querySelector('.pkg-accordion.open') !== null;
+      // If any is open → close all; otherwise open all
+      allAccordions.forEach((acc) => acc.classList.toggle('open', !anyOpen));
+      allToggles.forEach((b) => {
+        b.textContent = anyOpen ? 'מידע נוסף ↓' : 'סגור ↑';
+        b.setAttribute('aria-expanded', String(!anyOpen));
+      });
     });
   });
 }
@@ -126,23 +143,20 @@ async function fetchPurchases() {
 async function updateFeed() {
   const purchases = await fetchPurchases();
 
-  // Progress bar
-  const totalRaised = purchases.reduce((sum, p) => sum + (Number(p.payment_sum) || 0), 0);
-  const pct = Math.min((totalRaised / PROGRESS_GOAL) * 100, 100);
+  // Progress bar — count-based (0 to 50 teams)
+  const count = purchases.length;
+  const pct = Math.min((count / PROGRESS_GOAL) * 100, 100);
   const pctRounded = Math.round(pct);
 
   const barFill = document.getElementById('progress-bar-fill');
   if (barFill) barFill.style.width = pct + '%';
 
-  // Amount label
-  const label = document.getElementById('progress-label');
-  if (label) label.textContent = `${totalRaised.toLocaleString('he-IL')} ₪`;
-
-  // Team count
+  // CTA counter text
   const counter = document.getElementById('spots-counter');
   if (counter) {
-    counter.textContent = purchases.length > 0
-      ? `הצטרפו ${purchases.length} צוותים וארגונים שכבר הבטיחו את מקומם`
+    const next = count + 1;
+    counter.textContent = count > 0
+      ? `היו החברה ה־${next} שבוחרת בשינוי`
       : 'היו הראשונים להצטרף';
   }
 
@@ -151,14 +165,6 @@ async function updateFeed() {
   if (sun) {
     sun.style.left = pct + '%';
     sun.style.display = pct > 0 ? '' : 'none';
-  }
-
-  // Live % milestone
-  const liveMile = document.getElementById('pmile-live');
-  if (liveMile) {
-    liveMile.textContent = pctRounded + '%';
-    liveMile.style.left = pct + '%';
-    liveMile.style.display = pct > 0 ? '' : 'none';
   }
 
   // Live feed
