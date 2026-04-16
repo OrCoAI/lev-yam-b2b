@@ -295,7 +295,6 @@ section {
   border-radius: 20px;
   padding: 2rem 2rem 1.75rem;
   box-shadow: 0 4px 32px rgba(44,146,191,0.1), 0 1px 4px rgba(0,0,0,0.04);
-  max-width: 860px;
   margin: 0 auto;
 }
 
@@ -325,7 +324,6 @@ section {
 
 /* LTR track */
 .progress-track-wrapper {
-  max-width: 760px;
   margin: 0 auto;
 }
 
@@ -348,14 +346,14 @@ section {
   min-width: 0;
 }
 
-/* Footer below bar: amount + teamcount + bonus */
+/* Footer below bar: amount + teamcount — single row on desktop */
 .progress-footer {
-  text-align: center;
   margin-top: 1.5rem;
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.35rem;
+  flex-direction: row;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
 }
 
 /* Amount + goal on one row */
@@ -381,19 +379,8 @@ section {
 }
 
 .progress-teamcount {
-  font-size: 0.88rem;
+  font-size: 1.05rem;
   color: var(--text-light);
-}
-
-.progress-bonus {
-  font-size: 0.82rem;
-  font-weight: 600;
-  color: var(--orange);
-  background: #fff5e8;
-  border: 1px solid rgba(244,152,52,0.3);
-  border-radius: 20px;
-  padding: 0.2rem 0.75rem;
-  margin-top: 0.15rem;
 }
 
 /* Dates above bar */
@@ -428,19 +415,18 @@ section {
 
 /* Wave fill */
 /* One-directional wave: gradient starts and ends with same deep blue → seamless loop */
+/* background-size:200% + animating to -200% shifts exactly one full canvas width → seamless loop.
+   Junction at #3a3835 (near-neutral dark) hides the hue jump from burnt sienna back to ocean blue. */
 @keyframes wave-flow {
   from { background-position: 0% center; }
-  to   { background-position: 100% center; }
+  to   { background-position: -200% center; }
 }
 
 @keyframes shimmer-sweep {
-  0%   { transform: translateX(-100%); }
-  100% { transform: translateX(500%); }
-}
-
-@keyframes glow-pulse {
-  0%, 100% { box-shadow: 0 0 8px 3px rgba(244,152,52,0.55); }
-  50%       { box-shadow: 0 0 18px 7px rgba(244,152,52,0.85); }
+  0%   { transform: translateX(600%); opacity: 0; }
+  15%  { opacity: 1; }
+  85%  { opacity: 1; }
+  100% { transform: translateX(-100%); opacity: 0; }
 }
 
 .progress-bar-fill {
@@ -448,32 +434,46 @@ section {
   width: 0%;
   border-radius: 14px;
   transition: width 0.9s cubic-bezier(0.4, 0, 0.2, 1);
-  /* Seamlessly tileable: same deep-blue at 0% and 100% so loop is invisible */
   background: linear-gradient(90deg,
-    #1a6a8f 0%,
-    #2C92BF 12%,
-    #5dc4e8 26%,
-    #a8dff0 38%,
-    #fde89b 50%,
-    #f6c06a 62%,
-    #F49834 75%,
-    #e07824 88%,
-    #1a6a8f 100%
+    #0c5072  0%,   /* deep ocean — junction start */
+    #1a7aaa  9%,
+    #2C92BF  19%,
+    #60c8e8  28%,
+    #b8e8f8  36%,
+    #f0fafd  41%,
+    #fff8ed  46%,   /* warm ivory — center */
+    #fde896  51%,
+    #f8b84a  57%,
+    #F49834  65%,
+    #d9721a  73%,
+    #b04010  80%,
+    #7c3010  86%,
+    #3a3835  92%,   /* desaturated near-neutral — hue bridge */
+    #163248  96%,
+    #0c5072  100%  /* deep ocean — junction end (same as 0%) */
   );
   background-size: 200% 100%;
-  animation: wave-flow 5s linear infinite;
+  animation: wave-flow 12s linear infinite;
   position: relative;
   overflow: hidden;
-  box-shadow: 0 2px 12px rgba(44,146,191,0.35);
+  box-shadow: 0 2px 16px rgba(44,146,191,0.4), 0 1px 4px rgba(244,152,52,0.25);
 }
 
 .progress-bar-fill::after {
   content: '';
   position: absolute;
-  inset: 0;
-  width: 35%;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-  animation: shimmer-sweep 3s ease-in-out infinite;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 30%;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(255,255,255,0.18) 35%,
+    rgba(255,255,255,0.42) 55%,
+    rgba(255,255,255,0.18) 75%,
+    transparent 100%
+  );
+  animation: shimmer-sweep 5s ease-in-out infinite;
 }
 
 /* Sun marker — floats above bar at current % */
@@ -489,7 +489,6 @@ section {
   pointer-events: none;
   z-index: 2;
   filter: drop-shadow(0 0 8px rgba(244, 152, 52, 0.8));
-  animation: glow-pulse 2s ease-in-out infinite;
 }
 
 /* Milestone ticks */
@@ -1118,16 +1117,24 @@ section {
 
   /* Shrink side icons so bar gets more room */
   .progress-bar-icon {
-    height: 28px;
+    height: 20px;
   }
 
   .progress-amount-row {
-    flex-direction: column;
-    gap: 0.1rem;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    gap: 0.3rem;
+    justify-content: center;
   }
 
   .progress-raised {
-    font-size: 1.6rem;
+    font-size: 1.25rem;
+    white-space: nowrap;
+  }
+
+  .progress-goal-label {
+    font-size: 0.8rem;
+    white-space: nowrap;
   }
 
   /* Impact banner: smaller icons on mobile */
