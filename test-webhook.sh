@@ -29,7 +29,7 @@ RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" -X POST "$WORKER_URL" \
     \"paymentSum\": 10,
     \"paymentType\": \"רגיל\",
     \"paymentDate\": \"$(date +%d/%m/%y)\",
-    \"paymentDesc\": \"Company Offsite Day\",
+    \"paymentDesc\": \"b2b-classic\",
     \"payerPhone\": \"0500000000\",
     \"payerEmail\": \"[email protected]\",
     \"purchasePageKey\": \"TESTPAGE001\",
