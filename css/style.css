@@ -416,7 +416,7 @@ section {
 /* Wave fill */
 /* One-directional wave: gradient starts and ends with same deep blue → seamless loop */
 /* background-size:200% + animating to -200% shifts exactly one full canvas width → seamless loop.
-   Junction at #3a3835 (near-neutral dark) hides the hue jump from burnt sienna back to ocean blue. */
+   Junction at #5a82a0 (muted teal) bridges the hue from orange back to blue without going dark. */
 @keyframes wave-flow {
   from { background-position: 0% center; }
   to   { background-position: -200% center; }
@@ -435,22 +435,15 @@ section {
   border-radius: 14px;
   transition: width 0.9s cubic-bezier(0.4, 0, 0.2, 1);
   background: linear-gradient(90deg,
-    #0c5072  0%,   /* deep ocean — junction start */
-    #1a7aaa  9%,
-    #2C92BF  19%,
-    #60c8e8  28%,
-    #b8e8f8  36%,
-    #f0fafd  41%,
-    #fff8ed  46%,   /* warm ivory — center */
-    #fde896  51%,
-    #f8b84a  57%,
-    #F49834  65%,
-    #d9721a  73%,
-    #b04010  80%,
-    #7c3010  86%,
-    #3a3835  92%,   /* desaturated near-neutral — hue bridge */
-    #163248  96%,
-    #0c5072  100%  /* deep ocean — junction end (same as 0%) */
+    #5a82a0  0%,   /* muted teal — junction start */
+    #2C92BF  12%,  /* brand blue */
+    #4db8da  25%,  /* light blue */
+    #7ecfe8  38%,  /* sky */
+    #f4c97a  52%,  /* light orange */
+    #F49834  65%,  /* brand orange */
+    #e07820  78%,  /* warm orange */
+    #c4785a  88%,  /* muted terracotta — hue bridge */
+    #5a82a0  100%  /* muted teal — junction end (same as 0%) */
   );
   background-size: 200% 100%;
   animation: wave-flow 12s linear infinite;

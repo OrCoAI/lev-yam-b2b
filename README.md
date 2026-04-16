@@ -1,25 +1,24 @@
 # לב ים (Lev Yam) — B2B Landing Page
 
-A standalone B2B landing page for Lev Yam, selling company offsite days to businesses.  
-Built during a 4-hour hackathon on **April 14, 2026**, using [Claude Code](https://code.claude.com/) as the primary development tool.
+A standalone B2B landing page for **Lev Yam** (לב ים — "Heart of the Sea"), a beachfront venue in Jisr az-Zarqa, Israel. The page sells company offsite days to hi-tech teams in three packages.
+
+Built with [Claude Code](https://claude.ai/code) as the primary development tool.
 
 ---
 
-## Goal
+## Live Site
 
-A live landing page on levyam.com with a successful **10 ₪ test payment end-to-end**:  
-Page → Grow Payment Page → Webhook → Cloudflare Worker → Supabase.
+**[levyam.com](https://levyam.com)**
 
 ---
 
+## What it does
 
-## Team
-
-| Name | Role | What they do |
-|------|------|-------------|
-| **Or** | Team Lead & Project Owner | Environment setup, Grow/Cloudflare/Supabase accounts, content prep, pre-hackathon end-to-end test. Drives the day. |
-| **Moran** | Marketing & Content Creator | Writes all page copy, selects images, defines brand tone. Delivers final content to the repo before the hackathon. Reviews the live page on hackathon day. |
-| **Yair** | Software Engineer | Joins on hackathon day. Drives the technical build — page, Worker, Supabase wiring, deployment. No pre-hackathon tasks. |
+- Hebrew RTL landing page presenting three B2B offsite packages
+- Direct payment via [Grow Payments](https://grow.co.il/) hosted payment pages (per-package redirect)
+- On successful payment, Grow POSTs a webhook → Cloudflare Worker verifies and writes to Supabase
+- Page polls Supabase every 5 seconds to show a **live purchase feed** and **animated progress bar**
+- Email + SMS notifications to the team on each purchase (via Resend + Twilio)
 
 ---
 
@@ -28,130 +27,32 @@ Page → Grow Payment Page → Webhook → Cloudflare Worker → Supabase.
 ```
 User clicks "Buy" on levyam.com
         ↓
-Grow hosted payment page (redirect — pre-built static page per package)
+Grow hosted payment page (pre-built static page per package)
         ↓
 Payment succeeds → Grow POSTs webhook to Cloudflare Worker
         ↓
 Cloudflare Worker:
   1. Verifies webhookKey
   2. Writes purchase row to Supabase (name, amount, package, date)
+  3. Sends email (Resend) + SMS (Twilio) to team
         ↓
 Landing page polls Supabase every 5s
   → Updates live purchase feed
-  → Updates progress bar (spots filled)
+  → Updates progress bar
 ```
-
-### Why this architecture
-
-- **No backend to manage** — Cloudflare Worker is serverless, deploys in minutes, free tier
-- **Real database from day one** — Supabase (Postgres) scales post-hackathon into a full CRM/booking system with zero migration
-- **No approveTransaction needed** — standalone Grow static pages don't require it
-- **No Make/Zapier** — webhook fires directly to the Worker, no middleman
-- **WordPress plugin not used** — Grow's WooCommerce plugin requires a 5–7 day review process, incompatible with a hackathon. Post-hackathon option for the main WordPress site.
 
 ---
 
 ## Tech Stack
 
-| Layer | Tool | Purpose |
-|-------|------|---------|
-| **Page** | Static HTML/CSS/JS | Lightweight, no framework, fast to deploy |
-| **Payments** | [Grow Payments](https://grow.co.il/) — static payment page | Pre-built hosted page per package, redirect integration |
-| **Webhook receiver** | [Cloudflare Worker](https://workers.cloudflare.com/) | Receives Grow webhook, verifies, writes to Supabase |
-| **Database** | [Supabase](https://supabase.com/) (Postgres) | Stores purchases. Powers live feed + progress bar. Future CRM foundation. |
-| **Domain** | levyam.com via GoDaddy | DNS management |
-| **Dev tool** | [Claude Code](https://code.claude.com/) | AI-powered coding agent — builds the page from terminal |
-
----
-
-## Prerequisites
-
-Everything below must be done **before** hackathon day (April 14).
-
-### Or — Accounts & Infrastructure
-
-**Cloudflare:**
-- [x] Create free Cloudflare account at cloudflare.com ✓ Done
-- [x] Note Account ID → save to `.env` ✓ Done
-
-**Supabase:**
-- [x] Create free Supabase project at supabase.com ✓ Done
-- [x] Create `levyam-b2b` table with columns: `id`, `full_name`, `payment_sum`, `package`, `payment_date`, `transaction_code`, `created_at` ✓ Done
-- [x] Review and finalize exact columns based on Grow webhook payload ✓ Done
-- [x] Note project URL and anon key → save to `.env` ✓ Done
-
-**Grow Payments:**
-- [x] Create static payment pages for all 3 packages in Grow dashboard ✓ Done
-- [x] Payment page URLs saved to `.env` (GROW_URL_TEAM_RESET, GROW_URL_FOCUS_SESSION, GROW_URL_MOMENTUM_BOOSTER) ✓ Done
-- [x] Email [email protected] to enable webhooks for all one-time transactions ✓ Done
-- [x] Confirm `webhookKey` from Grow support → save to `.env` ✓ Done
-- [x] webhook `notifyUrl` set to `https://lev-yam-webhook.orcohenwork.workers.dev` ✓ Done
-
-**Claude Code:**
-- [x] Install Claude Code on your machine ✓ Done
-- [x] Authenticate with Anthropic account (Pro plan minimum) ✓ Done
-- [x] Run `claude doctor` — verify all checks pass ✓ Done
-- [x] Smoke test: run `claude` inside this repo, ask it to summarize `CLAUDE.md` ✓ Done
-
-**GitHub & Repo:**
-- [x] Confirm `CLAUDE.md` is in repo root ✓ Done
-- [x] Confirm folder structure exists: `content/`, `css/`, `js/`, `docs/`, `worker/` ✓ Done
-- [x] Invite Yair as collaborator ✓ Done
-
-**GoDaddy:**
-- [x] Verify login — confirm you can edit DNS for levyam.com ✓ Done
-
-### Or — Pre-Hackathon End-to-End Test (complete before April 13)
-
-This is the most important pre-hackathon task. If this passes, Yair walks in on April 12 knowing the plumbing works.
-
-- [x] Deploy Worker — live at `https://lev-yam-webhook.orcohenwork.workers.dev` ✓ Done
-- [x] All secrets set in Cloudflare (GROW_WEBHOOK_KEY, SUPABASE_URL, SUPABASE_ANON_KEY) ✓ Done
-- [x] Supabase `levyam-b2b` table confirmed reachable ✓ Done
-- [x] Run `./test-webhook.sh` — HTTP 200, Supabase row confirmed ✓ Done
-- [x] Grow webhook `notifyUrl` set to live Worker URL ✓ Done
-
-### Moran — Content & Brand
-
-- [x] Define B2B packages → `content/packages.md` ✓ Done
-- [x] Write all page copy → `content/copy.md` ✓ Done
-- [ ] Define Animations and styling
-- [x] Confirm brand elements — logo, colors, fonts → `content/brand/` ✓ Done
-
-### Yair — No pre-hackathon tasks
-
-Yair joins fresh on hackathon day. Everything he needs is in the repo:
-- `CLAUDE.md` — full project context for Claude Code
-- `content/` — all copy and images from Moran
-- `docs/grow-plan.md` — complete payment + Worker implementation plan
-- `.env` — all credentials ready
-
----
-
-## Final Check — April 13 Evening
-
-- [x] All credentials in `.env` ✓ Done
-- [x] Brand files in `content/brand/` ✓ Done
-- [x] `CLAUDE.md` is in repo root and up to date ✓ Done
-- [x] `docs/grow-plan.md` written and ready ✓ Done
-- [x] End-to-end dummy webhook test passed ✓ Done
-- [x] Grow `notifyUrl` updated with live Worker URL ✓ Done
-- [x] Claude Code runs inside the repo and understands the project ✓ Done
-- [ ] Quick sync with Yair to walk through the hackathon plan
-
----
-
-## Hackathon Schedule — April 14
-
-| Time | Block | Focus | Who |
-|------|-------|-------|-----|
-| 0:00–0:15 | Kickoff | Align on plan, confirm tools work, open everything | Everyone |
-| 0:15–1:30 | Sprint 1: Page | Build full landing page — all sections, RTL Hebrew, responsive | Yair builds · Moran reviews · Or observes |
-| 1:30–1:45 | Break | Moran reviews content on screen, flags fixes | Moran |
-| 1:45–2:45 | Sprint 2: Payments + Worker | Full Worker logic (verify → Supabase), wire Grow notifyUrl, live feed + progress bar on page | Yair builds · Or supports |
-| 2:45–3:15 | Sprint 3: Polish | UI polish, edge cases, final content review | Yair builds · Moran reviews |
-| 3:15–3:45 | Test & Fix | End-to-end 10 ₪ test payment, fix bugs | Everyone |
-| 3:45–4:00 | Deploy & Celebrate | Push live to levyam.com 🎉 | Everyone |
+| Layer | Tool |
+|-------|------|
+| Page | Static HTML + CSS + JS — no framework |
+| Payments | Grow Payments — hosted redirect pages |
+| Webhook receiver | Cloudflare Worker (`worker/index.js`) |
+| Database | Supabase (Postgres) — `levyam-b2b` table |
+| Notifications | Resend (email) + Twilio (SMS) |
+| Hosting | levyam.com via GoDaddy / GitHub Pages |
 
 ---
 
@@ -159,59 +60,75 @@ Yair joins fresh on hackathon day. Everything he needs is in the repo:
 
 ```
 lev-yam-b2b/
-├── index.html              # Landing page
-├── css/style.css           # Styles
-├── js/main.js              # Interactions + Supabase polling
-├── content/                # Source of truth for all copy and images
-│   ├── copy.md             # All page text (Moran)
-│   ├── packages.md         # B2B package definitions + Grow page URLs (Moran + Or)
-│   ├── images/             # Photos and visuals
-│   └── brand/              # Logo, colors, fonts
+├── index.html              # Landing page (Hebrew, RTL)
+├── css/style.css           # All styles — RTL-first, mobile-first
+├── js/main.js              # Interactions, Supabase polling, Grow button wiring
+├── content/
+│   ├── copy.md             # All Hebrew page copy
+│   ├── packages.md         # Package definitions + Grow payment URLs
+│   ├── images/             # Hero video, background image
+│   └── brand/              # Logo, icons, colors, fonts
 ├── worker/
 │   └── index.js            # Cloudflare Worker — webhook receiver
 ├── docs/
-│   └── grow-plan.md        # Full payment + Worker implementation plan (Or)
+│   └── grow-plan.md        # Grow Payments + Worker implementation plan
 ├── .env                    # Credentials (gitignored — never committed)
-├── .env.example            # Template showing which credentials are needed
-├── CLAUDE.md               # Claude Code project context — read by AI at session start
+├── .env.example            # Credential template
+├── CLAUDE.md               # Claude Code project context
 └── README.md               # This file
 ```
 
 ---
 
-## Key Files Explained
+## Packages
 
-**`CLAUDE.md`** — Claude Code reads this automatically at session start. Contains full project context so Yair can start building from minute one with no explanation needed.
+| Package | Hebrew name | Price |
+|---------|-------------|-------|
+| Team Reset | ליום איפוס של הצוות | Lite tier |
+| Focus Session | יום פוקוס ופריצת דרך | Classic tier |
+| Momentum Booster | יום מומנטום ועידוד הצוות | Gold tier |
 
-**`docs/grow-plan.md`** — Step-by-step implementation plan for Sprint 2. Covers Grow redirect setup, Cloudflare Worker code, Supabase schema, and the live feed polling pattern.
-
-**`worker/index.js`** — The Cloudflare Worker. Receives Grow's webhook POST, verifies the `webhookKey`, writes to Supabase. Scaffolded and tested before hackathon day.
-
-**`content/`** — Everything Moran produces. Claude Code reads copy and images directly from here during the build.
-
-**`.env`** — Credentials for Cloudflare, Supabase, Grow webhookKey. Never committed. Each team member creates from `.env.example`.
+Full details (inclusions, prices, Grow URLs) are in `content/packages.md`.
 
 ---
 
-## Post-Hackathon Roadmap
+## Running locally
 
-| What | Why |
-|------|-----|
-| Grow WooCommerce plugin on main WordPress site | Seamless in-page checkout, installments, recurring billing. Requires 5–7 day Grow review. |
-| Supabase → full booking/CRM system | Database is already live. Add customer history, package management, invoicing. |
-| Admin dashboard | Read from Supabase. Show all purchases, revenue, trends. |
-| Automated notifications | Worker already receives webhook — add WhatsApp/email on each purchase. |
+Open `index.html` directly in a browser — no build step needed.
 
 ---
 
-## Decisions Log
+## Deploying the Worker
 
-| Decision | Reasoning |
-|----------|-----------|
-| Standalone page, not WordPress | Faster build, no plugin overhead. Claude Code works better with plain files. |
-| Grow hosted redirect, not iframe | No backend needed to initiate checkout. Simpler for a 4-hour build. |
-| Cloudflare Worker, not Make/Zapier | Direct webhook receiver. No third-party dependency. ~40 lines of JS. |
-| Supabase instead of Cloudflare KV | Real Postgres database. Scales post-hackathon. No migration needed later. |
-| No approveTransaction | Not required for standalone Grow static payment pages. |
-| No Grow WooCommerce plugin | Requires 5–7 day review process — incompatible with hackathon timeline. Post-hackathon option. |
-| All content pre-prepared in repo | Zero content creation during hackathon — all 4 hours go to building. |
+```bash
+cd worker
+npm install
+npx wrangler deploy
+
+# Set secrets:
+npx wrangler secret put GROW_WEBHOOK_KEY
+npx wrangler secret put SUPABASE_URL
+npx wrangler secret put SUPABASE_ANON_KEY
+npx wrangler secret put RESEND_API_KEY
+npx wrangler secret put RESEND_FROM_EMAIL
+npx wrangler secret put TWILIO_ACCOUNT_SID
+npx wrangler secret put TWILIO_AUTH_TOKEN
+npx wrangler secret put TWILIO_FROM_NUMBER
+```
+
+Test the webhook:
+
+```bash
+./test-webhook.sh
+# Expected: HTTP 200 + new row in Supabase levyam-b2b table
+```
+
+---
+
+## Team
+
+| Name | Role |
+|------|------|
+| **Or** | Project owner |
+| **Moran** | Content & brand |
+| **Yair** | Engineering |

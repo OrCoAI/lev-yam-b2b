@@ -18,7 +18,6 @@ const PROGRESS_GOAL = 100000; // 100,000 NIS target
 /* ── Initialize ──────────────────────────────── */
 document.addEventListener('DOMContentLoaded', () => {
   wireGrowButtons();
-  initStoryAccordion();
   initPackageAccordions();
   initVolumeToggle();
   if (SUPABASE_URL !== 'REPLACE_WITH_SUPABASE_URL') {
@@ -89,20 +88,6 @@ function initPackageAccordions() {
       btn.textContent = isOpen ? 'מידע נוסף ↓' : 'סגור ↑';
       btn.setAttribute('aria-expanded', String(!isOpen));
     });
-  });
-}
-
-/* ── Story Accordion ─────────────────────────── */
-function initStoryAccordion() {
-  const toggle = document.getElementById('story-toggle');
-  const expandable = document.getElementById('story-expandable');
-  if (!toggle || !expandable) return;
-
-  toggle.addEventListener('click', () => {
-    const isOpen = expandable.classList.contains('open');
-    expandable.classList.toggle('open');
-    toggle.textContent = isOpen ? 'קראו עוד ↓' : 'קראו פחות ↑';
-    toggle.setAttribute('aria-expanded', String(!isOpen));
   });
 }
 
