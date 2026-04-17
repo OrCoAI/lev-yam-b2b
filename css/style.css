@@ -1477,6 +1477,11 @@ mark.mark-orange {
     height: 22px;
     width: 22px;
   }
+
+  /* Footer: push content above sticky buttons (buttons ~46px + 1rem gap) */
+  .footer {
+    padding-bottom: max(5rem, calc(env(safe-area-inset-bottom) + 4.5rem));
+  }
 }
 
 /* Mobile-only line break helper */
