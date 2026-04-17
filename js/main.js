@@ -36,7 +36,7 @@ const TRANSLATIONS = {
     'story-rm-p3': 'כולנו מיטלטלים כרגע – בין אם זה פוגש אותנו בבית, בעבודה או בעסק – המצב מאתגר את החיוניות שלנו, מוריד את המוטיבציה שלנו להתפתח ופוגע ביכולת שלנו ליצור. אבל! דווקא ב\'לב ים\' – אחרי שנלחמנו לשווא ברוחות וניסינו להוריד עוגן וקיווינו לכוון מחדש את הסירה – אנחנו עשויים להגיע אל האזור הקטן היחיד של רוגע, שקט מוחלט ושמיים בהירים.',
     'story-rm-p4': 'זוהי הזדמנות להקשיב לציוץ הציפורים ולחדע אנרגיה – זכות שאני מוקירה עליה בכל פעם שאני מגיעה לפה. ורק פה אני מבינה למה כל חברת הייטק בישראל צריכה להגיע לפה.',
     'story-rm-p5': '<strong>ההצטרפות עכשיו היא הזמנה להוביל ולקחת חלק ביצירת האופק של כולנו. זו הצהרת כוונות – אתם מבטיחים את מקומכם ב\'לב ים\' כשכל הגמישות אצלכם: המימוש יקרה רק מתי שזה ירגיש לכם נכון ומדויק. זו הזדמנות להצהיר ולהבטיח לעצמם ולצוות – שמגיע לכם להגיע לפה.</strong>',
-    'packages-h1': 'מספר המקומות ב\'לב ים\' מוגבל, כדי לשמור על הקסם והייחודיות.',
+    'packages-h1': 'הצטרפותכם עכשיו היא הצהרת כוונות – לכם ולצוות שלכם מגיע רגע אמיתי של שקט ומיקוד.',
     'packages-h2': 'באיזה הרכב אתם באים?',
     'pkg-badge': 'הכי פופולרי',
     'pkg-participants': 'משתתפים',
@@ -76,9 +76,10 @@ const TRANSLATIONS = {
     'policy-a3': 'עד 7 ימים לפני המועד, תוכלו להעביר את ההזמנה למועד אחר. השקט והביטחון שלכם הם בראש סדרי העדיפויות שלנו.',
     'impact-banner': 'מעטים המקומות שכמו נבראו מסיבה מסויימת,<br>ואם הם נבראו פעמיים – בטח יש לכך סיבה',
     'impact-h2': 'הסכום שיגויס יאפשר — יצירת מציאות חדשה',
-    'impact-intro': 'הרגע היקר-מפז של שקט עבורכם, לטובת חשיבה אסטרטגית או התארגנות מחדש, מקדם חזון של חיבור אנושי חיובי ושגשוג משותף, ומבטיח שה-DNA של נדיבות ואחריות ימשיך לפעום ולהדהד גם הרחק מעבר לקו המים.',
-    'impact-li1': '<strong>אתם משקיעים</strong> בשינוי הנרטיב על ג׳יסר א זרקא ובבניית גשר של חיים משותפים שמשנה תודעה הלכה למעשה ומייצר שגשוג כלכלי-חברתי אמיתי.',
-    'impact-li2': '<strong>אתם משקיעים</strong> בצמיחה מבוקרת ושיפור מתמיד של החוויה של מרחב \'לב ים\', ובא.נשים שמעזים לבחור לא להיכנע לזרם החזק, להוביל ולקחת שליטה על הסיפור שלהם — למען עתיד ישראל.',
+    'impact-subtitle': 'שקט אסטרטגי לצוות עם ROI מובהק ואימפקט חברתי',
+    'impact-intro': 'ב\'לב ים\' השקט שלכם הופך לשינוי במצב הצבירה של הצוות: מאנרגיה חסומה ליצירתיות ופתיחות',
+    'impact-li1': '<strong>אתם שותפים לשינוי הנרטיב:</strong> הצטרפות לנבחרת ה-50 בונה גשר של חיים משותפים.',
+    'impact-li2': '<strong>אתם מובילים אימפקט מקומי:</strong> הבטחת מקומכם מאפשרת לנו לבסס מודל חדשני של שגשוג כלכלי-חברתי אמיתי בכפר הדייגים.',
     'progress-subline': 'היעד: 50 צוותי הייטק שמעזים להוציא את הלב מהמקלט ולחזור להוביל',
     'progress-joined': 'הצטרפו',
     'progress-of': 'מתוך',
@@ -114,7 +115,7 @@ const TRANSLATIONS = {
     'story-rm-p3': 'كلنا نتأرجح الآن — سواء كان ذلك في البيت أو العمل أو المشروع — الوضع يتحدى حيويتنا، ويخفض دافعيتنا للنمو، ويضر بقدرتنا على الإبداع. لكن! في "لب يام" تحديداً — بعد أن كافحنا الرياح عبثاً وحاولنا إلقاء المرساة وأملنا في إعادة توجيه القارب — قد نصل إلى تلك المنطقة الصغيرة الوحيدة من الهدوء والسكون التام والسماء الصافية.',
     'story-rm-p4': 'هذه فرصة للاستماع إلى تغريد الطيور وتجديد الطاقة — امتياز أقدّره في كل مرة أصل إليه. وهنا فقط أفهم لماذا يجب على كل شركة هاي-تك في إسرائيل أن تأتي إلى هنا.',
     'story-rm-p5': '<strong>الانضمام الآن هو دعوة للقيادة والمشاركة في صنع أفق مشترك. هذا إعلان نية — أنتم تضمنون مكانكم في "لب يام" مع كامل المرونة: التنفيذ سيحدث عندما يشعر الأمر صحيحاً ومناسباً لكم. هذه فرصة للإعلان والوعد لأنفسكم ولفريقكم — بأنكم تستحقون المجيء إلى هنا.</strong>',
-    'packages-h1': 'عدد الأماكن في "لب يام" محدود، للحفاظ على السحر والتميز.',
+    'packages-h1': 'انضمامكم الآن هو إعلان نية – أنتم وفريقكم تستحقون لحظة حقيقية من الهدوء والتركيز.',
     'packages-h2': 'بأي تشكيلة ستأتون؟',
     'pkg-badge': 'الأكثر شعبية',
     'pkg-participants': 'مشاركون',
@@ -154,9 +155,10 @@ const TRANSLATIONS = {
     'policy-a3': 'حتى 7 أيام قبل الموعد، يمكنكم تحويل الحجز إلى موعد آخر. راحتكم وأمانكم هما أولويتنا القصوى.',
     'impact-banner': 'قليلة هي الأماكن التي تبدو كأنها خُلقت لسبب ما،<br>وإن خُلقت مرتين — فلابد أن ثمة سبباً',
     'impact-h2': 'المبلغ الذي سيُجمَع سيُتيح — خلق واقع جديد',
-    'impact-intro': 'تلك اللحظة الثمينة من الهدوء، لصالح التفكير الاستراتيجي أو إعادة التنظيم، تدفع رؤية الترابط الإنساني الإيجابي والازدهار المشترك، وتضمن أن حمض DNA من الكرم والمسؤولية سيستمر في النبض والصدى بعيداً عن خط المياه.',
-    'impact-li1': '<strong>أنتم تستثمرون</strong> في تغيير السردية عن جسر الزرقاء وبناء جسر من الحياة المشتركة يغيّر الوعي فعلياً ويولّد ازدهاراً اقتصادياً-اجتماعياً حقيقياً.',
-    'impact-li2': '<strong>أنتم تستثمرون</strong> في النمو المدروس والتحسين المستمر لتجربة فضاء "لب يام"، وفي الأشخاص الذين يتجرأون على اختيار عدم الاستسلام للتيار القوي، والقيادة وأخذ زمام قصتهم بأيديهم — من أجل مستقبل إسرائيل.',
+    'impact-subtitle': 'هدوء استراتيجي للفريق مع ROI واضح وأثر اجتماعي',
+    'impact-intro': 'في "لب يام" هدوؤكم يتحول إلى تغيير في حالة الفريق: من طاقة محبوسة إلى إبداع وانفتاح',
+    'impact-li1': '<strong>أنتم شركاء في تغيير السردية:</strong> الانضمام إلى نخبة الـ-50 يبني جسراً من الحياة المشتركة.',
+    'impact-li2': '<strong>أنتم تقودون أثراً محلياً:</strong> تأمين مكانكم يتيح لنا ترسيخ نموذج مبتكر من الازدهار الاقتصادي-الاجتماعي الحقيقي في قرية الصيادين.',
     'progress-subline': 'الهدف: 50 فريق هاي-تك يتجرأون على إخراج القلب من الملجأ والعودة إلى القيادة',
     'progress-joined': 'انضمّوا',
     'progress-of': 'من أصل',
@@ -363,18 +365,21 @@ function initStoryReadMore() {
 
 /* ── Volume toggle ───────────────────────────── */
 function initVolumeToggle() {
-  const video = document.getElementById('hero-video');
-  const btn   = document.getElementById('volume-btn');
+  const video     = document.getElementById('hero-video');
+  const btn       = document.getElementById('volume-btn');
+  const heroSection = document.getElementById('hero');
   if (!video || !btn) return;
 
   // Browsers block autoplay with audio — video must start muted.
-  let unmuteHandled = false;
+  let unmuteHandled  = false;
+  let userWantsSound = false; // true once the user has enabled audio
 
   const unmuteOnFirstInteraction = () => {
     if (unmuteHandled) return;
-    unmuteHandled = true;
-    video.muted = false;
-    video.volume = 1;
+    unmuteHandled  = true;
+    userWantsSound = true;
+    video.muted    = false;
+    video.volume   = 1;
     setUnmuted();
     document.removeEventListener('click',      unmuteOnFirstInteraction);
     document.removeEventListener('touchstart', unmuteOnFirstInteraction);
@@ -386,17 +391,31 @@ function initVolumeToggle() {
   btn.addEventListener('click', (e) => {
     e.stopPropagation();
     if (video.muted) {
-      unmuteHandled = true;
-      video.muted = false;
-      video.volume = 1;
+      unmuteHandled  = true;
+      userWantsSound = true;
+      video.muted    = false;
+      video.volume   = 1;
       document.removeEventListener('click',      unmuteOnFirstInteraction);
       document.removeEventListener('touchstart', unmuteOnFirstInteraction);
       setUnmuted();
     } else {
-      video.muted = true;
+      userWantsSound = false;
+      video.muted    = true;
       setMuted();
     }
   });
+
+  // Mute when hero scrolls out of view; restore when it comes back
+  if (heroSection) {
+    const observer = new IntersectionObserver((entries) => {
+      if (!entries[0].isIntersecting) {
+        video.muted = true;
+      } else if (userWantsSound) {
+        video.muted = false;
+      }
+    }, { threshold: 0.05 });
+    observer.observe(heroSection);
+  }
 
   function setUnmuted() {
     btn.classList.add('unmuted');

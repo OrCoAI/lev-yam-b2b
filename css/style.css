@@ -108,7 +108,7 @@ h3 {
 }
 
 section {
-  padding: 0.75rem 0;
+  padding: 0.35rem 0;
 }
 
 /* ── Buttons ─────────────────────────────────── */
@@ -174,8 +174,8 @@ section {
 /* ── Volume toggle button ──────────────────────── */
 .volume-btn {
   position: absolute;
-  bottom: 1.5rem;
-  left: 1.5rem;
+  top: 1.5rem;
+  right: 1.5rem;
   z-index: 10;
   background: rgba(255, 255, 255, 0.15);
   border: 1px solid rgba(255, 255, 255, 0.3);
@@ -287,7 +287,7 @@ section {
 /* ── Progress Section ────────────────────────── */
 .progress-section {
   background: transparent;
-  padding: 1rem 0 1.5rem;
+  padding: 0.35rem 0 0.75rem;
 }
 
 /* Card container */
@@ -518,7 +518,7 @@ section {
 .packages-header {
   text-align: center;
   margin-bottom: 0.5rem;
-  padding: 1rem 0;
+  padding: 0.25rem 0;
 }
 
 /* First line — quiet context */
@@ -543,7 +543,7 @@ section {
 /* ── Story ───────────────────────────────────── */
 .story {
   background: transparent;
-  padding: 1.25rem 0 1.75rem;
+  padding: 0.5rem 0 0.75rem;
 }
 
 .story h2 {
@@ -1018,7 +1018,7 @@ mark.mark-orange {
   align-items: center;
   justify-content: center;
   gap: 1.5rem;
-  margin-bottom: 1.25rem;
+  margin-bottom: 0.75rem;
   padding: 0.85rem 1rem;
   border-top: 1px solid rgba(44, 146, 191, 0.18);
   border-bottom: 1px solid rgba(44, 146, 191, 0.18);
@@ -1047,13 +1047,23 @@ mark.mark-orange {
   background: transparent;
 }
 
+.impact-subtitle {
+  max-width: 800px;
+  margin: 0.15rem auto 0.6rem;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--orange);
+  text-align: center;
+  letter-spacing: 0.01em;
+}
+
 .impact-intro {
   max-width: 800px;
-  margin: 0 auto 1.25rem;
-  font-size: 1.05rem;
+  margin: 0 auto 0.75rem;
+  font-size: 1.1rem;
   line-height: 1.8;
-  color: var(--text);
-  opacity: 0.85;
+  color: #111;
+  text-align: center;
 }
 
 .impact-list {
@@ -1063,7 +1073,7 @@ mark.mark-orange {
 }
 
 .impact-list li {
-  padding: 0.85rem 2.5rem 0.85rem 0;
+  padding: 0.55rem 2.5rem 0.55rem 0;
   font-size: 1.05rem;
   line-height: 1.75;
   border-bottom: 1px solid rgba(0, 0, 0, 0.07);
@@ -1192,6 +1202,14 @@ mark.mark-orange {
 .sticky-cta:hover {
   transform: translateY(-3px);
   box-shadow: 0 8px 30px rgba(244, 152, 52, 0.4);
+}
+
+.sticky-cta-logo {
+  height: 28px;
+  width: 28px;
+  object-fit: contain;
+  margin-right: 0.5rem;
+  flex-shrink: 0;
 }
 
 /* ── Footer ──────────────────────────────────── */
@@ -1447,6 +1465,17 @@ mark.mark-orange {
   .impact-banner-text {
     font-size: 1.15rem;
     line-height: 2;
+  }
+
+  /* Impact subtitle: slightly smaller on narrow screens */
+  .impact-subtitle {
+    font-size: 1.1rem;
+  }
+
+  /* Sticky CTA logo: slightly smaller on phones */
+  .sticky-cta-logo {
+    height: 22px;
+    width: 22px;
   }
 }
 
