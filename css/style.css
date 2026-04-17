@@ -1478,9 +1478,9 @@ mark.mark-orange {
     width: 22px;
   }
 
-  /* Footer: push content above sticky buttons (buttons ~46px + 1rem gap) */
+  /* Footer: push content above sticky buttons + iPhone home bar */
   .footer {
-    padding-bottom: max(5rem, calc(env(safe-area-inset-bottom) + 4.5rem));
+    padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 7rem);
   }
 }
 
