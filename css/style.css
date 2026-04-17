@@ -1480,7 +1480,7 @@ mark.mark-orange {
 
   /* Footer: push content above sticky buttons + iPhone home bar */
   .footer {
-    padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 7rem);
+    padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 46px + 2rem);
   }
 }
 
