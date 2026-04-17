@@ -21,11 +21,96 @@ document.addEventListener('DOMContentLoaded', () => {
   initPackageAccordions();
   initStoryReadMore();
   initVolumeToggle();
+  initBeachHubSlideshow();
   if (SUPABASE_URL !== 'REPLACE_WITH_SUPABASE_URL') {
     updateFeed();
     setInterval(updateFeed, 5000);
   }
 });
+
+/* ── Beach hub fadeshow ──────────────────────── */
+function initBeachHubSlideshow() {
+  const slides = document.querySelectorAll('#beachhub-slideshow .bh-slide');
+  const dots   = document.querySelectorAll('#beachhub-slideshow .bh-dot');
+  if (slides.length < 2) return;
+
+  const FADE_MS  = 2200; // duration of each crossfade
+  const HOLD_MS  = 5000; // how long each photo is fully visible
+
+  let current   = 0;
+  let timer     = null;
+  let fadeType  = 'out'; // alternates: 'out' (current fades away) | 'in' (next fades in on top)
+
+  // Show first slide immediately
+  slides[0].style.opacity = '1';
+  slides[0].style.zIndex  = '1';
+  slides[0].classList.add('bh-slide-active');
+  dots[0].classList.add('bh-dot-active');
+
+  function goTo(index) {
+    const prev = current;
+    current = (index + slides.length) % slides.length;
+
+    // Update dots
+    dots.forEach((d, i) => d.classList.toggle('bh-dot-active', i === current));
+
+    // Swap Ken Burns class so zoom restarts on the incoming slide
+    slides[prev].classList.remove('bh-slide-active');
+    slides[current].classList.add('bh-slide-active');
+
+    if (fadeType === 'out') {
+      // ── FADE OUT ── current photo dissolves away, revealing next beneath it
+      slides[current].style.transition = 'none';
+      slides[current].style.opacity    = '1';
+      slides[current].style.zIndex     = '0'; // sit beneath current
+
+      void slides[current].offsetWidth; // force reflow
+
+      slides[prev].style.zIndex     = '1'; // sits on top
+      slides[prev].style.transition = `opacity ${FADE_MS}ms ease-in-out`;
+      slides[prev].style.opacity    = '0';
+
+      setTimeout(() => {
+        slides[prev].style.zIndex  = '0';
+        slides[current].style.zIndex = '1';
+      }, FADE_MS);
+
+    } else {
+      // ── FADE IN ── next photo materialises on top of the current one
+      slides[current].style.transition = 'none';
+      slides[current].style.opacity    = '0';
+      slides[current].style.zIndex     = '2'; // sit above current
+
+      void slides[current].offsetWidth; // force reflow
+
+      slides[current].style.transition = `opacity ${FADE_MS}ms ease-in-out`;
+      slides[current].style.opacity    = '1';
+
+      setTimeout(() => {
+        slides[prev].style.opacity   = '0';
+        slides[prev].style.zIndex    = '0';
+        slides[current].style.zIndex = '1';
+      }, FADE_MS);
+    }
+
+    fadeType = fadeType === 'out' ? 'in' : 'out';
+  }
+
+  function next() { goTo(current + 1); }
+
+  function startTimer() { timer = setInterval(next, HOLD_MS); }
+  function stopTimer()  { clearInterval(timer); }
+
+  dots.forEach((dot, i) => {
+    dot.addEventListener('click', () => { stopTimer(); goTo(i); startTimer(); });
+  });
+
+  const container = document.getElementById('beachhub-slideshow');
+  container.addEventListener('mouseenter', stopTimer);
+  container.addEventListener('mouseleave', startTimer);
+
+  startTimer();
+}
 
 /* ── Story read-more accordion ──────────────── */
 function initStoryReadMore() {
@@ -150,6 +235,10 @@ async function updateFeed() {
 
   const barFill = document.getElementById('progress-bar-fill');
   if (barFill) barFill.style.width = pct + '%';
+
+  // Live stat number
+  const statJoined = document.getElementById('stat-joined');
+  if (statJoined) statJoined.textContent = count;
 
   // CTA counter text
   const counter = document.getElementById('spots-counter');
