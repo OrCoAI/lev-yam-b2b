@@ -435,13 +435,23 @@ function initPackageAccordions() {
 
   allToggles.forEach((btn) => {
     btn.addEventListener('click', () => {
-      const anyOpen = document.querySelector('.pkg-accordion.open') !== null;
-      // If any is open → close all; otherwise open all
-      allAccordions.forEach((acc) => acc.classList.toggle('open', !anyOpen));
-      allToggles.forEach((b) => {
-        b.textContent = anyOpen ? t('pkg-acc-open') : t('pkg-acc-close');
-        b.setAttribute('aria-expanded', String(!anyOpen));
-      });
+      const isMobile = window.innerWidth <= 767;
+      if (isMobile) {
+        // Mobile: toggle only this card
+        const thisAcc = btn.closest('.pkg-card').querySelector('.pkg-accordion');
+        const willOpen = !thisAcc.classList.contains('open');
+        thisAcc.classList.toggle('open', willOpen);
+        btn.textContent = willOpen ? t('pkg-acc-close') : t('pkg-acc-open');
+        btn.setAttribute('aria-expanded', String(willOpen));
+      } else {
+        // Desktop: toggle all cards together
+        const anyOpen = document.querySelector('.pkg-accordion.open') !== null;
+        allAccordions.forEach((acc) => acc.classList.toggle('open', !anyOpen));
+        allToggles.forEach((b) => {
+          b.textContent = anyOpen ? t('pkg-acc-open') : t('pkg-acc-close');
+          b.setAttribute('aria-expanded', String(!anyOpen));
+        });
+      }
     });
   });
 }
