@@ -437,8 +437,8 @@ function initPackageAccordions() {
     btn.addEventListener('click', () => {
       const isMobile = window.innerWidth <= 767;
       if (isMobile) {
-        // Mobile: toggle only this card
-        const thisAcc = btn.closest('.pkg-card').querySelector('.pkg-accordion');
+        // Mobile: toggle only this card (button references accordion via data-target)
+        const thisAcc = document.getElementById(btn.dataset.target);
         const willOpen = !thisAcc.classList.contains('open');
         thisAcc.classList.toggle('open', willOpen);
         btn.textContent = willOpen ? t('pkg-acc-close') : t('pkg-acc-open');
