@@ -1461,10 +1461,10 @@ mark.mark-orange {
     font-size: 1rem;
   }
 
-  /* Impact banner: bigger font + more line-height so text wraps cleanly */
+  /* Impact banner: compact on mobile so both lines fit cleanly */
   .impact-banner-text {
-    font-size: 1.15rem;
-    line-height: 2;
+    font-size: 0.95rem;
+    line-height: 1.7;
   }
 
   /* Impact subtitle: slightly smaller on narrow screens */
