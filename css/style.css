@@ -23,7 +23,7 @@ html {
 }
 
 body {
-  font-family: 'Heebo', sans-serif;
+  font-family: 'Heebo', 'Cairo', sans-serif;
   font-size: 1rem;
   font-weight: 400;
   line-height: 1.7;
@@ -115,7 +115,7 @@ section {
 .btn {
   display: inline-block;
   padding: 0.75rem 2rem;
-  font-family: 'Heebo', sans-serif;
+  font-family: 'Heebo', 'Cairo', sans-serif;
   font-size: 1rem;
   font-weight: 700;
   border: 2px solid transparent;
@@ -873,7 +873,7 @@ mark.mark-orange {
   background: none;
   border: none;
   border-top: 1px solid rgba(0, 0, 0, 0.07);
-  font-family: 'Heebo', sans-serif;
+  font-family: 'Heebo', 'Cairo', sans-serif;
   font-size: 0.88rem;
   font-weight: 700;
   color: var(--pkg-color, var(--blue));
@@ -1178,7 +1178,7 @@ mark.mark-orange {
   align-items: center;
   background: var(--orange);
   color: var(--white);
-  font-family: 'Heebo', sans-serif;
+  font-family: 'Heebo', 'Cairo', sans-serif;
   font-size: 1rem;
   font-weight: 700;
   padding: 0.75rem 1.5rem;
@@ -1210,6 +1210,51 @@ mark.mark-orange {
   opacity: 0.7;
 }
 
+
+/* ── Language Switch ─────────────────────────── */
+.lang-switch {
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  z-index: 300;
+  display: flex;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 22px;
+  padding: 3px;
+  gap: 2px;
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.12), 0 1px 4px rgba(0, 0, 0, 0.06);
+  border: 1px solid rgba(0, 0, 0, 0.07);
+}
+
+.lang-btn {
+  background: none;
+  border: none;
+  padding: 5px 13px;
+  border-radius: 18px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  color: #888;
+  transition: background 0.2s ease, color 0.2s ease;
+  font-family: 'Heebo', 'Cairo', sans-serif;
+  touch-action: manipulation;
+  min-height: 32px;
+  letter-spacing: 0.01em;
+  line-height: 1;
+}
+
+.lang-btn.lang-btn-active {
+  background: var(--blue);
+  color: #fff;
+  box-shadow: 0 1px 6px rgba(44, 146, 191, 0.3);
+}
+
+.lang-btn:not(.lang-btn-active):hover {
+  background: rgba(44, 146, 191, 0.09);
+  color: var(--blue);
+}
 
 /* ── Responsive ──────────────────────────────── */
 @media (min-width: 768px) {
