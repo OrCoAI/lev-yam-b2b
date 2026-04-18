@@ -476,6 +476,7 @@ function wireGrowButtons() {
 /* ── Fetch purchases from Supabase ───────────── */
 async function fetchPurchases() {
   try {
+    // Fetch latest 10 for the live feed display
     const res = await fetch(
       `${SUPABASE_URL}/rest/v1/levyam-b2b?select=full_name,package,payment_sum,created_at&order=created_at.desc&limit=10`,
       { headers: { 'apikey': SUPABASE_ANON_KEY } }
@@ -487,12 +488,25 @@ async function fetchPurchases() {
   }
 }
 
+async function fetchTotalCount() {
+  try {
+    const res = await fetch(
+      `${SUPABASE_URL}/rest/v1/levyam-b2b?select=id`,
+      { headers: { 'apikey': SUPABASE_ANON_KEY, 'Prefer': 'count=exact', 'Range-Unit': 'items', 'Range': '0-0' } }
+    );
+    if (!res.ok) return 0;
+    const contentRange = res.headers.get('Content-Range');
+    // Content-Range: 0-0/16 → extract total after "/"
+    const total = contentRange ? parseInt(contentRange.split('/')[1], 10) : 0;
+    return isNaN(total) ? 0 : total;
+  } catch {
+    return 0;
+  }
+}
+
 /* ── Update live feed + progress bar ─────────── */
 async function updateFeed() {
-  const purchases = await fetchPurchases();
-
-  // Progress bar — count-based (0 to 50 teams)
-  const count = purchases.length;
+  const [purchases, count] = await Promise.all([fetchPurchases(), fetchTotalCount()]);
   const pct = Math.min((count / PROGRESS_GOAL) * 100, 100);
   const pctRounded = Math.round(pct);
 
