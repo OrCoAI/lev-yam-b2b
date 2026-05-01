@@ -10,6 +10,20 @@ const GROW_URLS = {
   momentum_booster: 'https://pay.grow.link/1c3cc868eb771fe115cc9b9e3cf518ac-MzI4MzA1Ng',
 };
 
+/* ── Package metadata (for business events) ─── */
+const PACKAGE_META = {
+  team_reset:       { name: 'Team Reset',       price: 4200,  slug: 'b2b-lite' },
+  focus_session:    { name: 'Focus Session',    price: 12460, slug: 'b2b-classic' },
+  momentum_booster: { name: 'Momentum Booster', price: 17540, slug: 'b2b-gold' },
+};
+
+/* ── Dynatrace business event helper ─────────── */
+function sendBizEvent(type, data) {
+  if (typeof dtrum !== 'undefined' && typeof dtrum.sendBizEvent === 'function') {
+    dtrum.sendBizEvent(type, data || {});
+  }
+}
+
 /* ── Progress Bar Config ─────────────────────── */
 const PROGRESS_GOAL = 50; // 50 teams target
 
@@ -250,6 +264,9 @@ document.addEventListener('DOMContentLoaded', () => {
   initBeachHubSlideshow();
   // Apply saved language (restores state on page reload)
   if (currentLang !== 'he') applyLanguage(currentLang);
+  sendBizEvent('levyam.page.view', { lang: currentLang });
+  const waLink = document.querySelector('a[href^="https://wa.me"]');
+  if (waLink) waLink.addEventListener('click', () => sendBizEvent('levyam.ui.whatsapp_click', {}));
   if (SUPABASE_URL !== 'REPLACE_WITH_SUPABASE_URL') {
     updateFeed();
     setInterval(updateFeed, 5000);
@@ -261,7 +278,10 @@ function initLangSwitch() {
   document.querySelectorAll('.lang-btn').forEach((btn) => {
     btn.addEventListener('click', () => {
       const lang = btn.dataset.lang;
-      if (lang !== currentLang) applyLanguage(lang);
+      if (lang !== currentLang) {
+        applyLanguage(lang);
+        sendBizEvent('levyam.ui.language_switch', { lang });
+      }
     });
   });
 }
@@ -360,6 +380,7 @@ function initStoryReadMore() {
     const isOpen = content.classList.toggle('is-open');
     btn.setAttribute('aria-expanded', isOpen);
     btn.textContent = isOpen ? t('story-readmore-open') : t('story-readmore-closed');
+    sendBizEvent('levyam.ui.story_readmore', { action: isOpen ? 'open' : 'close' });
   });
 }
 
@@ -398,10 +419,12 @@ function initVolumeToggle() {
       document.removeEventListener('click',      unmuteOnFirstInteraction);
       document.removeEventListener('touchstart', unmuteOnFirstInteraction);
       setUnmuted();
+      sendBizEvent('levyam.ui.volume_toggle', { action: 'unmute' });
     } else {
       userWantsSound = false;
       video.muted    = true;
       setMuted();
+      sendBizEvent('levyam.ui.volume_toggle', { action: 'mute' });
     }
   });
 
@@ -443,6 +466,7 @@ function initPackageAccordions() {
         thisAcc.classList.toggle('open', willOpen);
         btn.textContent = willOpen ? t('pkg-acc-close') : t('pkg-acc-open');
         btn.setAttribute('aria-expanded', String(willOpen));
+        sendBizEvent('levyam.ui.package_accordion', { package: btn.dataset.target, action: willOpen ? 'open' : 'close' });
       } else {
         // Desktop: toggle all cards together
         const anyOpen = document.querySelector('.pkg-accordion.open') !== null;
@@ -451,6 +475,7 @@ function initPackageAccordions() {
           b.textContent = anyOpen ? t('pkg-acc-open') : t('pkg-acc-close');
           b.setAttribute('aria-expanded', String(!anyOpen));
         });
+        sendBizEvent('levyam.ui.package_accordion', { action: anyOpen ? 'close' : 'open', scope: 'all' });
       }
     });
   });
@@ -463,6 +488,15 @@ function wireGrowButtons() {
     const url = GROW_URLS[key];
     if (url && !url.startsWith('REPLACE')) {
       btn.href = url;
+      btn.addEventListener('click', () => {
+        const meta = PACKAGE_META[key] || {};
+        sendBizEvent('levyam.package.cta_click', {
+          package: key,
+          package_name: meta.name || key,
+          package_slug: meta.slug || key,
+          price: meta.price || 0,
+        });
+      });
     } else {
       // Placeholder — show alert if credentials not set
       btn.addEventListener('click', (e) => {
@@ -553,9 +587,11 @@ async function updateFeed() {
 document.addEventListener('click', (e) => {
   const anchor = e.target.closest('a[href^="#"]');
   if (!anchor) return;
-  const target = document.querySelector(anchor.getAttribute('href'));
+  const href = anchor.getAttribute('href');
+  const target = document.querySelector(href);
   if (target) {
     e.preventDefault();
     target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    sendBizEvent('levyam.ui.nav_click', { target: href, button: anchor.dataset.i18n || href });
   }
 });
