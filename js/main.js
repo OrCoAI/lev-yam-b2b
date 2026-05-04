@@ -17,11 +17,12 @@ const PACKAGE_META = {
   momentum_booster: { name: 'Momentum Booster', price: 17540, slug: 'b2b-gold' },
 };
 
-/* ── Dynatrace business event helper ─────────── */
-function sendBizEvent(type, data) {
-  if (typeof dynatrace !== 'undefined' && typeof dynatrace.sendBizEvent === 'function') {
-    dynatrace.sendBizEvent(type, data || {});
-  }
+const _dtSendBizEvent = typeof dynatrace !== 'undefined' && typeof dynatrace.sendBizEvent === 'function'
+  ? dynatrace.sendBizEvent.bind(dynatrace)
+  : null;
+
+function sendBizEvent(type, data = {}) {
+  if (_dtSendBizEvent) _dtSendBizEvent(type, data);
 }
 
 /* ── Progress Bar Config ─────────────────────── */
