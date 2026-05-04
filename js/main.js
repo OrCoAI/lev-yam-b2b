@@ -19,8 +19,8 @@ const PACKAGE_META = {
 
 /* ── Dynatrace business event helper ─────────── */
 function sendBizEvent(type, data) {
-  if (typeof dtrum !== 'undefined' && typeof dtrum.sendBizEvent === 'function') {
-    dtrum.sendBizEvent(type, data || {});
+  if (typeof dynatrace !== 'undefined' && typeof dynatrace.sendBizEvent === 'function') {
+    dynatrace.sendBizEvent(type, data || {});
   }
 }
 
