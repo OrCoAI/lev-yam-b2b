@@ -66,15 +66,45 @@ export default {
       return new Response('Supabase write failed', { status: 500 });
     }
 
-    // 5. Send notifications in parallel (fire-and-forget — don't fail the webhook if they error)
+    // 5. Send notifications + DT bizevent in parallel (fire-and-forget)
     await Promise.allSettled([
       sendEmail(purchase, env),
       sendSms(env),
+      sendDtBizEvent(purchase, env),
     ]);
 
     return new Response('OK', { status: 200 });
   },
 };
+
+// ── Dynatrace Business Event ──────────────────────────────────────────────────
+// Requires secret: DT_BIZEVENTS_TOKEN (scope: bizevents.ingest)
+// Requires secret: DT_ENV_URL (e.g. https://pzh8968h.sprint.apps.dynatracelabs.com)
+async function sendDtBizEvent(purchase, env) {
+  if (!env.DT_BIZEVENTS_TOKEN || !env.DT_ENV_URL) return;
+
+  const payload = [{
+    'event.type':     'levyam.payment.success',
+    'event.provider': 'levyam-webhook',
+    package:          purchase.package,
+    payment_sum:      purchase.payment_sum,
+    payment_type:     purchase.payment_type,
+    transaction_code: purchase.transaction_code,
+  }];
+
+  const res = await fetch(`${env.DT_ENV_URL}/api/v2/bizevents/ingest`, {
+    method: 'POST',
+    headers: {
+      'Content-Type':  'application/json; charset=utf-8',
+      'Authorization': `Api-Token ${env.DT_BIZEVENTS_TOKEN}`,
+    },
+    body: JSON.stringify(payload),
+  });
+
+  if (!res.ok) {
+    console.error('DT bizevent error:', res.status, await res.text());
+  }
+}
 
 // ── Email via Resend ──────────────────────────────────────────────────────────
 // Requires secret: RESEND_API_KEY
