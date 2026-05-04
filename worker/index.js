@@ -53,8 +53,8 @@ export default {
       method: 'POST',
       headers: {
         'Content-Type':  'application/json',
-        'apikey':        env.SUPABASE_ANON_KEY,
-        'Authorization': `Bearer ${env.SUPABASE_ANON_KEY}`,
+        'apikey':        env.SUPABASE_SERVICE_KEY,
+        'Authorization': `Bearer ${env.SUPABASE_SERVICE_KEY}`,
         'Prefer':        'return=minimal',
       },
       body: JSON.stringify(purchase),
