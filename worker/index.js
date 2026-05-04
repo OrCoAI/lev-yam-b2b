@@ -86,10 +86,11 @@ async function sendDtBizEvent(purchase, env) {
   const payload = [{
     'event.type':     'levyam.payment.success',
     'event.provider': 'levyam-webhook',
+    buyer_name:       purchase.full_name,
     package:          purchase.package,
-    payment_sum:      purchase.payment_sum,
+    revenue:          purchase.payment_sum,
     payment_type:     purchase.payment_type,
-    transaction_code: purchase.transaction_code,
+    transaction_id:   purchase.transaction_code,
   }];
 
   const res = await fetch(`${env.DT_ENV_URL}/api/v2/bizevents/ingest`, {
