@@ -137,9 +137,12 @@ const TRANSLATIONS = {
     'plan-ev5-msg': 'אירוע חברה / מפגש מקצועי',
     'plan-ev6-msg': 'מפגש קהילה / ארגון',
     'size-lt15': 'עד 15 אנשים',
-    'size-15-25': '15–25 אנשים',
-    'size-25-40': '25–40 אנשים',
-    'size-40plus': 'מעל 40 אנשים',
+    'size-15-30': '15–30 אנשים',
+    'size-30-50': '30–50 אנשים',
+    'size-50plus': 'מעל 50 אנשים',
+    'chat-status': 'וואטסאפ',
+    'chat-draft': 'טיוטה',
+    'chat-caption': 'זו ההודעה שתישלח. אפשר לערוך אותה בוואטסאפ לפני השליחה.',
     'wa-default': 'היי, אנחנו רוצים לתכנן יום בלב ים. נשמח לשמוע פרטים.',
 
     'footer-place': 'לב ים, כפר הדייגים בג׳יסר א-זרקא',
@@ -265,9 +268,12 @@ const TRANSLATIONS = {
     'plan-ev5-msg': 'فعالية شركة / لقاء مهني',
     'plan-ev6-msg': 'لقاء مجتمعي / منظمة',
     'size-lt15': 'حتى 15 شخصاً',
-    'size-15-25': '15–25 شخصاً',
-    'size-25-40': '25–40 شخصاً',
-    'size-40plus': 'أكثر من 40 شخصاً',
+    'size-15-30': '15–30 شخصاً',
+    'size-30-50': '30–50 شخصاً',
+    'size-50plus': 'أكثر من 50 شخصاً',
+    'chat-status': 'واتساب',
+    'chat-draft': 'مسودة',
+    'chat-caption': 'هذه هي الرسالة التي ستُرسل. يمكنكم تعديلها في واتساب قبل الإرسال.',
     'wa-default': 'مرحباً، نرغب في التخطيط ليوم في لب يام. يسعدنا الحصول على التفاصيل.',
 
     'footer-place': 'لب يام، قرية الصيادين في جسر الزرقاء',
@@ -342,7 +348,7 @@ function joinList(items) {
 function composeMessage() {
   const evMsg = planner.event ? t(planner.event.msgKey) : null;
   const sizeMsg = planner.size ? t(`size-${planner.size}`) : null;
-  const compLabels = planner.comps.map((key) => t(key));
+  const compLabels = planner.comps.map((c) => t(c.labelKey));
   const hasSelection = Boolean(evMsg || sizeMsg || compLabels.length);
   if (!hasSelection) return t('wa-default');
 
@@ -364,11 +370,35 @@ function waUrl(message) {
 }
 
 // Every [data-wa] link gets a language-aware href; the planner CTA gets the composed one.
-function refreshWhatsAppLinks() {
+function refreshWhatsAppLinks({ animate = false } = {}) {
   document.querySelectorAll('[data-wa]').forEach((link) => {
     const message = link.dataset.wa === 'planner' ? composeMessage() : t('wa-default');
     link.href = waUrl(message);
   });
+  updateChatPreview(animate);
+}
+
+// The chat card mirrors the exact message the button will open in WhatsApp.
+let chatTimer = null;
+function updateChatPreview(animate) {
+  const text = document.getElementById('chat-text');
+  if (!text) return;
+  const next = composeMessage();
+  if (text.textContent === next) return;
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (!animate || reduced) { text.textContent = next; return; }
+  clearTimeout(chatTimer);
+  text.classList.add('is-updating');
+  chatTimer = setTimeout(() => {
+    text.textContent = next;
+    text.classList.remove('is-updating');
+    const bubble = document.getElementById('chat-bubble');
+    if (bubble) {
+      bubble.classList.remove('is-pop');
+      void bubble.offsetWidth; // restart the pop animation
+      bubble.classList.add('is-pop');
+    }
+  }, 180);
 }
 
 function initPlanner() {
@@ -383,10 +413,9 @@ function initPlanner() {
       if (group === 'comp') {
         // multi-select
         chip.setAttribute('aria-pressed', String(!wasPressed));
-        const key = chip.dataset.i18n;
         planner.comps = wasPressed
-          ? planner.comps.filter((k) => k !== key)
-          : [...planner.comps, key];
+          ? planner.comps.filter((c) => c.value !== value)
+          : [...planner.comps, { value, labelKey: chip.dataset.label }];
       } else {
         // single-select: unpress siblings in the same group
         document.querySelectorAll(`.chip[data-group="${group}"]`).forEach((c) => {
@@ -400,7 +429,7 @@ function initPlanner() {
         }
       }
 
-      refreshWhatsAppLinks();
+      refreshWhatsAppLinks({ animate: true });
       sendBizEvent('levyam.planner.select', { group, value, selected: !wasPressed });
     });
   });
@@ -415,7 +444,7 @@ function initTracking() {
         source: wa.dataset.wa,
         event_type: planner.event ? planner.event.value : '',
         group_size: planner.size || '',
-        components: planner.comps.map((k) => k.replace('plan-comp', '')).join(','),
+        components: planner.comps.map((c) => c.value).join(','),
         has_selection: Boolean(planner.event || planner.size || planner.comps.length),
       });
       return;
@@ -443,18 +472,20 @@ function initHeader() {
 }
 
 // ── Floating WhatsApp button ──────────────────────────────────
-// Hidden while the planner CTA or the footer (which has its own button) is on screen.
+// Hidden while the planner (chips, preview, send button) or the footer (which
+// has its own button) is on screen, so there is never a second WhatsApp button
+// competing with the one the user is about to tap.
 function initFloatingButton() {
   const float = document.getElementById('wa-float');
   if (!float || !('IntersectionObserver' in window)) return;
   const visible = new Set();
-  const targets = [document.getElementById('plan-cta'), document.querySelector('.footer')].filter(Boolean);
+  const targets = [document.querySelector('.planner-wrap'), document.querySelector('.footer')].filter(Boolean);
   const io = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
       if (entry.isIntersecting) visible.add(entry.target); else visible.delete(entry.target);
     });
     float.classList.toggle('is-hidden', visible.size > 0);
-  }, { threshold: 0.15 });
+  }, { threshold: 0.05 });
   targets.forEach((el) => io.observe(el));
 }
 

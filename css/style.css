@@ -580,26 +580,86 @@ html[dir="rtl"] .pull-quote { border-radius: var(--radius-sm) 0 0 var(--radius-s
 .impact-lead { font-size: 1.25rem; font-weight: 700; }
 .impact-content p + p { margin-top: 0.9rem; opacity: 0.92; }
 
-/* ── Plan + planner ──────────────────────────── */
+/* ── Plan + WhatsApp planner ─────────────────── */
+/* Layout: questions card (inline-start) + live chat preview (inline-end).
+   The send block continues the questions card on desktop and follows the
+   preview on mobile, so the eye goes chips → message → send. */
+.plan {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background: linear-gradient(180deg, var(--white) 0%, #eef6fa 100%);
+}
+.plan-deco { position: absolute; inset: 0; z-index: -1; pointer-events: none; }
+.plan-sun {
+  position: absolute;
+  top: -140px;
+  inset-inline-end: -140px;
+  width: 480px;
+  height: 480px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(244, 152, 52, 0.24) 0%, rgba(244, 152, 52, 0) 68%);
+}
+.plan-palm {
+  position: absolute;
+  bottom: -30px;
+  inset-inline-start: -40px;
+  width: 200px;
+  opacity: 0.1;
+  transform: rotate(-8deg);
+}
+@media (min-width: 900px) { .plan-palm { width: 320px; inset-inline-start: 1vw; bottom: -60px; } }
+
+.planner-wrap {
+  display: grid;
+  grid-template-areas: "form" "chat" "actions";
+  gap: 1.25rem;
+  max-width: 1040px;
+  margin: 2.5rem auto 0;
+}
+.planner { grid-area: form; }
+.chat { grid-area: chat; }
+.planner-actions { grid-area: actions; }
+
 .planner {
-  margin-top: 2.5rem;
-  padding: clamp(1.5rem, 4vw, 2.5rem);
-  background: var(--cream);
+  background: var(--white);
   border-radius: var(--radius);
   box-shadow: var(--shadow-sm);
-  text-align: center;
+  padding: clamp(1.25rem, 3vw, 2rem);
 }
-.planner-group + .planner-group { margin-top: 1.75rem; }
+.planner-group + .planner-group {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px dashed rgba(44, 146, 191, 0.3);
+}
 .planner-q {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 0.8rem;
   font-size: 1.0625rem;
   font-weight: 700;
-  color: var(--blue-deep);
-  margin-bottom: 0.7rem;
+  color: var(--navy);
 }
-.chips { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.5rem; }
+.planner-step {
+  flex: none;
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--orange);
+  color: var(--navy);
+  font-size: 0.9rem;
+  font-weight: 900;
+}
+.chips { display: flex; flex-wrap: wrap; gap: 0.5rem; }
 .chip {
-  padding: 0.55rem 1rem;
-  border: 1.5px solid rgba(44, 146, 191, 0.45);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.55rem 0.95rem;
+  border: 1.5px solid rgba(44, 146, 191, 0.4);
   border-radius: var(--radius-pill);
   background: var(--white);
   color: var(--blue-deep);
@@ -607,18 +667,139 @@ html[dir="rtl"] .pull-quote { border-radius: var(--radius-sm) 0 0 var(--radius-s
   font-size: 0.95rem;
   line-height: 1.3;
   transition: background-color 0.15s var(--ease), color 0.15s var(--ease),
-              border-color 0.15s var(--ease), transform 0.15s var(--ease);
+              border-color 0.15s var(--ease), transform 0.15s var(--ease),
+              box-shadow 0.15s var(--ease);
 }
-.chip:hover { border-color: var(--blue); transform: translateY(-1px); }
+.chip svg { width: 1.15em; height: 1.15em; flex: none; }
+.chip:hover { border-color: var(--blue); background: rgba(44, 146, 191, 0.07); }
+.chip:active { transform: scale(0.97); }
 .chip[aria-pressed="true"] {
   background: var(--blue-deep);
   border-color: var(--blue-deep);
   color: var(--white);
+  box-shadow: 0 4px 12px rgba(26, 106, 143, 0.28);
 }
-.planner-help { margin: 1.5rem 0 1rem; font-size: 0.95rem; color: var(--ink-soft); }
-.planner .btn-xl { width: 100%; max-width: 440px; }
-.planner-direct { margin-top: 1rem; font-size: 0.95rem; color: var(--ink-soft); }
-.planner-direct a { font-weight: 700; color: var(--blue-deep); text-decoration: underline; text-underline-offset: 3px; }
+.chip-num { min-width: 4.6rem; justify-content: center; font-variant-numeric: tabular-nums; }
+.planner-help { margin-top: 1.25rem; font-size: 0.95rem; color: var(--ink-soft); }
+
+/* Send block */
+.planner-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.8rem;
+  text-align: center;
+}
+.planner-actions .btn-xl { width: 100%; max-width: 480px; }
+.planner-direct { font-size: 0.95rem; color: var(--ink-soft); }
+.planner-direct a {
+  font-weight: 700;
+  color: var(--blue-deep);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* Chat preview card */
+.chat {
+  background: var(--white);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+.chat-head {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.8rem 1rem;
+  background: var(--blue-deep);
+  color: var(--white);
+}
+.chat-avatar {
+  width: 42px;
+  height: 42px;
+  padding: 4px;
+  border-radius: 50%;
+  background: var(--cream);
+}
+.chat-head-text { display: flex; flex-direction: column; min-width: 0; line-height: 1.25; }
+.chat-head-text strong { font-size: 1rem; }
+.chat-status { font-size: 0.8rem; opacity: 0.85; }
+.chat-head-icon { width: 22px; height: 22px; margin-inline-start: auto; opacity: 0.9; }
+.chat-body {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  min-height: 190px;
+  padding: 1.25rem 1rem 1rem;
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 16'%3E%3Cpath d='M0 12 L12 4 L24 12 L36 4 L48 12' fill='none' stroke='%232c92bf' stroke-opacity='0.12' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") repeat center / 48px 16px,
+    #eaf3f8;
+}
+/* Outgoing bubble. Both languages are RTL, so "sent" sits on the left */
+.chat-bubble {
+  position: relative;
+  align-self: flex-end;
+  max-width: 94%;
+  padding: 0.7rem 0.9rem 0.45rem;
+  background: #e4f7ef;
+  border-radius: 14px 14px 14px 4px;
+  box-shadow: 0 1px 2px rgba(20, 53, 68, 0.1);
+}
+.chat-bubble.is-pop { animation: bubble-pop 0.25s var(--ease); }
+@keyframes bubble-pop {
+  from { transform: scale(0.97); }
+  to { transform: scale(1); }
+}
+.chat-text {
+  margin: 0;
+  font-size: 0.98rem;
+  line-height: 1.55;
+  color: var(--navy);
+  transition: opacity 0.18s var(--ease);
+}
+.chat-text.is-updating { opacity: 0; }
+.chat-meta {
+  display: block;
+  margin-top: 0.3rem;
+  text-align: end;
+  font-size: 0.72rem;
+  color: var(--ink-soft);
+}
+.chat-caption {
+  margin: 0;
+  padding: 0.8rem 1rem;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: var(--ink-soft);
+  border-top: 1px solid rgba(20, 53, 68, 0.06);
+}
+
+@media (min-width: 900px) {
+  .planner-wrap {
+    grid-template-columns: minmax(0, 1fr) 340px;
+    grid-template-areas: "form chat" "actions chat";
+    column-gap: 2rem;
+    row-gap: 0;
+    align-items: start;
+  }
+  /* One white card behind the questions and the send block */
+  .planner-wrap::before {
+    content: '';
+    grid-column: 1;
+    grid-row: 1 / 3;
+    align-self: stretch;  /* the grid aligns items to start; the card must fill both rows */
+    background: var(--white);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-sm);
+  }
+  .planner { background: transparent; box-shadow: none; }
+  .planner-actions {
+    padding: 0 clamp(1.25rem, 3vw, 2rem) clamp(1.25rem, 3vw, 2rem);
+    align-items: stretch;
+  }
+  .planner-actions .btn-xl { max-width: none; }
+  .chat { position: sticky; top: calc(var(--header-h) + 1rem); }
+}
 
 /* ── Footer ──────────────────────────────────── */
 .footer {

@@ -281,55 +281,84 @@
 
 <!-- ── Plan (closing + WhatsApp planner) ───── -->
 <section class="section plan" id="plan">
-  <div class="container narrow">
+  <div class="plan-deco" aria-hidden="true">
+    <span class="plan-sun"></span>
+    <img src="content/brand/icons-1.png" alt="" width="613" height="949" class="plan-palm" loading="lazy">
+  </div>
+  <div class="container">
     <h2 class="center h2-accent" data-i18n="plan-h2">בואו להיפגש בלב ים.</h2>
     <div class="fit-text center">
       <p data-i18n="plan-p1">יש משהו מיוחד ביום שמתחיל מול הים, ממשיך עם אוכל טוב, שיחות מעניינות וחוויות משותפות, ומסתיים בתחושה שהיה שווה לצאת מהשגרה.</p>
       <p data-i18n="plan-p2">ספרו לנו מה אתם מתכננים, כמה אנשים אתם ומה הייתם רוצים לחוות ונשמח ליצור יחד יום שמתאים בדיוק לכם.</p>
     </div>
 
-    <div class="planner" id="planner">
-      <div class="planner-group" role="group" aria-labelledby="plan-q1">
-        <h3 class="planner-q" id="plan-q1" data-i18n="plan-q1">מה אתם מתכננים?</h3>
-        <div class="chips">
-          <button type="button" class="chip" data-group="event" data-value="team" aria-pressed="false" data-i18n="fit-li1" data-msg="plan-ev1-msg">ימי גיבוש וצוות</button>
-          <button type="button" class="chip" data-group="event" data-value="mgmt" aria-pressed="false" data-i18n="fit-li2" data-msg="plan-ev2-msg">מפגשי הנהלה וימי אסטרטגיה</button>
-          <button type="button" class="chip" data-group="event" data-value="workshop" aria-pressed="false" data-i18n="fit-li3" data-msg="plan-ev3-msg">סדנאות והכשרות</button>
-          <button type="button" class="chip" data-group="event" data-value="thinking" aria-pressed="false" data-i18n="fit-li4" data-msg="plan-ev4-msg">ימי חשיבה ויצירה</button>
-          <button type="button" class="chip" data-group="event" data-value="company" aria-pressed="false" data-i18n="fit-li5" data-msg="plan-ev5-msg">אירועי חברה ומפגשים מקצועיים</button>
-          <button type="button" class="chip" data-group="event" data-value="community" aria-pressed="false" data-i18n="fit-li6" data-msg="plan-ev6-msg">מפגשי קהילה וארגונים</button>
+    <div class="planner-wrap">
+      <!-- Questions -->
+      <div class="planner" id="planner">
+        <div class="planner-group" role="group" aria-labelledby="plan-q1">
+          <h3 class="planner-q" id="plan-q1"><span class="planner-step" aria-hidden="true">1</span><span data-i18n="plan-q1">מה אתם מתכננים?</span></h3>
+          <div class="chips">
+            <button type="button" class="chip" data-group="event" data-value="team" data-msg="plan-ev1-msg" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-team"/></svg><span data-i18n="fit-li1">ימי גיבוש וצוות</span></button>
+            <button type="button" class="chip" data-group="event" data-value="mgmt" data-msg="plan-ev2-msg" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-target"/></svg><span data-i18n="fit-li2">מפגשי הנהלה וימי אסטרטגיה</span></button>
+            <button type="button" class="chip" data-group="event" data-value="workshop" data-msg="plan-ev3-msg" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-board"/></svg><span data-i18n="fit-li3">סדנאות והכשרות</span></button>
+            <button type="button" class="chip" data-group="event" data-value="thinking" data-msg="plan-ev4-msg" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-bulb"/></svg><span data-i18n="fit-li4">ימי חשיבה ויצירה</span></button>
+            <button type="button" class="chip" data-group="event" data-value="company" data-msg="plan-ev5-msg" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-event"/></svg><span data-i18n="fit-li5">אירועי חברה ומפגשים מקצועיים</span></button>
+            <button type="button" class="chip" data-group="event" data-value="community" data-msg="plan-ev6-msg" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-community"/></svg><span data-i18n="fit-li6">מפגשי קהילה וארגונים</span></button>
+          </div>
         </div>
+
+        <div class="planner-group" role="group" aria-labelledby="plan-q2">
+          <h3 class="planner-q" id="plan-q2"><span class="planner-step" aria-hidden="true">2</span><span data-i18n="plan-q2">כמה אנשים אתם?</span></h3>
+          <div class="chips">
+            <button type="button" class="chip chip-num" data-group="size" data-value="lt15" aria-pressed="false"><span data-i18n="plan-size1">עד 15</span></button>
+            <button type="button" class="chip chip-num" data-group="size" data-value="15-30" aria-pressed="false" dir="ltr">15–30</button>
+            <button type="button" class="chip chip-num" data-group="size" data-value="30-50" aria-pressed="false" dir="ltr">30–50</button>
+            <button type="button" class="chip chip-num" data-group="size" data-value="50plus" aria-pressed="false" dir="ltr">50+</button>
+          </div>
+        </div>
+
+        <div class="planner-group" role="group" aria-labelledby="plan-q3">
+          <h3 class="planner-q" id="plan-q3"><span class="planner-step" aria-hidden="true">3</span><span data-i18n="plan-q3">מה הייתם רוצים לחוות?</span></h3>
+          <div class="chips">
+            <button type="button" class="chip" data-group="comp" data-value="space" data-label="plan-comp1" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-space"/></svg><span data-i18n="plan-comp1">המרחב</span></button>
+            <button type="button" class="chip" data-group="comp" data-value="food" data-label="plan-comp2" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-food"/></svg><span data-i18n="plan-comp2">האוכל</span></button>
+            <button type="button" class="chip" data-group="comp" data-value="content" data-label="plan-comp3" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-content"/></svg><span data-i18n="plan-comp3">התוכן</span></button>
+          </div>
+        </div>
+
+        <p class="planner-help" data-i18n="plan-help">אפשר גם לדלג ולכתוב לנו חופשי.</p>
       </div>
 
-      <div class="planner-group" role="group" aria-labelledby="plan-q2">
-        <h3 class="planner-q" id="plan-q2" data-i18n="plan-q2">כמה אנשים אתם?</h3>
-        <div class="chips">
-          <button type="button" class="chip" data-group="size" data-value="lt15" aria-pressed="false" data-i18n="plan-size1">עד 15</button>
-          <button type="button" class="chip" data-group="size" data-value="15-25" aria-pressed="false" dir="ltr">15–25</button>
-          <button type="button" class="chip" data-group="size" data-value="25-40" aria-pressed="false" dir="ltr">25–40</button>
-          <button type="button" class="chip" data-group="size" data-value="40plus" aria-pressed="false" dir="ltr">40+</button>
+      <!-- Live preview of the exact message the button opens in WhatsApp -->
+      <aside class="chat" aria-labelledby="chat-title">
+        <div class="chat-head">
+          <img src="content/brand/Logo-fin-9.png" alt="" width="1080" height="1080" class="chat-avatar">
+          <div class="chat-head-text">
+            <strong id="chat-title" data-i18n="brand-name">לב ים</strong>
+            <span class="chat-status" data-i18n="chat-status">וואטסאפ</span>
+          </div>
+          <svg class="wa-icon chat-head-icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-wa"/></svg>
         </div>
-      </div>
-
-      <div class="planner-group" role="group" aria-labelledby="plan-q3">
-        <h3 class="planner-q" id="plan-q3" data-i18n="plan-q3">מה הייתם רוצים לחוות?</h3>
-        <div class="chips">
-          <button type="button" class="chip" data-group="comp" data-value="space" aria-pressed="false" data-i18n="plan-comp1">המרחב</button>
-          <button type="button" class="chip" data-group="comp" data-value="food" aria-pressed="false" data-i18n="plan-comp2">האוכל</button>
-          <button type="button" class="chip" data-group="comp" data-value="content" aria-pressed="false" data-i18n="plan-comp3">התוכן</button>
+        <div class="chat-body">
+          <div class="chat-bubble" id="chat-bubble">
+            <p class="chat-text" id="chat-text" aria-live="polite">היי, אנחנו רוצים לתכנן יום בלב ים. נשמח לשמוע פרטים.</p>
+            <span class="chat-meta" data-i18n="chat-draft">טיוטה</span>
+          </div>
         </div>
+        <p class="chat-caption" data-i18n="chat-caption">זו ההודעה שתישלח. אפשר לערוך אותה בוואטסאפ לפני השליחה.</p>
+      </aside>
+
+      <!-- Send -->
+      <div class="planner-actions">
+        <a href="#" class="btn btn-wa btn-xl" id="plan-cta" data-wa="planner" target="_blank" rel="noopener noreferrer">
+          <svg class="wa-icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-wa"/></svg>
+          <span data-i18n="cta-plan">בואו נתכנן את היום שלכם</span>
+        </a>
+        <p class="planner-direct">
+          <span data-i18n="plan-or">או ישירות בוואטסאפ:</span>
+          <a href="#" data-wa="plan-number" target="_blank" rel="noopener noreferrer" dir="ltr">050-666-9138</a>
+        </p>
       </div>
-
-      <p class="planner-help" data-i18n="plan-help">אפשר גם לדלג ולכתוב לנו חופשי.</p>
-
-      <a href="#" class="btn btn-wa btn-xl" id="plan-cta" data-wa="planner" target="_blank" rel="noopener noreferrer">
-        <svg class="wa-icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-wa"/></svg>
-        <span data-i18n="cta-plan">בואו נתכנן את היום שלכם</span>
-      </a>
-      <p class="planner-direct">
-        <span data-i18n="plan-or">או ישירות בוואטסאפ:</span>
-        <a href="#" data-wa="plan-number" target="_blank" rel="noopener noreferrer" dir="ltr">050-666-9138</a>
-      </p>
     </div>
   </div>
 </section>
@@ -394,6 +423,15 @@
     </symbol>
     <symbol id="icon-community" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
       <circle cx="12" cy="6" r="2.5"/><circle cx="5.5" cy="17" r="2.5"/><circle cx="18.5" cy="17" r="2.5"/><path d="M12 8.5V12M12 12l-4.5 3M12 12l4.5 3"/>
+    </symbol>
+    <symbol id="icon-space" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10v10h13V10"/><path d="M10 20v-5h4v5"/>
+    </symbol>
+    <symbol id="icon-food" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M5 3v6a3 3 0 0 0 6 0V3M8 3v18M8 12v9"/><path d="M19 3c-2.5 0-4 3-4 6.5V12h4v9"/>
+    </symbol>
+    <symbol id="icon-content" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9z"/><path d="M19 16l.8 2.2 2.2.8-2.2.8L19 22l-.8-2.2-2.2-.8 2.2-.8z"/>
     </symbol>
   </defs>
 </svg>
