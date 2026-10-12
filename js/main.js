@@ -1,598 +1,495 @@
-/* ── Supabase Config ──────────────────────────── */
-// Anon key is safe to expose — RLS protects data.
-const SUPABASE_URL = 'https://fapmkdhcysofgxcmodgk.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZhcG1rZGhjeXNvZmd4Y21vZGdrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYwNzI0OTcsImV4cCI6MjA5MTY0ODQ5N30.HJY6C5is9KhMP0qpfiMZbAFmRj2GDFYNKrs1Lr4hb8c';
+'use strict';
 
-/* ── Grow Payment URLs ───────────────────────── */
-const GROW_URLS = {
-  team_reset: 'https://pay.grow.link/36cad6e0f52205cec7b8ee192ef3f4c6-MzI4MjM4Mg',
-  focus_session: 'https://pay.grow.link/d4fb6a5014979ca1d91ea05d0003d457-MzI4MzA0MQ',
-  momentum_booster: 'https://pay.grow.link/1c3cc868eb771fe115cc9b9e3cf518ac-MzI4MzA1Ng',
-};
+// ── Config ────────────────────────────────────────────────────
+// Conversion is WhatsApp only (decision: Or, 2026-10-12). No form, no backend.
+const WA_NUMBER = '972506669138';
 
-/* ── Package metadata (for business events) ─── */
-const PACKAGE_META = {
-  team_reset:       { name: 'Team Reset',       price: 4200,  slug: 'b2b-lite' },
-  focus_session:    { name: 'Focus Session',    price: 12460, slug: 'b2b-classic' },
-  momentum_booster: { name: 'Momentum Booster', price: 17540, slug: 'b2b-gold' },
-};
-
+// ── Dynatrace business events ─────────────────────────────────
+// dynatrace.sendBizEvent is the correct API (not dtrum). Cached once at startup.
 const _dtSendBizEvent = typeof dynatrace !== 'undefined' && typeof dynatrace.sendBizEvent === 'function'
   ? dynatrace.sendBizEvent.bind(dynatrace)
   : null;
 
 function sendBizEvent(type, data = {}) {
-  if (_dtSendBizEvent) _dtSendBizEvent(type, data);
+  if (!_dtSendBizEvent) return;
+  try {
+    _dtSendBizEvent(type, { ...data, lang: currentLang, page: 'venue-landing' });
+  } catch (_) { /* never let analytics break the page */ }
 }
 
-/* ── Progress Bar Config ─────────────────────── */
-const PROGRESS_GOAL = 50; // 50 teams target
-
-/* ── Translations ────────────────────────────── */
+// ── Translations ──────────────────────────────────────────────
+// Hebrew is the source (content/copy.md). Arabic is a draft — flagged for
+// native-speaker review before launch. Venue name in Arabic: لب يام.
 const TRANSLATIONS = {
   he: {
-    'page-title': 'לב ים — כל חברת הייטק בישראל צריכה להיות פה',
-    'hero-h1': 'כל חברת הייטק בישראל<br>צריכה להיות פה.',
-    'hero-cta-why': 'גלו למה',
-    'hero-cta-join': 'הצטרפו',
-    'story-h2': 'למה זה כל כך חשוב להגיע ל\'לב ים\', כפר הדייגים, ג\'יסר א זרקא?',
-    'story-p1': 'האמת? כי זה מה שכל מי שמגיע לפה אומר.',
-    'story-p2': 'גם כשאני בעצמי לפעמים לא תופסת כמה המרחב הזה חשוב לאנושות. לאנושיות.',
-    'story-p3': '\'ביצ\'האב\' דאז ו\'לב ים\' היום הוא <mark class="mark-orange">100% אמיתי</mark> בתקופה של חרבות, חומות, עננים בינאריים ושאגות אריה.',
-    'story-p4': 'במרחב הקסום מול הים, בכפר דייגים העתיק בלב הטבע הפראי של מישור החוף, זורמת אנרגיה של אותנטיות פשוטה לצד פונקציונליות בריאה – שמייצרים תחושה של קרבה ותום, שפיות וביטחון. אנחנו מקדשים את הפשוט, מעריכים את הטבעי, מכירים בסדוק ומוקירים על הבלתי שלם, וכל מי שמעז להגיע לפה – גם אם לצד הפחד והספק – זוכה לנווט דרך האתגרים העסקיים, המורכבות הרגשית ומשבר האמון – אל עבר מחוזות ההשראה, הריפוי וההעצמה.',
-    'story-p5': 'אני מזמינה אתכם להיות חלק מהנבחרת שבוחרת בשפיות הזו.',
-    'story-cta': 'מצטרפים לתנועה של שפיות',
-    'story-cta-note': '* המועד והפרטים ייקבעו כשיהיה לכם מדויק',
-    'story-readmore-closed': 'לקרוא עוד ↓',
-    'story-readmore-open': 'סגור ↑',
-    'story-rm-p1': 'לא תיארתי לעצמי שב2026 התרנגולים המשוטטים על החול הרך, המים באלפי גוונים של כחול והחיוכים הלבביים של הדייגים עדיין יהיו מרחב מוגן לנפש שלי, ושל כל מי שמעז להוציא את הלב מהמקלט ולהגיע לפה.',
-    'story-rm-highlight': 'זה לא מובן מאליו. אנחנו חיים בתקופה בלתי רגילה שכמעט מנרמלת את הרעש והפחד. יש תחושה כללית של כמילה – פחות אנרגיה, פחות בהירות, פחות וודאות. יותר סטרס, יותר עומס רגשי. ואף אחד לא יכול להבטיח לנו שמחר זה ייגמר.',
-    'story-rm-p2': 'אני לא מתיימרת להציע איזו אוטופיה שמעלימה את הסערה, וגם לא אסקפיזם של הנאה רגעית וחסרת עומק. <mark class="mark-orange"><strong>אני מציעה אסטרטגיה</strong></mark>: שילוב של טבע פראי, קרקע יציבה, אוכל אמיתי ואותנטיות פשוטה – כל מה שבאמת נחוץ לנו כרגע, כבני אדם, כל מה שחסר לנו כדי לאפשר ללב שוב להיפתח, לאנרגיה להתרומם, ליצירתיות להתפרץ ולפתרונות להתבהר.',
-    'story-rm-p3': 'כולנו מיטלטלים כרגע – בין אם זה פוגש אותנו בבית, בעבודה או בעסק – המצב מאתגר את החיוניות שלנו, מוריד את המוטיבציה שלנו להתפתח ופוגע ביכולת שלנו ליצור. אבל! דווקא ב\'לב ים\' – אחרי שנלחמנו לשווא ברוחות וניסינו להוריד עוגן וקיווינו לכוון מחדש את הסירה – אנחנו עשויים להגיע אל האזור הקטן היחיד של רוגע, שקט מוחלט ושמיים בהירים.',
-    'story-rm-p4': 'זוהי הזדמנות להקשיב לציוץ הציפורים ולחדע אנרגיה – זכות שאני מוקירה עליה בכל פעם שאני מגיעה לפה. ורק פה אני מבינה למה כל חברת הייטק בישראל צריכה להגיע לפה.',
-    'story-rm-p5': '<strong>ההצטרפות עכשיו היא הזמנה להוביל ולקחת חלק ביצירת האופק של כולנו. זו הצהרת כוונות – אתם מבטיחים את מקומכם ב\'לב ים\' כשכל הגמישות אצלכם: המימוש יקרה רק מתי שזה ירגיש לכם נכון ומדויק. זו הזדמנות להצהיר ולהבטיח לעצמם ולצוות – שמגיע לכם להגיע לפה.</strong>',
-    'packages-h1': 'הצטרפותכם עכשיו היא הצהרת כוונות – לכם ולצוות שלכם מגיע רגע אמיתי של שקט ומיקוד.',
-    'packages-h2': 'באיזה הרכב אתם באים?',
-    'pkg-badge': 'הכי פופולרי',
-    'pkg-participants': 'משתתפים',
-    'pkg1-tagline': 'מפגש צוות אמיתי<br>בלב הטבע הפראי של מישור החוף',
-    'pkg2-tagline': 'תוכן איכותי ואוכל אמיתי<br>שמחזירים בהירות ותנועה',
-    'pkg3-tagline': 'אירוע של פשטות יוקרתית<br>לחידוש אנרגיה ומשמעות',
-    'pkg-label-space': 'מרחב',
-    'pkg-label-reception': 'קבלת פנים',
-    'pkg-label-morning': 'בוקר',
-    'pkg-label-lunch': 'צהרים',
-    'pkg-label-drink': 'שתייה',
-    'pkg-label-happyhour': 'הפי האוור',
-    'pkg-label-workshop': 'סדנה',
-    'pkg-val-space1': 'חלל התכנסות אינטימי',
-    'pkg-val-morning': 'מאפי הכפר',
-    'pkg-val-drink': 'משקה 100% פרי',
-    'pkg-val-reception': '"מסיבת תה"',
-    'pkg-val-lunch2': 'עשירה ומשמחת',
-    'pkg-val-workshop': 'לבחירה',
-    'pkg-val-space3': 'כל המתחם לרשותכם',
-    'pkg-val-morning3': 'מאפי הכפר, פירות',
-    'pkg-val-lunch3': 'חגיגית ושופעת',
-    'pkg-val-drink3': 'בר משקאות טבעיים',
-    'pkg-val-happyhour': 'מתוקים',
-    'pkg-price-unit': 'ש"ח *',
-    'pkg-cta': 'אני בפנים',
-    'pkg-pressure': 'כולל נעילת מחירים לשנת 2026',
-    'pkg-acc-open': 'מידע נוסף ↓',
-    'pkg-acc-close': 'סגור ↑',
-    'packages-footnote': '* המחירים אינם כוללים מע"מ',
-    'policy-h2': 'מחוייבים לשקט שלכם',
-    'policy-q1': 'ומה אם המצב הביטחוני לא מאפשר?',
-    'policy-a1': 'אנחנו נתאם מועד חדש ברוגע ובתיאום מלא אתכם.',
-    'policy-q2': 'ואם המצב או הלב לא מאפשרים?',
-    'policy-a2': 'המקדמה קטנה והגמישות גדולה. אנחנו פה כדי שיהיה לכם טוב.',
-    'policy-q3': 'ואם משהו השתנה ברגע האחרון?',
-    'policy-a3': 'עד 7 ימים לפני המועד, תוכלו להעביר את ההזמנה למועד אחר. השקט והביטחון שלכם הם בראש סדרי העדיפויות שלנו.',
-    'impact-banner': 'מעטים המקומות שכמו נבראו מסיבה מסויימת,<br>ואם הם נבראו פעמיים – בטח יש לכך סיבה',
-    'impact-h2': 'הסכום שיגויס יאפשר — יצירת מציאות חדשה',
-    'impact-subtitle': 'שקט אסטרטגי לצוות עם ROI מובהק ואימפקט חברתי',
-    'impact-intro': 'ב\'לב ים\' השקט שלכם הופך לשינוי במצב הצבירה של הצוות: מאנרגיה חסומה ליצירתיות ופתיחות',
-    'impact-li1': '<strong>אתם שותפים לשינוי הנרטיב:</strong> הצטרפות לנבחרת ה-50 בונה גשר של חיים משותפים.',
-    'impact-li2': '<strong>אתם מובילים אימפקט מקומי:</strong> הבטחת מקומכם מאפשרת לנו לבסס מודל חדשני של שגשוג כלכלי-חברתי אמיתי בכפר הדייגים.',
-    'progress-subline': 'היעד: 50 צוותי הייטק שמעזים להוציא את הלב מהמקלט ולחזור להוביל',
-    'progress-joined': 'הצטרפו',
-    'progress-of': 'מתוך',
-    'progress-spots': 'מקומות',
-    'progress-counter-first': 'היו הראשונים להצטרף',
-    'progress-counter-nth': 'היו החברה ה־{n} שבוחרת בשינוי',
-    'progress-limit': 'מספר המקומות בלב ים מוגבל,<br class="mobile-br"> כדי לשמור על הקסם והייחודיות',
-    'sticky-wa': 'דברו איתנו בוואטסאפ',
-    'sticky-cta': 'אני רוצה לבוא',
-    'footer-tagline': 'הבית שלך בתוך הסערה — לב ים, כפר הדייגים בג׳יסר א-זרקא',
+    'meta-title': 'לב ים | ימי צוות, מפגשי הנהלה ואירועי חברה מול הים',
+    'meta-desc': 'לב ים בכפר הדייגים ג׳יסר א-זרקא — מרחב אירוח ייחודי לימי צוות, מפגשי הנהלה ואירועי חברה, בין הים לטבע.',
+    'skip': 'דלגו לתוכן',
+    'brand-aria': 'לב ים — לראש הדף',
+    'brand-name': 'לב ים',
+    'nav-aria': 'ניווט ראשי',
+    'nav-space': 'המרחב',
+    'nav-food': 'האוכל',
+    'nav-content': 'התוכן',
+    'nav-fit': 'למי זה מתאים',
+    'nav-contact': 'צרו קשר',
+    'nav-wa': 'דברו איתנו',
+    'wa-aria': 'דברו איתנו בוואטסאפ',
+
+    'hero-eyebrow': 'לב ים · כפר הדייגים, ג׳יסר א-זרקא',
+    'hero-h1a': 'יוצאים מהשגרה.',
+    'hero-h1b': 'נפגשים אחרת.',
+    'hero-sub': 'ימי צוות, מפגשי הנהלה ואירועי חברה במקום קצת אחר.',
+    'hero-lead': 'בכפר הדייגים ג׳יסר א-זרקא, בין הים לטבע, מחכה לכם לב ים - מרחב אירוח ייחודי המשלב נוף עוצר נשימה, אוכל מקומי, תוכן מעשיר ומפגש אנושי בגובה העיניים.',
+    'cta-plan': 'בואו נתכנן את היום שלכם',
+    'hero-cta-discover': 'גלו את לב ים',
+
+    'fact-distance': 'מרחק מתל אביב',
+    'fact-size': 'גודל קבוצה',
+    'fact-spaces': 'חללים',
+    'fact-parking': 'חניה ונגישות',
+
+    'intro-p1': 'מקום לצאת מהשגרה, לפתוח את הראש, להתחבר מחדש ולחזור עם אנרגיה ורעיונות חדשים.',
+    'intro-p2': 'בין אם אתם מתכננים יום גיבוש, מפגש חשיבה, סדנה או אירוע חברה - ניצור יחד חוויה המותאמת לאנשים ולמטרות שלכם.',
+    'why-h2': "למה זה כל כך חשוב להגיע ל'לב ים', כפר הדייגים, ג'יסר א זרקא?",
+    'why-p1': 'האמת? כי זה מה שכל מי שמגיע לפה אומר.',
+    'why-p2': 'במרחב הקסום מול הים, בכפר דייגים העתיק בלב הטבע הפראי של מישור החוף, זורמת אנרגיה של אותנטיות פשוטה לצד פונקציונליות בריאה – שמייצרים תחושה של קרבה ותום, שפיות וביטחון.',
+    'why-p3': 'אנחנו מקדשים את הפשוט, מעריכים את הטבעי, מכירים בסדוק ומוקירים על הבלתי שלם, וכל מי שמעז להגיע לפה – גם אם לצד הפחד והספק – זוכה לנווט דרך האתגרים העסקיים, המורכבות הרגשית ומשבר האמון – אל עבר מחוזות ההשראה, הריפוי וההעצמה.',
+    'why-quote': 'אנחנו מזמינים אתכם להיות חלק מהנבחרת שבוחרת בשפיות הזו.',
+    'why-img-alt': 'מרחב העבודה של לב ים מול הים, עם סירת דייגים על החוף',
+    'testi-h2': 'מה אומרים מי שכבר היו כאן',
+
+    'pillars-h2': 'שלושה מרכיבים. אינספור אפשרויות.',
+    'p1-eyebrow': '01 | המרחב',
+    'p1-h3': 'משנים אווירה. פותחים את הראש.',
+    'p1-p1': 'המרחב משלב פינות ישיבה נעימות, אזורי התכנסות ואווירה אינטימית ובלתי פורמלית, שמאפשרת להאט, להתרכז ולהיפגש באמת.',
+    'p1-p2': 'בין אם מדובר בישיבת הנהלה, סיעור מוחות, יום צוות או מפגש מקצועי, כאן תמצאו סביבה שמעודדת יצירתיות, שיח פתוח וחיבור אנושי.',
+    'p1-list-title': 'מה מחכה לכם?',
+    'p1-li1': 'מרחבי התכנסות ועבודה לצוותים ולקבוצות',
+    'p1-li2': 'פינות ישיבה באווירה נינוחה',
+    'p1-li3': 'טבע, ים ונוף פתוח',
+    'p1-li4': 'אפשרות לשילוב מפגשים מקצועיים וזמן חופשי',
+    'p1-rent-title': 'איך אפשר לשכור?',
+    'p1-rent1': 'חלק מהמרחב',
+    'p1-rent2': 'החלל הפנימי בלבד',
+    'p1-rent3': 'המרפסת הצופה לים בלבד',
+    'p1-rent4': 'המתחם כולו',
+    'p1-img-alt': 'קבוצה עובדת במרחב של לב ים, הים ברקע',
+    'p2-eyebrow': '02 | האוכל',
+    'p2-h3': 'טעמים מקומיים. אירוח מכל הלב.',
+    'p2-p1': 'האוכל הוא חלק מהחוויה והבחירה היא שלכם.',
+    'p2-list-title': 'מה אפשר לשלב?',
+    'p2-li1': 'קבלת פנים עם תה מסורתי',
+    'p2-li2': 'מאפי בוקר מהכפר ופירות העונה',
+    'p2-li3': 'ארוחות צהריים מקומיות, עשירות ומגוונות',
+    'p2-li4': 'אירוח שף לחוויה קולינרית ייחודית',
+    'p2-li5': 'אפשרות להביא קייטרינג חיצוני מטעמכם',
+    'p2-close': 'התפריט והאירוח מותאמים לאופי המפגש ולצורכי הקבוצה.',
+    'p3-eyebrow': '03 | התוכן',
+    'p3-h3': 'חוויות שמחברות בין אנשים.',
+    'p3-p1': 'בלב ים תוכלו לשלב תוכן שמוסיף עומק, עניין והנאה ליום שלכם - מפעילויות תנועה ורוגע ועד חוויות מקומיות ומפגשים מעוררי השראה.',
+    'p3-list-title': 'מה אפשר לשלב?',
+    'p3-li1': 'יוגה, תנועה ומדיטציה',
+    'p3-li2': 'פעילויות בטבע ובים',
+    'p3-li3': 'סיורים והיכרות עם כפר הדייגים',
+    'p3-li4': 'מפגשים עם אנשים וסיפורים מקומיים',
+    'p3-li5': 'סדנאות חווייתיות ותוכן מותאם לקבוצה',
+    'p3-li6': 'זמן לעבודה משותפת, חשיבה ויצירה',
+    'p3-close': 'אפשר להגיע עם תוכן משלכם, לבחור מתוך מגוון הפעילויות שלנו או ליצור יחד תוכנית המשלבת עבודה, השראה והנאה.',
+
+    'fit-h2': 'יום אחד. בדיוק בשבילכם.',
+    'fit-p1': 'אין שני צוותים זהים, ולכן גם אין שני ימים זהים בלב ים.',
+    'fit-p2': 'יש צוותים שמגיעים ליום עבודה וחשיבה, אחרים מחפשים גיבוש וחוויה משותפת, ויש מי שרוצים פשוט לצאת מהמשרד ולבלות יחד במקום יפה ומיוחד.',
+    'fit-p3': 'אנחנו כאן כדי להקשיב, להציע ולבנות יחד את השילוב הנכון של מרחב, אוכל ותוכן.',
+    'fit-list-title': 'מתאים במיוחד ל:',
+    'fit-li1': 'ימי גיבוש וצוות',
+    'fit-li2': 'מפגשי הנהלה וימי אסטרטגיה',
+    'fit-li3': 'סדנאות והכשרות',
+    'fit-li4': 'ימי חשיבה ויצירה',
+    'fit-li5': 'אירועי חברה ומפגשים מקצועיים',
+    'fit-li6': 'מפגשי קהילה וארגונים',
+    'fit-cta': 'בואו ליצור את היום שלכם',
+
+    'impact-h2': 'חוויה טובה. השפעה טובה.',
+    'impact-p1': 'לב ים הוא הרבה יותר ממקום לאירוע.',
+    'impact-p2': 'הבחירה להתארח אצלנו היא גם הזדמנות להכיר מקרוב את ג׳יסר א-זרקא, לפגוש את האנשים והסיפורים של הכפר ולתמוך בעשייה ובכלכלה המקומית.',
+    'impact-p3': 'אנחנו מאמינים בכוחם של מפגשים פשוטים ואמיתיים לקרב בין אנשים, לפתוח נקודות מבט חדשות וליצור חיבורים שנשארים הרבה אחרי שהיום מסתיים.',
+    'impact-p4': 'כאן חוויה מהנה ומשמעותית יכולה גם לייצר ערך לקהילה שמארחת אותה.',
+
+    'plan-h2': 'בואו להיפגש בלב ים.',
+    'plan-p1': 'יש משהו מיוחד ביום שמתחיל מול הים, ממשיך עם אוכל טוב, שיחות מעניינות וחוויות משותפות, ומסתיים בתחושה שהיה שווה לצאת מהשגרה.',
+    'plan-p2': 'ספרו לנו מה אתם מתכננים, כמה אנשים אתם ומה הייתם רוצים לחוות ונשמח ליצור יחד יום שמתאים בדיוק לכם.',
+    'plan-q1': 'מה אתם מתכננים?',
+    'plan-q2': 'כמה אנשים אתם?',
+    'plan-q3': 'מה הייתם רוצים לחוות?',
+    'plan-size1': 'עד 15',
+    'plan-comp1': 'המרחב',
+    'plan-comp2': 'האוכל',
+    'plan-comp3': 'התוכן',
+    'plan-help': 'אפשר גם לדלג ולכתוב לנו חופשי.',
+    'plan-or': 'או ישירות בוואטסאפ:',
+
+    // WhatsApp message building blocks
+    'plan-ev1-msg': 'יום גיבוש וצוות',
+    'plan-ev2-msg': 'מפגש הנהלה / יום אסטרטגיה',
+    'plan-ev3-msg': 'סדנה או הכשרה',
+    'plan-ev4-msg': 'יום חשיבה ויצירה',
+    'plan-ev5-msg': 'אירוע חברה / מפגש מקצועי',
+    'plan-ev6-msg': 'מפגש קהילה / ארגון',
+    'size-lt15': 'עד 15 אנשים',
+    'size-15-25': '15–25 אנשים',
+    'size-25-40': '25–40 אנשים',
+    'size-40plus': 'מעל 40 אנשים',
+    'wa-default': 'היי, אנחנו רוצים לתכנן יום בלב ים. נשמח לשמוע פרטים.',
+
+    'footer-place': 'לב ים, כפר הדייגים בג׳יסר א-זרקא',
+    'footer-waze': 'ניווט ב-Waze',
+    'footer-maps': 'Google Maps',
+    'footer-email': 'אימייל',
+    'footer-instagram': 'אינסטגרם',
     'footer-copy': '© 2026 לב ים. כל הזכויות שמורות.',
-    'vol-muted': 'הפעל שמע',
-    'vol-unmuted': 'השתק',
   },
+
   ar: {
-    'page-title': 'لب يام — كل شركة هاي-تك في إسرائيل يجب أن تكون هنا',
-    'hero-h1': 'كل شركة هاي-تك في إسرائيل<br>يجب أن تكون هنا.',
-    'hero-cta-why': 'اكتشفوا لماذا',
-    'hero-cta-join': 'انضمّوا',
-    'story-h2': 'لماذا من المهم جداً الوصول إلى "لب يام"، قرية الصيادين، جسر الزرقاء؟',
-    'story-p1': 'الحقيقة؟ لأن هذا ما يقوله كل من يصل إلى هنا.',
-    'story-p2': 'حتى أنا أحياناً لا أدرك كم هذا المكان مهم للبشرية.',
-    'story-p3': '"بيتشهاب" في الماضي و"لب يام" اليوم — <mark class="mark-orange">100% حقيقي</mark> في زمن السيوف والجدران والغيوم الرقمية وزئير الأسود.',
-    'story-p4': 'في هذا الفضاء الساحر المطل على البحر، في قرية الصيادين العريقة في قلب طبيعة سهل الساحل البرية، تتدفق طاقة من أصالة بسيطة إلى جانب وظيفية صحية — تولّد شعوراً بالقرب والبراءة، والعقلانية والأمان. نحن نقدّس البساطة، ونقدّر الطبيعي، ونعترف بالكسر ونحتفي بالناقص، وكل من يتجرأ على المجيء إلى هنا — حتى مع الخوف والشك — يحظى بالتنقل عبر التحديات المهنية، والتعقيد العاطفي وأزمة الثقة — نحو آفاق الإلهام والشفاء والتمكين.',
-    'story-p5': 'أنا أدعوكم لتكونوا جزءاً من النخبة التي تختار هذه العقلانية.',
-    'story-cta': 'انضمّوا لحركة العقلانية',
-    'story-cta-note': '* سيُحدَّد الموعد والتفاصيل عندما يكون ذلك مناسباً لكم',
-    'story-readmore-closed': 'اقرأ المزيد ↓',
-    'story-readmore-open': 'إغلاق ↑',
-    'story-rm-p1': 'لم أتصور أنه في 2026 ستظل الديوك الرومية التي تجوب الرمال الناعمة، والمياه بآلاف درجات اللون الأزرق، وابتسامات الصيادين الحارة — فضاءً آمناً لروحي ولروح كل من يتجرأ على إخراج قلبه من الملجأ والوصول إلى هنا.',
-    'story-rm-highlight': 'هذا ليس أمراً مفروغاً منه. نحن نعيش في حقبة غير عادية كادت أن تُطبّع الضجيج والخوف. ثمة شعور عام بالتقلص — طاقة أقل، وضوح أقل، يقين أقل. مزيد من التوتر، مزيد من الأعباء العاطفية. ولا أحد يستطيع أن يضمن لنا أن الأمر سينتهي غداً.',
-    'story-rm-p2': 'لا أدّعي تقديم يوتوبيا تمحو العاصفة، ولا هروباً لمتعة آنية ضحلة. <mark class="mark-orange"><strong>أنا أقدم استراتيجية</strong></mark>: مزيج من الطبيعة البرية والأرض الثابتة والطعام الحقيقي والأصالة البسيطة — كل ما نحتاجه حقاً الآن كبشر، كل ما يفتقده قلبنا لينفتح من جديد، وتنطلق الطاقة، وتتفجر الإبداعية، وتتضح الحلول.',
-    'story-rm-p3': 'كلنا نتأرجح الآن — سواء كان ذلك في البيت أو العمل أو المشروع — الوضع يتحدى حيويتنا، ويخفض دافعيتنا للنمو، ويضر بقدرتنا على الإبداع. لكن! في "لب يام" تحديداً — بعد أن كافحنا الرياح عبثاً وحاولنا إلقاء المرساة وأملنا في إعادة توجيه القارب — قد نصل إلى تلك المنطقة الصغيرة الوحيدة من الهدوء والسكون التام والسماء الصافية.',
-    'story-rm-p4': 'هذه فرصة للاستماع إلى تغريد الطيور وتجديد الطاقة — امتياز أقدّره في كل مرة أصل إليه. وهنا فقط أفهم لماذا يجب على كل شركة هاي-تك في إسرائيل أن تأتي إلى هنا.',
-    'story-rm-p5': '<strong>الانضمام الآن هو دعوة للقيادة والمشاركة في صنع أفق مشترك. هذا إعلان نية — أنتم تضمنون مكانكم في "لب يام" مع كامل المرونة: التنفيذ سيحدث عندما يشعر الأمر صحيحاً ومناسباً لكم. هذه فرصة للإعلان والوعد لأنفسكم ولفريقكم — بأنكم تستحقون المجيء إلى هنا.</strong>',
-    'packages-h1': 'انضمامكم الآن هو إعلان نية – أنتم وفريقكم تستحقون لحظة حقيقية من الهدوء والتركيز.',
-    'packages-h2': 'بأي تشكيلة ستأتون؟',
-    'pkg-badge': 'الأكثر شعبية',
-    'pkg-participants': 'مشاركون',
-    'pkg1-tagline': 'لقاء فريق حقيقي<br>في قلب طبيعة سهل الساحل البرية',
-    'pkg2-tagline': 'محتوى عالي الجودة وطعام حقيقي<br>يُعيدان الوضوح والحركة',
-    'pkg3-tagline': 'حدث من البساطة الفاخرة<br>لتجديد الطاقة والمعنى',
-    'pkg-label-space': 'المكان',
-    'pkg-label-reception': 'الاستقبال',
-    'pkg-label-morning': 'الصباح',
-    'pkg-label-lunch': 'الغداء',
-    'pkg-label-drink': 'المشروبات',
-    'pkg-label-happyhour': 'الساعة السعيدة',
-    'pkg-label-workshop': 'ورشة العمل',
-    'pkg-val-space1': 'قاعة اجتماعات حميمة',
-    'pkg-val-morning': 'مخبوزات القرية',
-    'pkg-val-drink': 'مشروب فاكهة 100%',
-    'pkg-val-reception': '"حفلة شاي"',
-    'pkg-val-lunch2': 'غني ومبهج',
-    'pkg-val-workshop': 'حسب الاختيار',
-    'pkg-val-space3': 'كامل المجمع تحت تصرفكم',
-    'pkg-val-morning3': 'مخبوزات القرية وفواكه',
-    'pkg-val-lunch3': 'احتفالي وفاخر',
-    'pkg-val-drink3': 'بار مشروبات طبيعية',
-    'pkg-val-happyhour': 'حلويات',
-    'pkg-price-unit': '₪ *',
-    'pkg-cta': 'أنا داخل',
-    'pkg-pressure': 'يشمل تثبيت الأسعار لعام 2026',
-    'pkg-acc-open': 'مزيد من المعلومات ↓',
-    'pkg-acc-close': 'إغلاق ↑',
-    'packages-footnote': '* الأسعار لا تشمل ضريبة القيمة المضافة',
-    'policy-h2': 'ملتزمون براحة بالكم',
-    'policy-q1': 'وماذا لو لم يسمح الوضع الأمني؟',
-    'policy-a1': 'سنحدد موعداً جديداً بهدوء وبتنسيق كامل معكم.',
-    'policy-q2': 'وإذا كان الوضع أو القلب لا يسمحان؟',
-    'policy-a2': 'الدفعة المقدمة صغيرة والمرونة كبيرة. نحن هنا لكي يكون لكم خيراً.',
-    'policy-q3': 'وإذا تغير شيء في اللحظة الأخيرة؟',
-    'policy-a3': 'حتى 7 أيام قبل الموعد، يمكنكم تحويل الحجز إلى موعد آخر. راحتكم وأمانكم هما أولويتنا القصوى.',
-    'impact-banner': 'قليلة هي الأماكن التي تبدو كأنها خُلقت لسبب ما،<br>وإن خُلقت مرتين — فلابد أن ثمة سبباً',
-    'impact-h2': 'المبلغ الذي سيُجمَع سيُتيح — خلق واقع جديد',
-    'impact-subtitle': 'هدوء استراتيجي للفريق مع ROI واضح وأثر اجتماعي',
-    'impact-intro': 'في "لب يام" هدوؤكم يتحول إلى تغيير في حالة الفريق: من طاقة محبوسة إلى إبداع وانفتاح',
-    'impact-li1': '<strong>أنتم شركاء في تغيير السردية:</strong> الانضمام إلى نخبة الـ-50 يبني جسراً من الحياة المشتركة.',
-    'impact-li2': '<strong>أنتم تقودون أثراً محلياً:</strong> تأمين مكانكم يتيح لنا ترسيخ نموذج مبتكر من الازدهار الاقتصادي-الاجتماعي الحقيقي في قرية الصيادين.',
-    'progress-subline': 'الهدف: 50 فريق هاي-تك يتجرأون على إخراج القلب من الملجأ والعودة إلى القيادة',
-    'progress-joined': 'انضمّوا',
-    'progress-of': 'من أصل',
-    'progress-spots': 'مكاناً',
-    'progress-counter-first': 'كونوا أوائل المنضمين',
-    'progress-counter-nth': 'كونوا الشركة الـ {n} التي تختار التغيير',
-    'progress-limit': 'عدد الأماكن في لب يام محدود،<br class="mobile-br"> للحفاظ على السحر والتميز',
-    'sticky-wa': 'تحدثوا معنا على واتساب',
-    'sticky-cta': 'أريد أن أحضر',
-    'footer-tagline': 'بيتك في قلب العاصفة — لب يام، قرية الصيادين في جسر الزرقاء',
+    'meta-title': 'لب يام | أيام فريق، لقاءات إدارة وفعاليات شركات أمام البحر',
+    'meta-desc': 'لب يام في قرية الصيادين جسر الزرقاء – مساحة ضيافة فريدة لأيام الفريق، لقاءات الإدارة وفعاليات الشركات، بين البحر والطبيعة.',
+    'skip': 'انتقلوا إلى المحتوى',
+    'brand-aria': 'لب يام – إلى أعلى الصفحة',
+    'brand-name': 'لب يام',
+    'nav-aria': 'التنقل الرئيسي',
+    'nav-space': 'المكان',
+    'nav-food': 'الطعام',
+    'nav-content': 'المحتوى',
+    'nav-fit': 'لمن يناسب',
+    'nav-contact': 'تواصلوا معنا',
+    'nav-wa': 'تحدثوا معنا',
+    'wa-aria': 'تحدثوا معنا عبر واتساب',
+
+    'hero-eyebrow': 'لب يام · قرية الصيادين، جسر الزرقاء',
+    'hero-h1a': 'نخرج من الروتين.',
+    'hero-h1b': 'نلتقي بشكل مختلف.',
+    'hero-sub': 'أيام فريق، لقاءات إدارة وفعاليات شركات في مكان مختلف قليلاً.',
+    'hero-lead': 'في قرية الصيادين جسر الزرقاء، بين البحر والطبيعة، ينتظركم لب يام – مساحة ضيافة فريدة تجمع بين إطلالة خلابة، طعام محلي، محتوى غني ولقاء إنساني حقيقي.',
+    'cta-plan': 'لنخطّط يومكم معاً',
+    'hero-cta-discover': 'اكتشفوا لب يام',
+
+    'fact-distance': 'المسافة من تل أبيب',
+    'fact-size': 'حجم المجموعة',
+    'fact-spaces': 'المساحات',
+    'fact-parking': 'مواقف ووصول',
+
+    'intro-p1': 'مكان للخروج من الروتين، لفتح الذهن، لإعادة التواصل والعودة بطاقة وأفكار جديدة.',
+    'intro-p2': 'سواء كنتم تخططون ليوم تعزيز فريق، لقاء عصف ذهني، ورشة أو فعالية شركة – سنصنع معاً تجربة مصممة لأشخاصكم وأهدافكم.',
+    'why-h2': 'لماذا من المهم جداً الوصول إلى "لب يام"، قرية الصيادين، جسر الزرقاء؟',
+    'why-p1': 'الحقيقة؟ لأن هذا ما يقوله كل من يصل إلى هنا.',
+    'why-p2': 'في هذه المساحة الساحرة أمام البحر، في قرية صيادين عريقة في قلب الطبيعة البرية للسهل الساحلي، تتدفق طاقة من الأصالة البسيطة إلى جانب عملية صحية – تولّد شعوراً بالقرب والبراءة، بالصفاء والأمان.',
+    'why-p3': 'نحن نقدّس البسيط، نقدّر الطبيعي، نعترف بالمتصدّع ونحتفي بغير المكتمل، وكل من يجرؤ على الوصول إلى هنا – حتى مع الخوف والشك – يحظى بأن يبحر عبر التحديات التجارية، التعقيد العاطفي وأزمة الثقة – نحو آفاق الإلهام، الشفاء والتمكين.',
+    'why-quote': 'ندعوكم لتكونوا جزءاً من المنتخب الذي يختار هذا الصفاء.',
+    'why-img-alt': 'مساحة العمل في لب يام أمام البحر، مع قارب صيد على الشاطئ',
+    'testi-h2': 'ماذا يقول من كانوا هنا',
+
+    'pillars-h2': 'ثلاثة مكوّنات. إمكانيات لا تُحصى.',
+    'p1-eyebrow': '01 | المكان',
+    'p1-h3': 'نغيّر الأجواء. نفتح الذهن.',
+    'p1-p1': 'يجمع المكان بين زوايا جلوس مريحة، مناطق تجمّع وأجواء حميمة وغير رسمية، تتيح التمهّل، التركيز واللقاء الحقيقي.',
+    'p1-p2': 'سواء كان الأمر اجتماع إدارة، عصف ذهني، يوم فريق أو لقاء مهني، ستجدون هنا بيئة تشجع الإبداع، الحوار المفتوح والتواصل الإنساني.',
+    'p1-list-title': 'ما الذي ينتظركم؟',
+    'p1-li1': 'مساحات تجمّع وعمل للفرق والمجموعات',
+    'p1-li2': 'زوايا جلوس بأجواء هادئة',
+    'p1-li3': 'طبيعة، بحر وإطلالة مفتوحة',
+    'p1-li4': 'إمكانية الجمع بين لقاءات مهنية ووقت حر',
+    'p1-rent-title': 'كيف يمكن الاستئجار؟',
+    'p1-rent1': 'جزء من المكان',
+    'p1-rent2': 'القاعة الداخلية فقط',
+    'p1-rent3': 'الشرفة المطلة على البحر فقط',
+    'p1-rent4': 'المجمّع بأكمله',
+    'p1-img-alt': 'مجموعة تعمل في مساحة لب يام والبحر في الخلفية',
+    'p2-eyebrow': '02 | الطعام',
+    'p2-h3': 'نكهات محلية. ضيافة من القلب.',
+    'p2-p1': 'الطعام جزء من التجربة والخيار لكم.',
+    'p2-list-title': 'ما الذي يمكن دمجه؟',
+    'p2-li1': 'استقبال بشاي تقليدي',
+    'p2-li2': 'معجنات صباحية من القرية وفواكه الموسم',
+    'p2-li3': 'وجبات غداء محلية، غنية ومتنوعة',
+    'p2-li4': 'استضافة شيف لتجربة طهي فريدة',
+    'p2-li5': 'إمكانية إحضار تموين خارجي من طرفكم',
+    'p2-close': 'تُصمَّم قائمة الطعام والضيافة وفق طابع اللقاء واحتياجات المجموعة.',
+    'p3-eyebrow': '03 | المحتوى',
+    'p3-h3': 'تجارب تربط بين الناس.',
+    'p3-p1': 'في لب يام يمكنكم دمج محتوى يضيف عمقاً، اهتماماً ومتعة ليومكم – من أنشطة الحركة والاسترخاء إلى تجارب محلية ولقاءات ملهمة.',
+    'p3-list-title': 'ما الذي يمكن دمجه؟',
+    'p3-li1': 'يوغا، حركة وتأمل',
+    'p3-li2': 'أنشطة في الطبيعة والبحر',
+    'p3-li3': 'جولات وتعرّف على قرية الصيادين',
+    'p3-li4': 'لقاءات مع أشخاص وقصص محلية',
+    'p3-li5': 'ورشات تجريبية ومحتوى مصمم للمجموعة',
+    'p3-li6': 'وقت للعمل المشترك، التفكير والإبداع',
+    'p3-close': 'يمكنكم القدوم بمحتوى خاص بكم، الاختيار من بين أنشطتنا المتنوعة أو أن نبني معاً برنامجاً يجمع بين العمل، الإلهام والمتعة.',
+
+    'fit-h2': 'يوم واحد. مصمّم لكم بالضبط.',
+    'fit-p1': 'لا يوجد فريقان متشابهان، ولذلك لا يوجد يومان متشابهان في لب يام.',
+    'fit-p2': 'هناك فرق تأتي ليوم عمل وتفكير، وأخرى تبحث عن تعزيز الفريق وتجربة مشتركة، وهناك من يريد ببساطة الخروج من المكتب وقضاء الوقت معاً في مكان جميل ومميز.',
+    'fit-p3': 'نحن هنا لنصغي، نقترح ونبني معاً المزيج الصحيح من المكان، الطعام والمحتوى.',
+    'fit-list-title': 'يناسب بشكل خاص:',
+    'fit-li1': 'أيام تعزيز الفريق',
+    'fit-li2': 'لقاءات الإدارة وأيام الاستراتيجية',
+    'fit-li3': 'ورشات وتدريبات',
+    'fit-li4': 'أيام التفكير والإبداع',
+    'fit-li5': 'فعاليات الشركات واللقاءات المهنية',
+    'fit-li6': 'لقاءات المجتمعات والمنظمات',
+    'fit-cta': 'لنصنع يومكم معاً',
+
+    'impact-h2': 'تجربة جيدة. أثر جيد.',
+    'impact-p1': 'لب يام أكثر بكثير من مكان لفعالية.',
+    'impact-p2': 'اختياركم الاستضافة عندنا هو أيضاً فرصة للتعرف عن قرب على جسر الزرقاء، للقاء أهل القرية وقصصها ولدعم العمل والاقتصاد المحليين.',
+    'impact-p3': 'نؤمن بقوة اللقاءات البسيطة والحقيقية في تقريب الناس، فتح وجهات نظر جديدة وخلق روابط تبقى طويلاً بعد انتهاء اليوم.',
+    'impact-p4': 'هنا، تجربة ممتعة وذات معنى يمكنها أيضاً أن تخلق قيمة للمجتمع الذي يستضيفها.',
+
+    'plan-h2': 'تعالوا نلتقي في لب يام.',
+    'plan-p1': 'هناك شيء مميز في يوم يبدأ أمام البحر، يستمر مع طعام جيد، أحاديث شيّقة وتجارب مشتركة، وينتهي بشعور أن الخروج من الروتين كان يستحق.',
+    'plan-p2': 'أخبرونا ما الذي تخططون له، كم عددكم وما الذي تودّون تجربته، ويسعدنا أن نصنع معاً يوماً يناسبكم تماماً.',
+    'plan-q1': 'ما الذي تخططون له؟',
+    'plan-q2': 'كم عددكم؟',
+    'plan-q3': 'ما الذي تودّون تجربته؟',
+    'plan-size1': 'حتى 15',
+    'plan-comp1': 'المكان',
+    'plan-comp2': 'الطعام',
+    'plan-comp3': 'المحتوى',
+    'plan-help': 'يمكنكم أيضاً تخطي هذا والكتابة لنا بحرية.',
+    'plan-or': 'أو مباشرة عبر واتساب:',
+
+    'plan-ev1-msg': 'يوم تعزيز فريق',
+    'plan-ev2-msg': 'لقاء إدارة / يوم استراتيجية',
+    'plan-ev3-msg': 'ورشة أو تدريب',
+    'plan-ev4-msg': 'يوم تفكير وإبداع',
+    'plan-ev5-msg': 'فعالية شركة / لقاء مهني',
+    'plan-ev6-msg': 'لقاء مجتمعي / منظمة',
+    'size-lt15': 'حتى 15 شخصاً',
+    'size-15-25': '15–25 شخصاً',
+    'size-25-40': '25–40 شخصاً',
+    'size-40plus': 'أكثر من 40 شخصاً',
+    'wa-default': 'مرحباً، نرغب في التخطيط ليوم في لب يام. يسعدنا الحصول على التفاصيل.',
+
+    'footer-place': 'لب يام، قرية الصيادين في جسر الزرقاء',
+    'footer-waze': 'التنقل عبر Waze',
+    'footer-maps': 'Google Maps',
+    'footer-email': 'البريد الإلكتروني',
+    'footer-instagram': 'إنستغرام',
     'footer-copy': '© 2026 لب يام. جميع الحقوق محفوظة.',
-    'vol-muted': 'تشغيل الصوت',
-    'vol-unmuted': 'كتم الصوت',
   },
 };
 
-/* ── Language helpers ────────────────────────── */
-let currentLang = localStorage.getItem('lang') || 'he';
+// ── Language ──────────────────────────────────────────────────
+let currentLang = 'he';
+try {
+  const saved = localStorage.getItem('lang');
+  if (saved === 'he' || saved === 'ar') currentLang = saved;
+} catch (_) { /* storage unavailable — stay on Hebrew */ }
 
 function t(key) {
-  return (TRANSLATIONS[currentLang] && TRANSLATIONS[currentLang][key]) ||
-         (TRANSLATIONS['he'][key]) || key;
+  const dict = TRANSLATIONS[currentLang] || TRANSLATIONS.he;
+  return dict[key] ?? TRANSLATIONS.he[key] ?? '';
 }
 
 function applyLanguage(lang) {
   currentLang = lang;
-  localStorage.setItem('lang', lang);
-
-  // Update html lang attribute
   document.documentElement.lang = lang;
+  document.title = t('meta-title');
+  const metaDesc = document.querySelector('meta[name="description"]');
+  if (metaDesc) metaDesc.content = t('meta-desc');
 
-  // Update page title
-  document.title = t('page-title');
-
-  // Update all data-i18n elements
   document.querySelectorAll('[data-i18n]').forEach((el) => {
-    const key = el.getAttribute('data-i18n');
-    const val = TRANSLATIONS[lang] && TRANSLATIONS[lang][key];
-    if (val !== undefined) el.innerHTML = val;
+    el.textContent = t(el.dataset.i18n);
   });
-
-  // Fix sticky-cta aria-label (text content was set above via data-i18n)
-  const stickyCta = document.querySelector('.sticky-cta');
-  if (stickyCta) stickyCta.setAttribute('aria-label', t('sticky-cta'));
-
-  // Fix WA aria-label
-  const stickyWa = document.querySelector('.sticky-wa');
-  if (stickyWa) stickyWa.setAttribute('aria-label', t('sticky-wa'));
-
-  // Fix volume button label based on current muted state
-  const volumeBtn = document.getElementById('volume-btn');
-  if (volumeBtn) {
-    const isMuted = !volumeBtn.classList.contains('unmuted');
-    volumeBtn.setAttribute('aria-label', isMuted ? t('vol-muted') : t('vol-unmuted'));
-  }
-
-  // Fix read-more button if accordion is currently open
-  const readMoreContent = document.getElementById('story-read-more-content');
-  const readMoreBtn = document.getElementById('story-read-more-btn');
-  if (readMoreContent && readMoreBtn) {
-    const isOpen = readMoreContent.classList.contains('is-open');
-    readMoreBtn.textContent = isOpen ? t('story-readmore-open') : t('story-readmore-closed');
-  }
-
-  // Fix package accordion toggles if currently open
-  const anyAccOpen = document.querySelector('.pkg-accordion.open') !== null;
-  if (anyAccOpen) {
-    document.querySelectorAll('.pkg-accordion-toggle').forEach((btn) => {
-      btn.textContent = t('pkg-acc-close');
-    });
-  }
-
-  // Re-render dynamic counter (spots-counter)
-  updateFeed();
-
-  // Update toggle button active state
+  document.querySelectorAll('[data-i18n-aria]').forEach((el) => {
+    el.setAttribute('aria-label', t(el.dataset.i18nAria));
+  });
+  document.querySelectorAll('[data-i18n-alt]').forEach((el) => {
+    el.alt = t(el.dataset.i18nAlt);
+  });
   document.querySelectorAll('.lang-btn').forEach((btn) => {
-    btn.classList.toggle('lang-btn-active', btn.dataset.lang === lang);
+    btn.setAttribute('aria-pressed', String(btn.dataset.lang === lang));
   });
+
+  refreshWhatsAppLinks();
+  try { localStorage.setItem('lang', lang); } catch (_) { /* ignore */ }
 }
 
-/* ── Initialize ──────────────────────────────── */
-document.addEventListener('DOMContentLoaded', () => {
-  initLangSwitch();
-  wireGrowButtons();
-  initPackageAccordions();
-  initStoryReadMore();
-  initVolumeToggle();
-  initBeachHubSlideshow();
-  // Apply saved language (restores state on page reload)
-  if (currentLang !== 'he') applyLanguage(currentLang);
-  sendBizEvent('levyam.page.view', { lang: currentLang });
-  const waLink = document.querySelector('a[href^="https://wa.me"]');
-  if (waLink) waLink.addEventListener('click', () => sendBizEvent('levyam.ui.whatsapp_click', {}));
-  if (SUPABASE_URL !== 'REPLACE_WITH_SUPABASE_URL') {
-    updateFeed();
-    setInterval(updateFeed, 5000);
-  }
-});
-
-/* ── Language switch ─────────────────────────── */
 function initLangSwitch() {
   document.querySelectorAll('.lang-btn').forEach((btn) => {
     btn.addEventListener('click', () => {
-      const lang = btn.dataset.lang;
-      if (lang !== currentLang) {
-        applyLanguage(lang);
-        sendBizEvent('levyam.ui.language_switch', { lang });
-      }
+      const next = btn.dataset.lang;
+      if (next === currentLang) return;
+      const from = currentLang;
+      applyLanguage(next);
+      sendBizEvent('levyam.lang.switch', { from, to: next });
     });
   });
 }
 
-/* ── Beach hub fadeshow ──────────────────────── */
-function initBeachHubSlideshow() {
-  const slides = document.querySelectorAll('#beachhub-slideshow .bh-slide');
-  const dots   = document.querySelectorAll('#beachhub-slideshow .bh-dot');
-  if (slides.length < 2) return;
+// ── WhatsApp planner ──────────────────────────────────────────
+// Three optional questions → one composed message. Nothing is stored.
+const planner = { event: null, size: null, comps: [] };
 
-  const FADE_MS  = 2200; // duration of each crossfade
-  const HOLD_MS  = 5000; // how long each photo is fully visible
-
-  let current   = 0;
-  let timer     = null;
-  let fadeType  = 'out'; // alternates: 'out' (current fades away) | 'in' (next fades in on top)
-
-  // Show first slide immediately
-  slides[0].style.opacity = '1';
-  slides[0].style.zIndex  = '1';
-  slides[0].classList.add('bh-slide-active');
-  dots[0].classList.add('bh-dot-active');
-
-  function goTo(index) {
-    const prev = current;
-    current = (index + slides.length) % slides.length;
-
-    // Update dots
-    dots.forEach((d, i) => d.classList.toggle('bh-dot-active', i === current));
-
-    // Swap Ken Burns class so zoom restarts on the incoming slide
-    slides[prev].classList.remove('bh-slide-active');
-    slides[current].classList.add('bh-slide-active');
-
-    if (fadeType === 'out') {
-      // ── FADE OUT ── current photo dissolves away, revealing next beneath it
-      slides[current].style.transition = 'none';
-      slides[current].style.opacity    = '1';
-      slides[current].style.zIndex     = '0'; // sit beneath current
-
-      void slides[current].offsetWidth; // force reflow
-
-      slides[prev].style.zIndex     = '1'; // sits on top
-      slides[prev].style.transition = `opacity ${FADE_MS}ms ease-in-out`;
-      slides[prev].style.opacity    = '0';
-
-      setTimeout(() => {
-        slides[prev].style.zIndex  = '0';
-        slides[current].style.zIndex = '1';
-      }, FADE_MS);
-
-    } else {
-      // ── FADE IN ── next photo materialises on top of the current one
-      slides[current].style.transition = 'none';
-      slides[current].style.opacity    = '0';
-      slides[current].style.zIndex     = '2'; // sit above current
-
-      void slides[current].offsetWidth; // force reflow
-
-      slides[current].style.transition = `opacity ${FADE_MS}ms ease-in-out`;
-      slides[current].style.opacity    = '1';
-
-      setTimeout(() => {
-        slides[prev].style.opacity   = '0';
-        slides[prev].style.zIndex    = '0';
-        slides[current].style.zIndex = '1';
-      }, FADE_MS);
-    }
-
-    fadeType = fadeType === 'out' ? 'in' : 'out';
-  }
-
-  function next() { goTo(current + 1); }
-
-  function startTimer() { timer = setInterval(next, HOLD_MS); }
-  function stopTimer()  { clearInterval(timer); }
-
-  dots.forEach((dot, i) => {
-    dot.addEventListener('click', () => { stopTimer(); goTo(i); startTimer(); });
-  });
-
-  const container = document.getElementById('beachhub-slideshow');
-  container.addEventListener('mouseenter', stopTimer);
-  container.addEventListener('mouseleave', startTimer);
-
-  startTimer();
+function joinList(items) {
+  if (items.length <= 1) return items.join('');
+  const last = items[items.length - 1];
+  const head = items.slice(0, -1).join(currentLang === 'ar' ? '، ' : ', ');
+  // Hebrew "ו" attaches to the next word; Arabic "و" takes a space.
+  return currentLang === 'ar' ? `${head} و${last}` : `${head} ו${last}`;
 }
 
-/* ── Story read-more accordion ──────────────── */
-function initStoryReadMore() {
-  const btn     = document.getElementById('story-read-more-btn');
-  const content = document.getElementById('story-read-more-content');
-  if (!btn || !content) return;
+function composeMessage() {
+  const evMsg = planner.event ? t(planner.event.msgKey) : null;
+  const sizeMsg = planner.size ? t(`size-${planner.size}`) : null;
+  const compLabels = planner.comps.map((key) => t(key));
+  const hasSelection = Boolean(evMsg || sizeMsg || compLabels.length);
+  if (!hasSelection) return t('wa-default');
 
-  btn.addEventListener('click', () => {
-    const isOpen = content.classList.toggle('is-open');
-    btn.setAttribute('aria-expanded', isOpen);
-    btn.textContent = isOpen ? t('story-readmore-open') : t('story-readmore-closed');
-    sendBizEvent('levyam.ui.story_readmore', { action: isOpen ? 'open' : 'close' });
+  if (currentLang === 'ar') {
+    let msg = evMsg ? `مرحباً، نخطط لتنظيم ${evMsg} في لب يام` : 'مرحباً، نرغب في التخطيط ليوم في لب يام';
+    if (sizeMsg) msg += `، عددنا ${sizeMsg}`;
+    if (compLabels.length) msg += `، ونرغب بدمج ${joinList(compLabels)}`;
+    return `${msg}. يسعدنا أن نخطط معاً!`;
+  }
+
+  let msg = evMsg ? `היי, אנחנו מתכננים ${evMsg} בלב ים` : 'היי, אנחנו רוצים לתכנן יום בלב ים';
+  if (sizeMsg) msg += ` לקבוצה של ${sizeMsg}`;
+  if (compLabels.length) msg += `, ורוצים לשלב את ${joinList(compLabels)}`;
+  return `${msg}. נשמח לתכנן יחד!`;
+}
+
+function waUrl(message) {
+  return `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(message)}`;
+}
+
+// Every [data-wa] link gets a language-aware href; the planner CTA gets the composed one.
+function refreshWhatsAppLinks() {
+  document.querySelectorAll('[data-wa]').forEach((link) => {
+    const message = link.dataset.wa === 'planner' ? composeMessage() : t('wa-default');
+    link.href = waUrl(message);
   });
 }
 
-/* ── Volume toggle ───────────────────────────── */
-function initVolumeToggle() {
-  const video     = document.getElementById('hero-video');
-  const btn       = document.getElementById('volume-btn');
-  const heroSection = document.getElementById('hero');
-  if (!video || !btn) return;
+function initPlanner() {
+  const chips = document.querySelectorAll('.chip[data-group]');
+  if (!chips.length) return;
 
-  // Browsers block autoplay with audio — video must start muted.
-  let unmuteHandled  = false;
-  let userWantsSound = false; // true once the user has enabled audio
+  chips.forEach((chip) => {
+    chip.addEventListener('click', () => {
+      const { group, value } = chip.dataset;
+      const wasPressed = chip.getAttribute('aria-pressed') === 'true';
 
-  const unmuteOnFirstInteraction = () => {
-    if (unmuteHandled) return;
-    unmuteHandled  = true;
-    userWantsSound = true;
-    video.muted    = false;
-    video.volume   = 1;
-    setUnmuted();
-    document.removeEventListener('click',      unmuteOnFirstInteraction);
-    document.removeEventListener('touchstart', unmuteOnFirstInteraction);
-  };
-
-  document.addEventListener('click',      unmuteOnFirstInteraction);
-  document.addEventListener('touchstart', unmuteOnFirstInteraction);
-
-  btn.addEventListener('click', (e) => {
-    e.stopPropagation();
-    if (video.muted) {
-      unmuteHandled  = true;
-      userWantsSound = true;
-      video.muted    = false;
-      video.volume   = 1;
-      document.removeEventListener('click',      unmuteOnFirstInteraction);
-      document.removeEventListener('touchstart', unmuteOnFirstInteraction);
-      setUnmuted();
-      sendBizEvent('levyam.ui.volume_toggle', { action: 'unmute' });
-    } else {
-      userWantsSound = false;
-      video.muted    = true;
-      setMuted();
-      sendBizEvent('levyam.ui.volume_toggle', { action: 'mute' });
-    }
-  });
-
-  // Mute when hero scrolls out of view; restore when it comes back
-  if (heroSection) {
-    const observer = new IntersectionObserver((entries) => {
-      if (!entries[0].isIntersecting) {
-        video.muted = true;
-      } else if (userWantsSound) {
-        video.muted = false;
-      }
-    }, { threshold: 0.05 });
-    observer.observe(heroSection);
-  }
-
-  function setUnmuted() {
-    btn.classList.add('unmuted');
-    btn.setAttribute('aria-label', t('vol-unmuted'));
-  }
-
-  function setMuted() {
-    btn.classList.remove('unmuted');
-    btn.setAttribute('aria-label', t('vol-muted'));
-  }
-}
-
-/* ── Package Accordions ──────────────────────── */
-function initPackageAccordions() {
-  const allToggles    = document.querySelectorAll('.pkg-accordion-toggle');
-  const allAccordions = document.querySelectorAll('.pkg-accordion');
-
-  allToggles.forEach((btn) => {
-    btn.addEventListener('click', () => {
-      const isMobile = window.innerWidth <= 767;
-      if (isMobile) {
-        // Mobile: toggle only this card (button references accordion via data-target)
-        const thisAcc = document.getElementById(btn.dataset.target);
-        const willOpen = !thisAcc.classList.contains('open');
-        thisAcc.classList.toggle('open', willOpen);
-        btn.textContent = willOpen ? t('pkg-acc-close') : t('pkg-acc-open');
-        btn.setAttribute('aria-expanded', String(willOpen));
-        sendBizEvent('levyam.ui.package_accordion', { package: btn.dataset.target, action: willOpen ? 'open' : 'close' });
+      if (group === 'comp') {
+        // multi-select
+        chip.setAttribute('aria-pressed', String(!wasPressed));
+        const key = chip.dataset.i18n;
+        planner.comps = wasPressed
+          ? planner.comps.filter((k) => k !== key)
+          : [...planner.comps, key];
       } else {
-        // Desktop: toggle all cards together
-        const anyOpen = document.querySelector('.pkg-accordion.open') !== null;
-        allAccordions.forEach((acc) => acc.classList.toggle('open', !anyOpen));
-        allToggles.forEach((b) => {
-          b.textContent = anyOpen ? t('pkg-acc-open') : t('pkg-acc-close');
-          b.setAttribute('aria-expanded', String(!anyOpen));
+        // single-select: unpress siblings in the same group
+        document.querySelectorAll(`.chip[data-group="${group}"]`).forEach((c) => {
+          c.setAttribute('aria-pressed', 'false');
         });
-        sendBizEvent('levyam.ui.package_accordion', { action: anyOpen ? 'close' : 'open', scope: 'all' });
+        if (wasPressed) {
+          planner[group] = null;
+        } else {
+          chip.setAttribute('aria-pressed', 'true');
+          planner[group] = group === 'event' ? { value, msgKey: chip.dataset.msg } : value;
+        }
       }
+
+      refreshWhatsAppLinks();
+      sendBizEvent('levyam.planner.select', { group, value, selected: !wasPressed });
     });
   });
 }
 
-/* ── Wire Grow CTA buttons ───────────────────── */
-function wireGrowButtons() {
-  document.querySelectorAll('[data-grow]').forEach((btn) => {
-    const key = btn.getAttribute('data-grow');
-    const url = GROW_URLS[key];
-    if (url && !url.startsWith('REPLACE')) {
-      btn.href = url;
-      btn.addEventListener('click', () => {
-        const meta = PACKAGE_META[key] || {};
-        sendBizEvent('levyam.package.cta_click', {
-          package: key,
-          package_name: meta.name || key,
-          package_slug: meta.slug || key,
-          price: meta.price || 0,
-        });
+// ── Click tracking ────────────────────────────────────────────
+function initTracking() {
+  document.addEventListener('click', (e) => {
+    const wa = e.target.closest('[data-wa]');
+    if (wa) {
+      sendBizEvent('levyam.whatsapp.click', {
+        source: wa.dataset.wa,
+        event_type: planner.event ? planner.event.value : '',
+        group_size: planner.size || '',
+        components: planner.comps.map((k) => k.replace('plan-comp', '')).join(','),
+        has_selection: Boolean(planner.event || planner.size || planner.comps.length),
       });
-    } else {
-      // Placeholder — show alert if credentials not set
-      btn.addEventListener('click', (e) => {
-        e.preventDefault();
-        alert('קישור התשלום עדיין לא הוגדר — יש לעדכן את כתובות Grow ב-main.js');
-      });
+      return;
+    }
+    const cta = e.target.closest('[data-track]');
+    if (cta) {
+      sendBizEvent('levyam.cta.click', { source: cta.dataset.track, target: cta.getAttribute('href') });
     }
   });
 }
 
-/* ── Fetch purchases from Supabase ───────────── */
-async function fetchPurchases() {
-  try {
-    // Fetch latest 10 for the live feed display
-    const res = await fetch(
-      `${SUPABASE_URL}/rest/v1/levyam-b2b?select=full_name,package,payment_sum,created_at&order=created_at.desc&limit=10`,
-      { headers: { 'apikey': SUPABASE_ANON_KEY } }
-    );
-    if (!res.ok) return [];
-    return res.json();
-  } catch {
-    return [];
-  }
+// ── Header state ──────────────────────────────────────────────
+function initHeader() {
+  const header = document.getElementById('site-header');
+  if (!header) return;
+  let ticking = false;
+  const update = () => {
+    header.classList.toggle('is-scrolled', window.scrollY > 24);
+    ticking = false;
+  };
+  window.addEventListener('scroll', () => {
+    if (!ticking) { requestAnimationFrame(update); ticking = true; }
+  }, { passive: true });
+  update();
 }
 
-async function fetchTotalCount() {
-  try {
-    const res = await fetch(
-      `${SUPABASE_URL}/rest/v1/levyam-b2b?select=id`,
-      { headers: { 'apikey': SUPABASE_ANON_KEY, 'Prefer': 'count=exact', 'Range-Unit': 'items', 'Range': '0-0' } }
-    );
-    if (!res.ok) return 0;
-    const contentRange = res.headers.get('Content-Range');
-    // Content-Range: 0-0/16 → extract total after "/"
-    const total = contentRange ? parseInt(contentRange.split('/')[1], 10) : 0;
-    return isNaN(total) ? 0 : total;
-  } catch {
-    return 0;
-  }
+// ── Floating WhatsApp button ──────────────────────────────────
+// Hidden while the planner CTA or the footer (which has its own button) is on screen.
+function initFloatingButton() {
+  const float = document.getElementById('wa-float');
+  if (!float || !('IntersectionObserver' in window)) return;
+  const visible = new Set();
+  const targets = [document.getElementById('plan-cta'), document.querySelector('.footer')].filter(Boolean);
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) visible.add(entry.target); else visible.delete(entry.target);
+    });
+    float.classList.toggle('is-hidden', visible.size > 0);
+  }, { threshold: 0.15 });
+  targets.forEach((el) => io.observe(el));
 }
 
-/* ── Update live feed + progress bar ─────────── */
-async function updateFeed() {
-  const [purchases, count] = await Promise.all([fetchPurchases(), fetchTotalCount()]);
-  const pct = Math.min((count / PROGRESS_GOAL) * 100, 100);
-  const pctRounded = Math.round(pct);
+// ── Hero video ────────────────────────────────────────────────
+// Play only while the hero is on screen; respect reduced-motion.
+function initHeroVideo() {
+  const video = document.getElementById('hero-video');
+  const hero = document.getElementById('hero');
+  if (!video || !hero) return;
 
-  const barFill = document.getElementById('progress-bar-fill');
-  if (barFill) barFill.style.width = pct + '%';
-
-  // Live stat number
-  const statJoined = document.getElementById('stat-joined');
-  if (statJoined) statJoined.textContent = count;
-
-  // CTA counter text (language-aware)
-  const counter = document.getElementById('spots-counter');
-  if (counter) {
-    const next = count + 1;
-    counter.textContent = count > 0
-      ? t('progress-counter-nth').replace('{n}', next)
-      : t('progress-counter-first');
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    video.removeAttribute('autoplay');
+    video.pause();
+    return;
   }
+  if (!('IntersectionObserver' in window)) return;
 
-  // Sun marker position
-  const sun = document.getElementById('progress-sun');
-  if (sun) {
-    sun.style.left = pct + '%';
-    sun.style.display = pct > 0 ? '' : 'none';
-  }
-
-  // Live feed
-  const feed = document.getElementById('purchase-feed');
-  if (feed) {
-    if (purchases.length === 0) {
-      feed.innerHTML = '<p class="feed-empty">היו הראשונים להצטרף!</p>';
+  const io = new IntersectionObserver(([entry]) => {
+    if (entry.isIntersecting) {
+      const p = video.play();
+      if (p && typeof p.catch === 'function') p.catch(() => { /* autoplay blocked — poster shows */ });
     } else {
-      feed.innerHTML = purchases.map((p) => {
-        return `<div class="purchase-item">
-          <img src="content/brand/icons-16.png" class="purchase-icon" alt="">
-          <span class="purchase-name">${p.package || 'חבילה'}</span>
-        </div>`;
-      }).join('');
+      video.pause();
     }
-  }
+  }, { threshold: 0.1 });
+  io.observe(hero);
 }
 
-/* ── Smooth scroll for nav CTA ───────────────── */
-document.addEventListener('click', (e) => {
-  const anchor = e.target.closest('a[href^="#"]');
-  if (!anchor) return;
-  const href = anchor.getAttribute('href');
-  const target = document.querySelector(href);
-  if (target) {
-    e.preventDefault();
-    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    sendBizEvent('levyam.ui.nav_click', { target: href, button: anchor.dataset.i18n || href });
-  }
+// ── Boot ──────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  initLangSwitch();
+  initPlanner();
+  initTracking();
+  initHeader();
+  initFloatingButton();
+  initHeroVideo();
+  applyLanguage(currentLang);
 });
