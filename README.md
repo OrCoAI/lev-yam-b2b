@@ -46,8 +46,8 @@ Merging to `main` deploys.
 | 4 | Three components — 01 space, 02 food, 03 content | `#space` `#food` `#content` |
 | 5 | One day, exactly for you — 6 tiles + CTA | `#fit` |
 | 6 | Good experience, good impact | `#impact` |
-| 7 | Let's meet — closing + WhatsApp planner | `#plan` |
-| 8 | Footer — logo, place, WhatsApp, language, © | `.footer` |
+| 7 | Let's meet — closing + WhatsApp planner (blue finale, one white card) | `#plan` |
+| 8 | Footer — removed for now (Or, 2026-10-12); its copy is kept in `content/copy.md` | — |
 | — | Floating WhatsApp button (mobile only) | `#wa-float` |
 
 ---

@@ -337,24 +337,45 @@ function joinList(items) {
   return currentLang === 'ar' ? `${head} و${last}` : `${head} ו${last}`;
 }
 
-function composeMessage() {
+// The message as a list of fragments; the ones the user chose are marked so
+// the preview can highlight them. The WhatsApp link uses the plain join.
+function composeParts() {
   const evMsg = planner.event ? t(planner.event.msgKey) : null;
   const sizeMsg = planner.size ? t(`size-${planner.size}`) : null;
   const compLabels = planner.comps.map((c) => t(c.labelKey));
   const hasSelection = Boolean(evMsg || sizeMsg || compLabels.length);
-  if (!hasSelection) return t('wa-default');
+  if (!hasSelection) return [{ text: t('wa-default') }];
 
+  const parts = [];
   if (currentLang === 'ar') {
-    let msg = evMsg ? `مرحباً، نخطط لتنظيم ${evMsg} في لب يام` : 'مرحباً، نرغب في التخطيط ليوم في لب يام';
-    if (sizeMsg) msg += `، عددنا ${sizeMsg}`;
-    if (compLabels.length) msg += `، ونرغب بدمج ${joinList(compLabels)}`;
-    return `${msg}. يسعدنا أن نخطط معاً!`;
+    if (evMsg) parts.push({ text: 'مرحباً، نخطط لتنظيم ' }, { text: evMsg, mark: true }, { text: ' في لب يام' });
+    else parts.push({ text: 'مرحباً، نرغب في التخطيط ليوم في لب يام' });
+    if (sizeMsg) parts.push({ text: '، عددنا ' }, { text: sizeMsg, mark: true });
+    if (compLabels.length) parts.push({ text: '، ونرغب بدمج ' }, { text: joinList(compLabels), mark: true });
+    parts.push({ text: '. يسعدنا أن نخطط معاً!' });
+    return parts;
   }
 
-  let msg = evMsg ? `היי, אנחנו מתכננים ${evMsg} בלב ים` : 'היי, אנחנו רוצים לתכנן יום בלב ים';
-  if (sizeMsg) msg += ` לקבוצה של ${sizeMsg}`;
-  if (compLabels.length) msg += `, ורוצים לשלב את ${joinList(compLabels)}`;
-  return `${msg}. נשמח לתכנן יחד!`;
+  if (evMsg) parts.push({ text: 'היי, אנחנו מתכננים ' }, { text: evMsg, mark: true }, { text: ' בלב ים' });
+  else parts.push({ text: 'היי, אנחנו רוצים לתכנן יום בלב ים' });
+  if (sizeMsg) parts.push({ text: ' לקבוצה של ' }, { text: sizeMsg, mark: true });
+  if (compLabels.length) parts.push({ text: ', ורוצים לשלב את ' }, { text: joinList(compLabels), mark: true });
+  parts.push({ text: '. נשמח לתכנן יחד!' });
+  return parts;
+}
+
+function composeMessage() {
+  return composeParts().map((p) => p.text).join('');
+}
+
+function escapeHtml(s) {
+  return s.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}
+
+function composePreviewHtml() {
+  return composeParts()
+    .map((p) => (p.mark ? `<mark class="sel">${escapeHtml(p.text)}</mark>` : escapeHtml(p.text)))
+    .join('');
 }
 
 function waUrl(message) {
@@ -372,17 +393,20 @@ function refreshWhatsAppLinks({ animate = false } = {}) {
 
 // The chat card mirrors the exact message the button will open in WhatsApp.
 let chatTimer = null;
+let lastPreview = '';
 function updateChatPreview(animate) {
   const text = document.getElementById('chat-text');
   if (!text) return;
   const next = composeMessage();
-  if (text.textContent === next) return;
+  if (next === lastPreview) return;
+  lastPreview = next;
+  const render = () => { text.innerHTML = composePreviewHtml(); };
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (!animate || reduced) { text.textContent = next; return; }
+  if (!animate || reduced) { render(); return; }
   clearTimeout(chatTimer);
   text.classList.add('is-updating');
   chatTimer = setTimeout(() => {
-    text.textContent = next;
+    render();
     text.classList.remove('is-updating');
     const bubble = document.getElementById('chat-bubble');
     if (bubble) {
@@ -464,14 +488,13 @@ function initHeader() {
 }
 
 // ── Floating WhatsApp button ──────────────────────────────────
-// Hidden while the planner (chips, preview, send button) or the footer (which
-// has its own button) is on screen, so there is never a second WhatsApp button
-// competing with the one the user is about to tap.
+// Hidden while the planner (chips, message, send button) is on screen, so there
+// is never a second WhatsApp button competing with the one the user is about to tap.
 function initFloatingButton() {
   const float = document.getElementById('wa-float');
   if (!float || !('IntersectionObserver' in window)) return;
   const visible = new Set();
-  const targets = [document.getElementById('planner'), document.querySelector('.footer')].filter(Boolean);
+  const targets = [document.getElementById('planner')].filter(Boolean);
   const io = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
       if (entry.isIntersecting) visible.add(entry.target); else visible.delete(entry.target);

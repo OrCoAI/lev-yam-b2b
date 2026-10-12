@@ -272,17 +272,17 @@
   </div>
 </section>
 
-<!-- ── Plan (closing + WhatsApp planner) ───── -->
+<!-- ── Plan (closing + WhatsApp planner) — the page's finale ── -->
 <section class="section plan" id="plan">
   <div class="container">
     <h2 class="center h2-accent" data-i18n="plan-h2">בואו להיפגש בלב ים.</h2>
-    <div class="fit-text center">
+    <div class="plan-intro center">
       <p data-i18n="plan-p1">יש משהו מיוחד ביום שמתחיל מול הים, ממשיך עם אוכל טוב, שיחות מעניינות וחוויות משותפות, ומסתיים בתחושה שהיה שווה לצאת מהשגרה.</p>
       <p data-i18n="plan-p2">ספרו לנו מה אתם מתכננים, כמה אנשים אתם ומה הייתם רוצים לחוות ונשמח ליצור יחד יום שמתאים בדיוק לכם.</p>
     </div>
 
     <div class="planner" id="planner">
-      <div class="planner-group" role="group" aria-labelledby="plan-q1">
+      <div class="planner-row" role="group" aria-labelledby="plan-q1">
         <h3 class="planner-q" id="plan-q1" data-i18n="plan-q1">מה אתם מתכננים?</h3>
         <div class="chips">
           <button type="button" class="chip" data-group="event" data-value="team" data-msg="plan-ev1-msg" aria-pressed="false" data-i18n="fit-li1">ימי גיבוש וצוות</button>
@@ -294,7 +294,7 @@
         </div>
       </div>
 
-      <div class="planner-group" role="group" aria-labelledby="plan-q2">
+      <div class="planner-row" role="group" aria-labelledby="plan-q2">
         <h3 class="planner-q" id="plan-q2" data-i18n="plan-q2">כמה אנשים אתם?</h3>
         <div class="chips">
           <button type="button" class="chip chip-num" data-group="size" data-value="lt15" aria-pressed="false" data-i18n="plan-size1">עד 15</button>
@@ -304,7 +304,7 @@
         </div>
       </div>
 
-      <div class="planner-group" role="group" aria-labelledby="plan-q3">
+      <div class="planner-row" role="group" aria-labelledby="plan-q3">
         <h3 class="planner-q" id="plan-q3" data-i18n="plan-q3">מה הייתם רוצים לחוות?</h3>
         <div class="chips">
           <button type="button" class="chip" data-group="comp" data-value="space" data-label="plan-comp1" aria-pressed="false" data-i18n="plan-comp1">המרחב</button>
@@ -313,14 +313,12 @@
         </div>
       </div>
 
-      <p class="planner-help" data-i18n="plan-help">אפשר גם לדלג ולכתוב לנו חופשי.</p>
-
-      <!-- The exact message the button opens in WhatsApp; updates with every selection -->
-      <div class="preview" id="chat-bubble">
-        <svg class="wa-icon preview-icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-wa"/></svg>
-        <div class="preview-body">
+      <!-- The message itself, assembling as chips are tapped; selections are highlighted -->
+      <div class="message" id="chat-bubble">
+        <svg class="wa-icon message-icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-wa"/></svg>
+        <div class="message-body">
           <p class="chat-text" id="chat-text" aria-live="polite">היי, אנחנו רוצים לתכנן יום בלב ים. נשמח לשמוע פרטים.</p>
-          <p class="preview-caption" data-i18n="chat-caption">זו ההודעה שתישלח. אפשר לערוך אותה בוואטסאפ לפני השליחה.</p>
+          <p class="message-caption" data-i18n="chat-caption">זו ההודעה שתישלח. אפשר לערוך אותה בוואטסאפ לפני השליחה.</p>
         </div>
       </div>
 
@@ -329,10 +327,6 @@
           <svg class="wa-icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-wa"/></svg>
           <span data-i18n="cta-plan">בואו נתכנן את היום שלכם</span>
         </a>
-        <p class="planner-direct">
-          <span data-i18n="plan-or">או ישירות בוואטסאפ:</span>
-          <a href="#" data-wa="plan-number" target="_blank" rel="noopener noreferrer" dir="ltr">050-666-9138</a>
-        </p>
       </div>
     </div>
   </div>
@@ -340,34 +334,7 @@
 
 </main>
 
-<!-- ── Footer ───────────────────────────────── -->
-<footer class="footer">
-  <div class="container footer-inner">
-    <img src="content/brand/Logo-fin-(1080_1080pxl)-13.png" alt="לב ים" data-i18n-alt="brand-name" width="1080" height="1080" class="footer-logo" loading="lazy">
-    <p class="footer-place" data-i18n="footer-place">לב ים, כפר הדייגים בג׳יסר א-זרקא</p>
-
-    <!-- Contact details — hidden until Or supplies them -->
-    <ul class="footer-contact" hidden data-pending="address, maps links, phone, email, instagram">
-      <li><a href="#" data-i18n="footer-waze">ניווט ב-Waze</a></li>
-      <li><a href="#" data-i18n="footer-maps">Google Maps</a></li>
-      <li><a href="mailto:" data-i18n="footer-email">אימייל</a></li>
-      <li><a href="#" data-i18n="footer-instagram">אינסטגרם</a></li>
-    </ul>
-
-    <div class="footer-actions">
-      <a href="#" class="btn btn-wa" data-wa="footer" target="_blank" rel="noopener noreferrer">
-        <svg class="wa-icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-wa"/></svg>
-        <span data-i18n="nav-wa">דברו איתנו</span>
-      </a>
-      <div class="lang-switch lang-switch-footer" role="group" aria-label="בחירת שפה / اختيار اللغة">
-        <button type="button" class="lang-btn" data-lang="he" aria-pressed="true" lang="he">עברית</button>
-        <button type="button" class="lang-btn" data-lang="ar" aria-pressed="false" lang="ar">العربية</button>
-      </div>
-    </div>
-
-    <p class="footer-copy" data-i18n="footer-copy">© 2026 לב ים. כל הזכויות שמורות.</p>
-  </div>
-</footer>
+<!-- Footer removed for now (Or, 2026-10-12). Language switch lives in the header. -->
 
 <!-- ── Floating WhatsApp ────────────────────── -->
 <a href="#" class="wa-float" id="wa-float" data-wa="floating" target="_blank" rel="noopener noreferrer" aria-label="דברו איתנו בוואטסאפ" data-i18n-aria="wa-aria">

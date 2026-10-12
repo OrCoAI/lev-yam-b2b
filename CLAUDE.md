@@ -66,8 +66,10 @@ logos, footer contact details. Switch on by removing `hidden` once real content 
 4. Three components `#space` `#food` `#content` — alternating photo/text rows, checklists, rental options
 5. Fit `#fit` — "יום אחד. בדיוק בשבילכם." + 6 icon tiles + CTA
 6. Impact `#impact` — full-bleed photo, short text
-7. Plan `#plan` — closing text + WhatsApp planner (3 optional chip questions) + CTA + direct number
-8. Footer — logo, place line, WhatsApp, language, ©. No tagline (dropped on purpose).
+7. Plan `#plan` — the finale: blue full-bleed section, one white card with three label + chips rows,
+   the message in large type (selections highlighted in orange marker), one orange CTA. No direct
+   number (removed). No decorations — Or rejected a busier version.
+8. Footer — removed for now (Or, 2026-10-12). Copy kept in `content/copy.md` for when it returns.
 — Floating WhatsApp button, mobile only; hides while `#plan-cta` or the footer is on screen.
 
 One WhatsApp entry point per viewport: header button on desktop, floating button on mobile.

@@ -538,36 +538,50 @@ p + p { margin-top: 0.9rem; }
 .tile-icon svg { width: 34px; height: 34px; }
 
 /* ── Impact ──────────────────────────────────── */
-/* Blue is the brand's dark background; text is set large enough to read on it */
-.impact {
+.impact { background: var(--white); text-align: center; }
+.impact-icon { width: 56px; margin: 0 auto 1rem; }
+.impact-content p { color: var(--ink-soft); }
+.impact-lead { font-size: 1.25rem; font-weight: 700; color: var(--ink); }
+
+/* ── Plan + WhatsApp planner — the page's finale ── */
+/* Blue is the brand's dark background. Inside it, one white card: three
+   label + chips rows, the message set in large type with the selections
+   highlighted, and one orange button. Nothing else. */
+.plan {
   background: var(--blue);
   color: var(--white);
-  text-align: center;
+  padding-bottom: calc(clamp(3.5rem, 8vw, 6.5rem) + env(safe-area-inset-bottom, 0px));
 }
-.impact h2 { color: var(--white); }
-.impact-icon { width: 56px; margin: 0 auto 1rem; }
-.impact-content p { font-size: 1.1875rem; font-weight: 700; line-height: 1.6; }
-.impact-lead { font-size: 1.4rem; font-weight: 900; }
-
-/* ── Plan + WhatsApp planner ─────────────────── */
-/* One white card: three questions, the message that will be sent, the button */
-.plan { background: var(--cream); }
+.plan h2 { color: var(--white); }
+/* White on blue is read at ≥ 19px bold */
+.plan-intro {
+  max-width: 680px;
+  margin: 0 auto;
+  font-size: 1.2rem;
+  font-weight: 700;
+  line-height: 1.6;
+}
+.plan-intro p + p { margin-top: 0.75rem; }
 
 .planner {
-  max-width: 720px;
+  max-width: 880px;
   margin: 2.5rem auto 0;
-  padding: clamp(1.5rem, 4vw, 2.5rem);
+  padding: clamp(1.5rem, 4vw, 2.75rem);
   background: var(--white);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow-sm);
-}
-.planner-group + .planner-group { margin-top: 1.75rem; }
-.planner-q {
-  font-size: 1.0625rem;
-  font-weight: 700;
   color: var(--ink);
-  margin-bottom: 0.7rem;
+  border-radius: 28px;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.18);
 }
+
+.planner-row { display: grid; gap: 0.6rem; padding-block: 1.1rem; }
+.planner-row:first-child { padding-top: 0; }
+.planner-row + .planner-row { border-top: 1px solid var(--line); }
+.planner-q { margin: 0; font-size: 1.0625rem; font-weight: 700; color: var(--ink); }
+@media (min-width: 768px) {
+  .planner-row { grid-template-columns: 220px minmax(0, 1fr); gap: 1rem 1.5rem; align-items: start; padding-block: 1.4rem; }
+  .planner-q { padding-top: 0.5rem; }
+}
+
 .chips { display: flex; flex-wrap: wrap; gap: 0.5rem; }
 .chip {
   display: inline-flex;
@@ -586,72 +600,46 @@ p + p { margin-top: 0.9rem; }
 }
 .chip:hover { border-color: var(--blue); background: var(--blue-soft); }
 .chip:active { transform: scale(0.97); }
-.chip[aria-pressed="true"] {
-  background: var(--orange);
-  border-color: var(--orange);
-}
+.chip[aria-pressed="true"] { background: var(--orange); border-color: var(--orange); }
 .chip-num { min-width: 4.6rem; font-variant-numeric: tabular-nums; }
-.planner-help { margin-top: 1rem; font-size: 0.95rem; color: var(--ink-soft); }
 
 /* The message that will open in WhatsApp */
-.preview {
+.message {
   display: flex;
   align-items: flex-start;
-  gap: 0.75rem;
-  margin-top: 1.75rem;
-  padding: 1rem 1.1rem;
-  border-radius: var(--radius-sm);
+  gap: 0.9rem;
+  margin-top: 1.4rem;
+  padding: 1.4rem 1.5rem;
+  border-radius: var(--radius);
   background: var(--cream);
 }
-.preview.is-pop { animation: preview-pop 0.25s var(--ease); }
+.message.is-pop { animation: preview-pop 0.25s var(--ease); }
 @keyframes preview-pop {
   from { transform: scale(0.985); }
   to { transform: scale(1); }
 }
-.preview-icon { width: 22px; height: 22px; margin-top: 0.2rem; color: var(--blue); }
-.preview-body { min-width: 0; }
+.message-icon { width: 26px; height: 26px; margin-top: 0.3rem; color: var(--blue); }
+.message-body { min-width: 0; }
 .chat-text {
   margin: 0;
-  line-height: 1.6;
+  font-size: clamp(1.15rem, 0.6vw + 1rem, 1.5rem);
   font-weight: 700;
+  line-height: 1.5;
   transition: opacity 0.18s var(--ease);
 }
 .chat-text.is-updating { opacity: 0; }
-.preview-caption { margin: 0.5rem 0 0; font-size: 0.85rem; line-height: 1.5; color: var(--ink-soft); }
-
-.planner-actions {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.8rem;
-  margin-top: 1.5rem;
-  text-align: center;
+/* Selected fragments: orange marker under the words */
+.chat-text .sel {
+  color: inherit;
+  background: linear-gradient(transparent 45%, rgba(244, 152, 52, 0.5) 45%);
+  padding: 0 0.1em;
+  border-radius: 2px;
 }
+.message-caption { margin: 0.6rem 0 0; font-size: 0.875rem; line-height: 1.5; color: var(--ink-soft); }
+
+.planner-actions { display: flex; justify-content: center; margin-top: 1.5rem; }
 .planner-actions .btn-xl { width: 100%; }
-.planner-direct { font-size: 0.95rem; color: var(--ink-soft); }
-.planner-direct a {
-  font-weight: 700;
-  color: var(--ink);
-  text-decoration: underline;
-  text-underline-offset: 3px;
-}
-
-/* ── Footer ──────────────────────────────────── */
-.footer {
-  background: var(--cream);
-  border-top: 1px solid var(--line);
-  padding: 3rem 0 calc(2rem + 72px);  /* room for the floating button */
-  text-align: center;
-}
-.footer-inner { display: flex; flex-direction: column; align-items: center; gap: 0.9rem; }
-.footer-logo { width: 120px; height: 120px; }
-.footer-place { font-weight: 700; }
-.footer-contact { display: flex; flex-wrap: wrap; justify-content: center; gap: 1.25rem; }
-.footer-contact a { font-weight: 700; text-decoration: underline; text-underline-offset: 3px; }
-.footer-actions { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 0.9rem; margin-top: 0.5rem; }
-.lang-switch-footer { background: var(--blue-soft); }
-.lang-switch-footer .lang-btn { color: var(--ink); }
-.footer-copy { font-size: 0.875rem; color: var(--ink-soft); margin-top: 0.5rem; }
+@media (min-width: 600px) { .planner-actions .btn-xl { width: auto; min-width: 380px; } }
 
 /* ── Floating WhatsApp ───────────────────────── */
 .wa-float {
@@ -683,7 +671,6 @@ p + p { margin-top: 0.9rem; }
 /* Desktop has the header button — one WhatsApp entry point per viewport */
 @media (min-width: 900px) {
   .wa-float { display: none; }
-  .footer { padding-bottom: 3rem; }
 }
 
 /* ── Motion preferences ──────────────────────── */
