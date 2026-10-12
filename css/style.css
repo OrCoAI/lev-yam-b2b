@@ -117,6 +117,8 @@ p + p { margin-top: 0.9rem; }
   padding-bottom: 1.1rem;
   margin-bottom: 1.5rem;
 }
+/* Arabic letters reach lower below the line; give the wave more room */
+html[lang="ar"] .h2-accent { padding-bottom: 1.5rem; }
 .h2-accent::after {
   content: '';
   position: absolute;
@@ -424,7 +426,8 @@ p + p { margin-top: 0.9rem; }
 .logo-row { display: flex; flex-wrap: wrap; justify-content: center; gap: 2rem; margin-top: 2.5rem; }
 
 /* ── Three pillars — folded ──────────────────── */
-/* Mobile: one cream list with three rows; a row opens in place, one at a time.
+/* One template per item: title, subtitle, paragraph.
+   Mobile: one cream list with three rows; a row opens in place, one at a time.
    Desktop: three cream cards in a row (cream is the brand's package-card
    colour); "מידע נוסף" opens all three together so the cards stay aligned. */
 .pillar-grid {
@@ -463,14 +466,17 @@ p + p { margin-top: 0.9rem; }
 }
 .pillar-icon img { width: auto; height: auto; max-width: 32px; max-height: 32px; }
 
-.pillar-titles { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 0.25rem; }
-.pillar-name {
+.pillar-titles { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 0.3rem; }
+
+/* Title — the largest line; blue on cream passes contrast at this size */
+.pillar-title {
   display: inline-flex;
   align-items: center;
-  gap: 0.45rem;
-  font-size: 0.9375rem;
-  font-weight: 700;
-  color: var(--ink);
+  gap: 0.5rem;
+  font-size: 1.4rem;
+  font-weight: 900;
+  line-height: 1.2;
+  color: var(--blue);
 }
 .pillar-num {
   display: inline-grid;
@@ -485,12 +491,13 @@ p + p { margin-top: 0.9rem; }
   font-weight: 900;
   font-variant-numeric: tabular-nums;
 }
-/* Blue on cream passes contrast as large text only (≥ 19px bold) */
-.pillar-tagline {
-  font-size: 1.2rem;
-  font-weight: 900;
-  line-height: 1.35;
-  color: var(--blue);
+/* Subtitle — one step down */
+.pillar-subtitle {
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.45;
+  color: var(--ink);
+  text-wrap: balance;
 }
 
 .pillar-chevron {
@@ -523,11 +530,17 @@ p + p { margin-top: 0.9rem; }
 .pillar.no-anim .pillar-panel-inner,
 .pillar.no-anim .pillar-chevron { transition: none; }
 
-.pillar-body { padding: 0.25rem 1.1rem 1.5rem; }
-.pillar-body > p { color: var(--ink-soft); }
-.pillar-body > p:first-child { color: var(--ink); }
-.pillar-body .list-title:first-of-type { margin-top: 1.1rem; }
-.pillar-body > .pillar-close { margin-top: 1.25rem; font-weight: 700; color: var(--ink); }
+/* Paragraph — on mobile it starts in line with the title, past the icon */
+.pillar-body {
+  padding-block: 0 1.4rem;
+  padding-inline: calc(1.1rem + 56px + 0.9rem) 1.1rem;  /* start = the icon side */
+}
+.pillar-text {
+  font-size: 1rem;
+  line-height: 1.75;
+  color: var(--ink-soft);
+  text-wrap: pretty;
+}
 
 /* Desktop-only "מידע נוסף / סגור" bar */
 .pillar-more { display: none; }
@@ -555,20 +568,29 @@ p + p { margin-top: 0.9rem; }
 
   .pillar-head {
     flex-direction: column;
-    gap: 0.9rem;
-    padding: 2.25rem 1.5rem 1.5rem;
+    gap: 1rem;
+    padding: 2.25rem 1.75rem 1.5rem;
     text-align: center;
   }
   .pillar-icon { width: 92px; height: 92px; }
   .pillar-icon img { max-width: 50px; max-height: 50px; }
-  .pillar-titles { align-items: center; gap: 0.55rem; }
-  .pillar-tagline { font-size: 1.4rem; text-wrap: balance; }
+  .pillar-titles { align-items: center; gap: 0.5rem; }
+  .pillar-title { font-size: 1.75rem; }
+  .pillar-subtitle { font-size: 1.1rem; }
   .pillar-head .pillar-chevron { display: none; }
 
-  .pillar-body { padding: 0 1.75rem 1.75rem; }
-  .pillar .checklist { grid-template-columns: 1fr; }
-  .pillar .options { grid-template-columns: 1fr; gap: 0.5rem; }
-  .pillar .options li { padding-block: 0.55rem; }
+  /* Short orange rule between subtitle and paragraph */
+  .pillar-body { padding-block: 0 1.75rem; padding-inline: 1.75rem; text-align: center; }
+  .pillar-body::before {
+    content: '';
+    display: block;
+    width: 40px;
+    height: 3px;
+    margin: 0 auto 1.1rem;
+    border-radius: 2px;
+    background: var(--orange);
+  }
+  .pillar-text { max-width: 30ch; margin-inline: auto; }
 
   .pillar-more {
     display: flex;
@@ -589,42 +611,6 @@ p + p { margin-top: 0.9rem; }
   }
   .pillar-more:hover { background: var(--blue-soft); }
   .pillar-more .pillar-chevron { width: 26px; height: 26px; background-size: 13px; }
-}
-
-/* Checklist with blue check marks */
-.checklist { display: grid; gap: 0.5rem 1.25rem; }
-@media (min-width: 600px) { .checklist { grid-template-columns: 1fr 1fr; } }
-.checklist li {
-  position: relative;
-  padding-inline-start: 1.9rem;
-  line-height: 1.55;
-}
-.checklist li::before {
-  content: '';
-  position: absolute;
-  inset-inline-start: 0;
-  top: 0.2em;
-  width: 1.25rem;
-  height: 1.25rem;
-  border-radius: 50%;
-  background: var(--blue) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M5.5 10.5 L8.5 13.5 L14.5 7' fill='none' stroke='%23fff' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / 100% no-repeat;
-}
-
-/* Rental options as small white boxes */
-.options {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 0.6rem;
-}
-.options li {
-  padding: 0.7rem 0.9rem;
-  border: 1.5px solid var(--line);
-  border-radius: var(--radius-sm);
-  background: var(--white);
-  font-weight: 700;
-  font-size: 0.95rem;
-  text-align: center;
-  line-height: 1.35;
 }
 
 /* ── Fit ─────────────────────────────────────── */

@@ -65,8 +65,10 @@ logos, footer contact details. Switch on by removing `hidden` once real content 
 3b. Testimonials + logos `#testimonials` — hidden until content
 4. Three components `#space` `#food` `#content` — folded (Or, 2026-10-12). Desktop: three cream cards in
    a row like the old packages; "מידע נוסף" opens all three together. Mobile: one grouped list, one item
-   open at a time (an item above closes instantly with scroll compensation). Closed view = icon, number +
-   name, tagline. Header links open the item. Real photos go at the top of each `.pillar-body`.
+   open at a time (an item above closes instantly with scroll compensation). Every item is the same
+   template: title (name) → subtitle (tagline) → one paragraph of similar length; closed view shows icon,
+   number + title, subtitle. Lists and rental options were removed for now (text kept in copy.md and the
+   translation dictionary). Header links open the item. Real photos go at the top of each `.pillar-body`.
 5. Fit `#fit` — "יום אחד. בדיוק בשבילכם." + 6 icon tiles + CTA
 6. Impact `#impact` — full-bleed photo, short text
 7. Plan `#plan` — the finale: blue full-bleed section, one white card with three label + chips rows,

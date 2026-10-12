@@ -153,7 +153,9 @@
 </section>
 
 <!-- ── Three components — folded ────────────── -->
-<!-- Mobile: one grouped list; tapping a row opens it and closes the others.
+<!-- Every item has the same template: title, subtitle, one paragraph (Or, 2026-10-12;
+     the text will be rewritten to equal lengths).
+     Mobile: one grouped list; tapping a row opens it and closes the others.
      Desktop: three cards in a row; "מידע נוסף" opens all three together, as the old packages did.
      Photos, when they arrive, go as the first child of each .pillar-body. -->
 <section class="section pillars" id="pillars">
@@ -168,8 +170,8 @@
           <button type="button" class="pillar-head" id="pillar-head-space" aria-expanded="false" aria-controls="pillar-panel-space">
             <span class="pillar-icon" aria-hidden="true"><img src="content/brand/icons-4.png" alt="" width="469" height="310"></span>
             <span class="pillar-titles">
-              <span class="pillar-name"><span class="pillar-num">01</span><span data-i18n="nav-space">המרחב</span></span>
-              <span class="pillar-tagline" data-i18n="p1-h3">משנים אווירה. פותחים את הראש.</span>
+              <span class="pillar-title"><span class="pillar-num">01</span><span data-i18n="nav-space">המרחב</span></span>
+              <span class="pillar-subtitle" data-i18n="p1-h3">משנים אווירה. פותחים את הראש.</span>
             </span>
             <span class="pillar-chevron" aria-hidden="true"></span>
           </button>
@@ -177,22 +179,7 @@
         <div class="pillar-panel" id="pillar-panel-space" role="region" aria-labelledby="pillar-head-space">
           <div class="pillar-panel-inner">
             <div class="pillar-body">
-              <p data-i18n="p1-p1">המרחב משלב פינות ישיבה נעימות, אזורי התכנסות ואווירה אינטימית ובלתי פורמלית, שמאפשרת להאט, להתרכז ולהיפגש באמת.</p>
-              <p data-i18n="p1-p2">בין אם מדובר בישיבת הנהלה, סיעור מוחות, יום צוות או מפגש מקצועי, כאן תמצאו סביבה שמעודדת יצירתיות, שיח פתוח וחיבור אנושי.</p>
-              <h4 class="list-title" data-i18n="p1-list-title">מה מחכה לכם?</h4>
-              <ul class="checklist">
-                <li data-i18n="p1-li1">מרחבי התכנסות ועבודה לצוותים ולקבוצות</li>
-                <li data-i18n="p1-li2">פינות ישיבה באווירה נינוחה</li>
-                <li data-i18n="p1-li3">טבע, ים ונוף פתוח</li>
-                <li data-i18n="p1-li4">אפשרות לשילוב מפגשים מקצועיים וזמן חופשי</li>
-              </ul>
-              <h4 class="list-title" data-i18n="p1-rent-title">איך אפשר לשכור?</h4>
-              <ul class="options">
-                <li data-i18n="p1-rent1">חלק מהמרחב</li>
-                <li data-i18n="p1-rent2">החלל הפנימי בלבד</li>
-                <li data-i18n="p1-rent3">המרפסת הצופה לים בלבד</li>
-                <li data-i18n="p1-rent4">המתחם כולו</li>
-              </ul>
+              <p class="pillar-text" data-i18n="p1-p1">המרחב משלב פינות ישיבה נעימות, אזורי התכנסות ואווירה אינטימית ובלתי פורמלית, שמאפשרת להאט, להתרכז ולהיפגש באמת.</p>
             </div>
           </div>
         </div>
@@ -207,8 +194,8 @@
           <button type="button" class="pillar-head" id="pillar-head-food" aria-expanded="false" aria-controls="pillar-panel-food">
             <span class="pillar-icon" aria-hidden="true"><img src="content/brand/icons-1.png" alt="" width="613" height="949"></span>
             <span class="pillar-titles">
-              <span class="pillar-name"><span class="pillar-num">02</span><span data-i18n="nav-food">האוכל</span></span>
-              <span class="pillar-tagline" data-i18n="p2-h3">טעמים מקומיים. אירוח מכל הלב.</span>
+              <span class="pillar-title"><span class="pillar-num">02</span><span data-i18n="nav-food">האוכל</span></span>
+              <span class="pillar-subtitle" data-i18n="p2-h3">טעמים מקומיים. אירוח מכל הלב.</span>
             </span>
             <span class="pillar-chevron" aria-hidden="true"></span>
           </button>
@@ -216,16 +203,7 @@
         <div class="pillar-panel" id="pillar-panel-food" role="region" aria-labelledby="pillar-head-food">
           <div class="pillar-panel-inner">
             <div class="pillar-body">
-              <p data-i18n="p2-p1">האוכל הוא חלק מהחוויה והבחירה היא שלכם.</p>
-              <h4 class="list-title" data-i18n="p2-list-title">מה אפשר לשלב?</h4>
-              <ul class="checklist">
-                <li data-i18n="p2-li1">קבלת פנים עם תה מסורתי</li>
-                <li data-i18n="p2-li2">מאפי בוקר מהכפר ופירות העונה</li>
-                <li data-i18n="p2-li3">ארוחות צהריים מקומיות, עשירות ומגוונות</li>
-                <li data-i18n="p2-li4">אירוח שף לחוויה קולינרית ייחודית</li>
-                <li data-i18n="p2-li5">אפשרות להביא קייטרינג חיצוני מטעמכם</li>
-              </ul>
-              <p class="pillar-close" data-i18n="p2-close">התפריט והאירוח מותאמים לאופי המפגש ולצורכי הקבוצה.</p>
+              <p class="pillar-text"><span data-i18n="p2-p1">האוכל הוא חלק מהחוויה והבחירה היא שלכם.</span> <span data-i18n="p2-close">התפריט והאירוח מותאמים לאופי המפגש ולצורכי הקבוצה.</span></p>
             </div>
           </div>
         </div>
@@ -240,8 +218,8 @@
           <button type="button" class="pillar-head" id="pillar-head-content" aria-expanded="false" aria-controls="pillar-panel-content">
             <span class="pillar-icon" aria-hidden="true"><img src="content/brand/icons-22.png" alt="" width="370" height="340"></span>
             <span class="pillar-titles">
-              <span class="pillar-name"><span class="pillar-num">03</span><span data-i18n="nav-content">התוכן</span></span>
-              <span class="pillar-tagline" data-i18n="p3-h3">חוויות שמחברות בין אנשים.</span>
+              <span class="pillar-title"><span class="pillar-num">03</span><span data-i18n="nav-content">התוכן</span></span>
+              <span class="pillar-subtitle" data-i18n="p3-h3">חוויות שמחברות בין אנשים.</span>
             </span>
             <span class="pillar-chevron" aria-hidden="true"></span>
           </button>
@@ -249,17 +227,7 @@
         <div class="pillar-panel" id="pillar-panel-content" role="region" aria-labelledby="pillar-head-content">
           <div class="pillar-panel-inner">
             <div class="pillar-body">
-              <p data-i18n="p3-p1">בלב ים תוכלו לשלב תוכן שמוסיף עומק, עניין והנאה ליום שלכם - מפעילויות תנועה ורוגע ועד חוויות מקומיות ומפגשים מעוררי השראה.</p>
-              <h4 class="list-title" data-i18n="p3-list-title">מה אפשר לשלב?</h4>
-              <ul class="checklist">
-                <li data-i18n="p3-li1">יוגה, תנועה ומדיטציה</li>
-                <li data-i18n="p3-li2">פעילויות בטבע ובים</li>
-                <li data-i18n="p3-li3">סיורים והיכרות עם כפר הדייגים</li>
-                <li data-i18n="p3-li4">מפגשים עם אנשים וסיפורים מקומיים</li>
-                <li data-i18n="p3-li5">סדנאות חווייתיות ותוכן מותאם לקבוצה</li>
-                <li data-i18n="p3-li6">זמן לעבודה משותפת, חשיבה ויצירה</li>
-              </ul>
-              <p class="pillar-close" data-i18n="p3-close">אפשר להגיע עם תוכן משלכם, לבחור מתוך מגוון הפעילויות שלנו או ליצור יחד תוכנית המשלבת עבודה, השראה והנאה.</p>
+              <p class="pillar-text" data-i18n="p3-p1">בלב ים תוכלו לשלב תוכן שמוסיף עומק, עניין והנאה ליום שלכם - מפעילויות תנועה ורוגע ועד חוויות מקומיות ומפגשים מעוררי השראה.</p>
             </div>
           </div>
         </div>
