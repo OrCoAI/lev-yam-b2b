@@ -310,6 +310,7 @@ function applyLanguage(lang) {
 
   refreshWhatsAppLinks();
   syncPillarLabels();
+  alignPillarRows();
   try { localStorage.setItem('lang', lang); } catch (_) { /* ignore */ }
 }
 
@@ -520,6 +521,21 @@ function syncPillarLabels() {
   document.querySelectorAll('.pillar').forEach((p) => setPillarOpen(p, p.classList.contains('is-open')));
 }
 
+// Desktop: line up the matching blocks of the three cards (subtitle, intro,
+// list, note) by giving each block the height of the longest one. Heights are
+// measured with the cards closed too, so opening never shifts the layout.
+const PILLAR_ROWS = ['subtitle', 'intro', 'list', 'note'];
+function alignPillarRows() {
+  const grid = document.querySelector('.pillar-grid');
+  if (!grid) return;
+  PILLAR_ROWS.forEach((row) => grid.style.removeProperty(`--row-${row}`));
+  if (!desktopMQ.matches) return;
+  PILLAR_ROWS.forEach((row) => {
+    const heights = [...grid.querySelectorAll(`[data-row="${row}"]`)].map((el) => el.getBoundingClientRect().height);
+    if (heights.length) grid.style.setProperty(`--row-${row}`, `${Math.ceil(Math.max(...heights))}px`);
+  });
+}
+
 // Phone: an open item above the tapped one closes instantly and the scroll is
 // compensated in the same frame, so the tapped row stays exactly under the finger.
 function closeOthersInPlace(pillar, pillars) {
@@ -587,10 +603,22 @@ function initPillars() {
   // Crossing the breakpoint (e.g. rotating a tablet) keeps what the visitor opened:
   // desktop opens the whole row, phone keeps the first open item.
   desktopMQ.addEventListener('change', (e) => {
+    alignPillarRows();
     const open = [...pillars].filter((p) => p.classList.contains('is-open'));
     if (!open.length) return;
     pillars.forEach((p) => setPillarOpen(p, e.matches ? true : p === open[0]));
   });
+
+  // Re-measure the desktop rows when the width changes or the web fonts arrive
+  let lastWidth = window.innerWidth;
+  let alignFrame = 0;
+  window.addEventListener('resize', () => {
+    if (window.innerWidth === lastWidth) return;
+    lastWidth = window.innerWidth;
+    cancelAnimationFrame(alignFrame);
+    alignFrame = requestAnimationFrame(alignPillarRows);
+  });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(alignPillarRows);
 }
 
 // ── Hero video ────────────────────────────────────────────────

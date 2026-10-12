@@ -426,10 +426,12 @@ html[lang="ar"] .h2-accent { padding-bottom: 1.5rem; }
 .logo-row { display: flex; flex-wrap: wrap; justify-content: center; gap: 2rem; margin-top: 2.5rem; }
 
 /* ── Three pillars — folded ──────────────────── */
-/* One template per item: title, subtitle, paragraph.
+/* Same blocks in every item, same order, same spacing:
+   title → subtitle → intro paragraph(s) → list → note box.
    Mobile: one cream list with three rows; a row opens in place, one at a time.
    Desktop: three cream cards in a row (cream is the brand's package-card
-   colour); "מידע נוסף" opens all three together so the cards stay aligned. */
+   colour); "מידע נוסף" opens all three together, and the matching blocks line
+   up across the cards (JS sets --row-* on the grid from the longest card). */
 .pillar-grid {
   max-width: 1040px;
   margin: 2rem auto 0;
@@ -530,20 +532,77 @@ html[lang="ar"] .h2-accent { padding-bottom: 1.5rem; }
 .pillar.no-anim .pillar-panel-inner,
 .pillar.no-anim .pillar-chevron { transition: none; }
 
-/* Paragraph — on mobile it starts in line with the title, past the icon */
+/* Body: the same blocks with the same spacing in every item */
 .pillar-body {
-  padding-block: 0 1.4rem;
-  padding-inline: calc(1.1rem + 56px + 0.9rem) 1.1rem;  /* start = the icon side */
+  display: flex;
+  flex-direction: column;
+  gap: 1.4rem;
+  padding: 0.25rem 1.1rem 1.5rem;
 }
-.pillar-text {
+.pillar-intro p { color: var(--ink-soft); line-height: 1.75; }
+.pillar-intro p + p { margin-top: 0.75rem; }
+.pillar-label {
+  margin: 0 0 0.7rem;
   font-size: 1rem;
-  line-height: 1.75;
-  color: var(--ink-soft);
-  text-wrap: pretty;
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--ink);
+}
+/* Note box — the same white box closes every item */
+.pillar-note {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 1rem 1.15rem;
+  border-radius: var(--radius-sm);
+  background: var(--white);
+}
+.pillar-note-text { font-weight: 700; line-height: 1.6; color: var(--ink); }
+
+/* Checklist with blue check marks */
+.checklist { display: grid; gap: 0.55rem; }
+.checklist li {
+  position: relative;
+  padding-inline-start: 1.9rem;
+  line-height: 1.55;
+}
+.checklist li::before {
+  content: '';
+  position: absolute;
+  inset-inline-start: 0;
+  top: 0.2em;
+  width: 1.25rem;
+  height: 1.25rem;
+  border-radius: 50%;
+  background: var(--blue) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M5.5 10.5 L8.5 13.5 L14.5 7' fill='none' stroke='%23fff' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / 100% no-repeat;
+}
+/* Rental options: compact list with orange dots */
+.options { display: grid; gap: 0.4rem; }
+.options li {
+  position: relative;
+  padding-inline-start: 1.2rem;
+  font-weight: 700;
+  line-height: 1.5;
+}
+.options li::before {
+  content: '';
+  position: absolute;
+  inset-inline-start: 0;
+  top: 0.6em;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--orange);
 }
 
 /* Desktop-only "מידע נוסף / סגור" bar */
 .pillar-more { display: none; }
+
+/* Wide phones and tablets: two-column lists keep the open item short */
+@media (min-width: 600px) and (max-width: 899px) {
+  .checklist,
+  .options { grid-template-columns: 1fr 1fr; column-gap: 1.25rem; }
+}
 
 @media (min-width: 900px) {
   .pillar-grid {
@@ -579,18 +638,22 @@ html[lang="ar"] .h2-accent { padding-bottom: 1.5rem; }
   .pillar-subtitle { font-size: 1.1rem; }
   .pillar-head .pillar-chevron { display: none; }
 
-  /* Short orange rule between subtitle and paragraph */
-  .pillar-body { padding-block: 0 1.75rem; padding-inline: 1.75rem; text-align: center; }
+  .pillar-body { padding: 0 1.75rem 1.75rem; }
+  /* Short orange rule between the centred head and the body */
   .pillar-body::before {
     content: '';
-    display: block;
+    align-self: center;
     width: 40px;
     height: 3px;
-    margin: 0 auto 1.1rem;
     border-radius: 2px;
     background: var(--orange);
   }
-  .pillar-text { max-width: 30ch; margin-inline: auto; }
+
+  /* Matching blocks line up across the three cards */
+  .pillar-subtitle { min-height: var(--row-subtitle, auto); }
+  .pillar-intro { min-height: var(--row-intro, auto); }
+  .pillar-list { min-height: var(--row-list, auto); }
+  .pillar-note { min-height: var(--row-note, auto); }
 
   .pillar-more {
     display: flex;
