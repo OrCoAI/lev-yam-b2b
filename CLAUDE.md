@@ -63,7 +63,10 @@ logos, footer contact details. Switch on by removing `hidden` once real content 
 2. Facts strip `#facts` — hidden until data
 3. Why `#why` — two intro sentences, H2, story split into short paragraphs, pull quote, photo
 3b. Testimonials + logos `#testimonials` — hidden until content
-4. Three components `#space` `#food` `#content` — alternating photo/text rows, checklists, rental options
+4. Three components `#space` `#food` `#content` — folded (Or, 2026-10-12). Desktop: three cream cards in
+   a row like the old packages; "מידע נוסף" opens all three together. Mobile: one grouped list, one item
+   open at a time (an item above closes instantly with scroll compensation). Closed view = icon, number +
+   name, tagline. Header links open the item. Real photos go at the top of each `.pillar-body`.
 5. Fit `#fit` — "יום אחד. בדיוק בשבילכם." + 6 icon tiles + CTA
 6. Impact `#impact` — full-bleed photo, short text
 7. Plan `#plan` — the finale: blue full-bleed section, one white card with three label + chips rows,

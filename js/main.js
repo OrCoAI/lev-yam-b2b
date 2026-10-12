@@ -59,7 +59,9 @@ const TRANSLATIONS = {
     'testi-h2': 'מה אומרים מי שכבר היו כאן',
 
     'pillars-h2': 'שלושה מרכיבים. אינספור אפשרויות.',
-    'p1-eyebrow': '01 | המרחב',
+    // Labels of the desktop accordion bar, reused from the old packages ("מידע נוסף ↓" / "סגור ↑")
+    'pillar-more': 'מידע נוסף',
+    'pillar-less': 'סגור',
     'p1-h3': 'משנים אווירה. פותחים את הראש.',
     'p1-p1': 'המרחב משלב פינות ישיבה נעימות, אזורי התכנסות ואווירה אינטימית ובלתי פורמלית, שמאפשרת להאט, להתרכז ולהיפגש באמת.',
     'p1-p2': 'בין אם מדובר בישיבת הנהלה, סיעור מוחות, יום צוות או מפגש מקצועי, כאן תמצאו סביבה שמעודדת יצירתיות, שיח פתוח וחיבור אנושי.',
@@ -73,7 +75,6 @@ const TRANSLATIONS = {
     'p1-rent2': 'החלל הפנימי בלבד',
     'p1-rent3': 'המרפסת הצופה לים בלבד',
     'p1-rent4': 'המתחם כולו',
-    'p2-eyebrow': '02 | האוכל',
     'p2-h3': 'טעמים מקומיים. אירוח מכל הלב.',
     'p2-p1': 'האוכל הוא חלק מהחוויה והבחירה היא שלכם.',
     'p2-list-title': 'מה אפשר לשלב?',
@@ -83,7 +84,6 @@ const TRANSLATIONS = {
     'p2-li4': 'אירוח שף לחוויה קולינרית ייחודית',
     'p2-li5': 'אפשרות להביא קייטרינג חיצוני מטעמכם',
     'p2-close': 'התפריט והאירוח מותאמים לאופי המפגש ולצורכי הקבוצה.',
-    'p3-eyebrow': '03 | התוכן',
     'p3-h3': 'חוויות שמחברות בין אנשים.',
     'p3-p1': 'בלב ים תוכלו לשלב תוכן שמוסיף עומק, עניין והנאה ליום שלכם - מפעילויות תנועה ורוגע ועד חוויות מקומיות ומפגשים מעוררי השראה.',
     'p3-list-title': 'מה אפשר לשלב?',
@@ -187,7 +187,8 @@ const TRANSLATIONS = {
     'testi-h2': 'ماذا يقول من كانوا هنا',
 
     'pillars-h2': 'ثلاثة مكوّنات. إمكانيات لا تُحصى.',
-    'p1-eyebrow': '01 | المكان',
+    'pillar-more': 'مزيد من المعلومات',
+    'pillar-less': 'إغلاق',
     'p1-h3': 'نغيّر الأجواء. نفتح الذهن.',
     'p1-p1': 'يجمع المكان بين زوايا جلوس مريحة، مناطق تجمّع وأجواء حميمة وغير رسمية، تتيح التمهّل، التركيز واللقاء الحقيقي.',
     'p1-p2': 'سواء كان الأمر اجتماع إدارة، عصف ذهني، يوم فريق أو لقاء مهني، ستجدون هنا بيئة تشجع الإبداع، الحوار المفتوح والتواصل الإنساني.',
@@ -201,7 +202,6 @@ const TRANSLATIONS = {
     'p1-rent2': 'القاعة الداخلية فقط',
     'p1-rent3': 'الشرفة المطلة على البحر فقط',
     'p1-rent4': 'المجمّع بأكمله',
-    'p2-eyebrow': '02 | الطعام',
     'p2-h3': 'نكهات محلية. ضيافة من القلب.',
     'p2-p1': 'الطعام جزء من التجربة والخيار لكم.',
     'p2-list-title': 'ما الذي يمكن دمجه؟',
@@ -211,7 +211,6 @@ const TRANSLATIONS = {
     'p2-li4': 'استضافة شيف لتجربة طهي فريدة',
     'p2-li5': 'إمكانية إحضار تموين خارجي من طرفكم',
     'p2-close': 'تُصمَّم قائمة الطعام والضيافة وفق طابع اللقاء واحتياجات المجموعة.',
-    'p3-eyebrow': '03 | المحتوى',
     'p3-h3': 'تجارب تربط بين الناس.',
     'p3-p1': 'في لب يام يمكنكم دمج محتوى يضيف عمقاً، اهتماماً ومتعة ليومكم – من أنشطة الحركة والاسترخاء إلى تجارب محلية ولقاءات ملهمة.',
     'p3-list-title': 'ما الذي يمكن دمجه؟',
@@ -310,6 +309,7 @@ function applyLanguage(lang) {
   });
 
   refreshWhatsAppLinks();
+  syncPillarLabels();
   try { localStorage.setItem('lang', lang); } catch (_) { /* ignore */ }
 }
 
@@ -504,6 +504,95 @@ function initFloatingButton() {
   targets.forEach((el) => io.observe(el));
 }
 
+// ── Three components accordion ────────────────────────────────
+// Desktop (≥900px): the three cards open and close together, as the old packages did.
+// Mobile: one at a time; opening an item closes the others.
+const desktopMQ = window.matchMedia('(min-width: 900px)');
+
+function setPillarOpen(pillar, open) {
+  pillar.classList.toggle('is-open', open);
+  pillar.querySelectorAll('[aria-controls]').forEach((btn) => btn.setAttribute('aria-expanded', String(open)));
+  const label = pillar.querySelector('.pillar-more-label');
+  if (label) label.textContent = t(open ? 'pillar-less' : 'pillar-more');
+}
+
+function syncPillarLabels() {
+  document.querySelectorAll('.pillar').forEach((p) => setPillarOpen(p, p.classList.contains('is-open')));
+}
+
+// Phone: an open item above the tapped one closes instantly and the scroll is
+// compensated in the same frame, so the tapped row stays exactly under the finger.
+function closeOthersInPlace(pillar, pillars) {
+  const head = pillar.querySelector('.pillar-head');
+  const before = head.getBoundingClientRect().top;
+  pillars.forEach((p) => {
+    if (p === pillar || !p.classList.contains('is-open')) return;
+    if (p.compareDocumentPosition(pillar) & Node.DOCUMENT_POSITION_FOLLOWING) p.classList.add('no-anim');
+    setPillarOpen(p, false);
+  });
+  const shift = head.getBoundingClientRect().top - before;  // forces layout with the collapse applied
+  if (shift) {
+    const root = document.documentElement;
+    const prev = root.style.scrollBehavior;
+    root.style.scrollBehavior = 'auto';  // the page scrolls smoothly by default; this must be instant
+    window.scrollBy(0, shift);
+    root.style.scrollBehavior = prev;
+  }
+  requestAnimationFrame(() => pillars.forEach((p) => p.classList.remove('no-anim')));
+}
+
+function togglePillar(pillar, { forceOpen = false, source = 'click' } = {}) {
+  const wasOpen = pillar.classList.contains('is-open');
+  if (forceOpen && wasOpen) return;
+  const willOpen = forceOpen || !wasOpen;
+  const pillars = document.querySelectorAll('.pillar');
+
+  if (desktopMQ.matches) {
+    pillars.forEach((p) => setPillarOpen(p, willOpen));
+  } else {
+    if (willOpen) closeOthersInPlace(pillar, pillars);
+    setPillarOpen(pillar, willOpen);
+  }
+
+  sendBizEvent('levyam.pillar.toggle', {
+    pillar: pillar.id,
+    action: willOpen ? 'open' : 'close',
+    scope: desktopMQ.matches ? 'all' : 'single',
+    source,
+  });
+}
+
+function initPillars() {
+  const pillars = document.querySelectorAll('.pillar');
+  if (!pillars.length) return;
+
+  pillars.forEach((pillar) => {
+    pillar.querySelectorAll('.pillar-head, .pillar-more').forEach((btn) => {
+      btn.addEventListener('click', () => togglePillar(pillar));
+    });
+  });
+
+  // Header links (#space / #food / #content) open the item they point to
+  document.addEventListener('click', (e) => {
+    const link = e.target.closest('a[href^="#"]');
+    if (!link) return;
+    const target = document.getElementById(link.getAttribute('href').slice(1));
+    if (target && target.classList.contains('pillar')) togglePillar(target, { forceOpen: true, source: 'nav' });
+  });
+
+  // Landing on the page with #space / #food / #content
+  const fromHash = location.hash ? document.getElementById(location.hash.slice(1)) : null;
+  if (fromHash && fromHash.classList.contains('pillar')) togglePillar(fromHash, { forceOpen: true, source: 'hash' });
+
+  // Crossing the breakpoint (e.g. rotating a tablet) keeps what the visitor opened:
+  // desktop opens the whole row, phone keeps the first open item.
+  desktopMQ.addEventListener('change', (e) => {
+    const open = [...pillars].filter((p) => p.classList.contains('is-open'));
+    if (!open.length) return;
+    pillars.forEach((p) => setPillarOpen(p, e.matches ? true : p === open[0]));
+  });
+}
+
 // ── Hero video ────────────────────────────────────────────────
 // Play only while the hero is on screen; respect reduced-motion.
 function initHeroVideo() {
@@ -537,5 +626,6 @@ document.addEventListener('DOMContentLoaded', () => {
   initHeader();
   initFloatingButton();
   initHeroVideo();
+  initPillars();
   applyLanguage(currentLang);
 });

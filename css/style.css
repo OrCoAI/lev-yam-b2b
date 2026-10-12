@@ -423,42 +423,172 @@ p + p { margin-top: 0.9rem; }
 .testi footer { margin-top: 0.75rem; font-size: 0.9rem; color: var(--ink-soft); }
 .logo-row { display: flex; flex-wrap: wrap; justify-content: center; gap: 2rem; margin-top: 2.5rem; }
 
-/* ── Three pillars ───────────────────────────── */
-.pillar {
-  display: grid;
-  gap: 1.75rem;
-  align-items: center;
-  padding-block: clamp(2rem, 5vw, 4rem);
+/* ── Three pillars — folded ──────────────────── */
+/* Mobile: one cream list with three rows; a row opens in place, one at a time.
+   Desktop: three cream cards in a row (cream is the brand's package-card
+   colour); "מידע נוסף" opens all three together so the cards stay aligned. */
+.pillar-grid {
+  max-width: 1040px;
+  margin: 2rem auto 0;
+  background: var(--cream);
+  border-radius: var(--radius);
+  overflow: hidden;
 }
 .pillar + .pillar { border-top: 1px solid var(--line); }
-/* Mobile: visual first — an anchor before each block of copy */
-.pillar-media { order: -1; }
-@media (min-width: 900px) {
-  .pillar { grid-template-columns: 1fr 1fr; gap: 4rem; }
-  .pillar-media { order: 0; }
-  /* Alternate side: even pillars get the visual on the inline-start side */
-  .pillar:nth-of-type(even) .pillar-media { order: -1; }
-}
-.pillar-body > p { color: var(--ink-soft); }
-.pillar-body > p:first-of-type { color: inherit; }
-.pillar-close { margin-top: 1.25rem; font-weight: 700; color: var(--ink); }
 
-.pillar-media { position: relative; }
-.pillar-num {
-  position: absolute;
-  top: -0.9rem;
-  inset-inline-start: 1.25rem;
-  width: 56px;
-  height: 56px;
+.pillar-heading { margin: 0; font: inherit; color: inherit; }
+.pillar-head {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  width: 100%;
+  padding: 1.1rem;
+  border: 0;
+  background: transparent;
+  text-align: start;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+.pillar-head:focus-visible,
+.pillar-more:focus-visible { outline-offset: -3px; }
+
+.pillar-icon {
+  flex: none;
   display: grid;
   place-items: center;
+  width: 56px;
+  height: 56px;
   border-radius: 50%;
+  background: var(--white);
+}
+.pillar-icon img { width: auto; height: auto; max-width: 32px; max-height: 32px; }
+
+.pillar-titles { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 0.25rem; }
+.pillar-name {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+.pillar-num {
+  display: inline-grid;
+  place-items: center;
+  min-width: 1.75rem;
+  height: 1.75rem;
+  padding-inline: 0.3rem;
+  border-radius: var(--radius-pill);
   background: var(--orange);
   color: var(--ink);
+  font-size: 0.75rem;
   font-weight: 900;
-  font-size: 1.15rem;
-  letter-spacing: 0.02em;
-  box-shadow: 0 6px 16px rgba(244, 152, 52, 0.4);
+  font-variant-numeric: tabular-nums;
+}
+/* Blue on cream passes contrast as large text only (≥ 19px bold) */
+.pillar-tagline {
+  font-size: 1.2rem;
+  font-weight: 900;
+  line-height: 1.35;
+  color: var(--blue);
+}
+
+.pillar-chevron {
+  flex: none;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--white) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3.5 6 L8 10.5 L12.5 6' fill='none' stroke='%23222' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / 16px no-repeat;
+  transition: transform 0.3s var(--ease), background-color 0.2s var(--ease);
+}
+.pillar.is-open .pillar-chevron { transform: rotate(180deg); background-color: var(--orange); }
+
+/* Panel height animates with the 0fr → 1fr grid technique; visibility keeps
+   closed content out of the tab order and the accessibility tree */
+.pillar-panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.35s var(--ease);
+}
+.pillar.is-open .pillar-panel { grid-template-rows: 1fr; }
+.pillar-panel-inner {
+  min-height: 0;
+  overflow: hidden;
+  visibility: hidden;
+  transition: visibility 0s linear 0.35s;
+}
+.pillar.is-open .pillar-panel-inner { visibility: visible; transition-delay: 0s; }
+/* Set by JS for one frame when an item above the tapped one closes instantly */
+.pillar.no-anim .pillar-panel,
+.pillar.no-anim .pillar-panel-inner,
+.pillar.no-anim .pillar-chevron { transition: none; }
+
+.pillar-body { padding: 0.25rem 1.1rem 1.5rem; }
+.pillar-body > p { color: var(--ink-soft); }
+.pillar-body > p:first-child { color: var(--ink); }
+.pillar-body .list-title:first-of-type { margin-top: 1.1rem; }
+.pillar-body > .pillar-close { margin-top: 1.25rem; font-weight: 700; color: var(--ink); }
+
+/* Desktop-only "מידע נוסף / סגור" bar */
+.pillar-more { display: none; }
+
+@media (min-width: 900px) {
+  .pillar-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.5rem;
+    align-items: stretch;
+    background: none;
+    border-radius: 0;
+    overflow: visible;
+  }
+  .pillar + .pillar { border-top: 0; }
+  .pillar {
+    display: flex;
+    flex-direction: column;
+    background: var(--cream);
+    border-radius: var(--radius);
+    overflow: hidden;
+    transition: transform 0.2s var(--ease), box-shadow 0.2s var(--ease);
+  }
+  .pillar:hover { transform: translateY(-3px); box-shadow: var(--shadow); }
+
+  .pillar-head {
+    flex-direction: column;
+    gap: 0.9rem;
+    padding: 2.25rem 1.5rem 1.5rem;
+    text-align: center;
+  }
+  .pillar-icon { width: 92px; height: 92px; }
+  .pillar-icon img { max-width: 50px; max-height: 50px; }
+  .pillar-titles { align-items: center; gap: 0.55rem; }
+  .pillar-tagline { font-size: 1.4rem; text-wrap: balance; }
+  .pillar-head .pillar-chevron { display: none; }
+
+  .pillar-body { padding: 0 1.75rem 1.75rem; }
+  .pillar .checklist { grid-template-columns: 1fr; }
+  .pillar .options { grid-template-columns: 1fr; gap: 0.5rem; }
+  .pillar .options li { padding-block: 0.55rem; }
+
+  .pillar-more {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    margin-top: auto;          /* pins the bar to the card bottom so all three line up */
+    width: 100%;
+    min-height: 52px;
+    padding: 0.75rem 1.5rem;
+    border: 0;
+    border-top: 1px solid var(--line);
+    background: transparent;
+    font-weight: 700;
+    font-size: 1rem;
+    color: var(--ink);
+    transition: background-color 0.15s var(--ease);
+  }
+  .pillar-more:hover { background: var(--blue-soft); }
+  .pillar-more .pillar-chevron { width: 26px; height: 26px; background-size: 13px; }
 }
 
 /* Checklist with blue check marks */
@@ -480,7 +610,7 @@ p + p { margin-top: 0.9rem; }
   background: var(--blue) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M5.5 10.5 L8.5 13.5 L14.5 7' fill='none' stroke='%23fff' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / 100% no-repeat;
 }
 
-/* Rental options as small cards */
+/* Rental options as small white boxes */
 .options {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
