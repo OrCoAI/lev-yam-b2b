@@ -1,4 +1,4 @@
-# CLAUDE.md — Lev Yam B2B Landing Page
+# CLAUDE.md — Lev Yam Venue Landing Page
 
 Read this file completely before writing a single line of code.
 This is the authoritative context for every session.
@@ -7,27 +7,38 @@ This is the authoritative context for every session.
 
 ## What we're building
 
-A standalone B2B landing page for **Lev Yam** (לב ים — "Heart of the Sea"), a beachfront venue in
-Jisr az-Zarqa, Israel. The page sells offsite to hi-tech companies in three packages,
+A landing page for **Lev Yam** (לב ים — "Heart of the Sea"), a beachfront venue in the fishing village of
+Jisr az-Zarqa, Israel. The page presents the venue to **groups** — team days, management offsites,
+workshops, company and community events — and converts through **WhatsApp only** (no form, no backend).
 
-**Live goal:** Working website with the following flow
-Page → Grow Payment Page → Webhook → Cloudflare Worker → Supabase.
+**History:** until October 2026 this was a pre-sale campaign for hi-tech teams (three packages, Grow
+payments, live purchase feed, progress bar). On 2026-10-12 Or pivoted it to an evergreen venue page,
+following the copy doc "דף נחיתה עסקי - לב ים" (Google Docs, owned by Mayula). Everything about
+packages, prices, early-bird offers, the "50 teams" counter and the security situation was removed on
+purpose — do not bring it back.
 
-Have a perfect, high quality website.
+**Goals, in order:**
+1. A perfect, high-quality website (current step — branch `venue-landing`).
+2. Integrate the page in a smart way under www.levyam.com (next step — not started).
 
 ---
 
-
 ## Content rules — read carefully
 
-**Never invent copy.** All text lives in `content/copy.md` and `content/packages.md`.
-Read those files before building any section. If a file is missing, stop and tell Or.
+**Never invent copy.** All text lives in `content/copy.md` (source: the Google Doc). Read it before
+building or changing any section. Deviations from the doc are marked `[הערה לתוכן]` there — keep that
+habit: flag, don't silently rewrite. `content/packages.md` is legacy and is **not displayed**.
 
-**Never invent images.** All photos live in `content/images/`. Use only what's there.
-Reference images by their actual filename. Ask if you're unsure which image goes where.
+**Never invent images.** All photos live in `content/images/`. Use only what's there, by filename.
+No photos are in use yet: the old co-working photos were removed on 2026-10-12 at Or's request, and
+every visual slot is a brand placeholder (`div.ph` inside a `figure[data-pending]`). Ask Or for assets.
 
-**Language:** The page is in **Hebrew (RTL)**. All user-facing text is Hebrew.
-Set `dir="rtl"` on `<html>`. Mirror layouts accordingly — flex-row becomes flex-row-reverse logically.
+**Language:** Hebrew (RTL) is the source; an Arabic version is switched in via `data-i18n` keys and the
+`TRANSLATIONS` dictionary in `js/main.js`. The Arabic is a draft pending native review. Venue name in
+Arabic: لب يام. Both languages are RTL — use logical CSS properties (`inline-start`), never left/right.
+
+**Hidden until content arrives** (`hidden` + `data-pending` in `index.html`): facts strip, testimonials,
+logos, footer contact details. Switch on by removing `hidden` once real content exists.
 
 ---
 
@@ -35,62 +46,71 @@ Set `dir="rtl"` on `<html>`. Mirror layouts accordingly — flex-row becomes fle
 
 | Layer | Tool | Notes |
 |-------|------|-------|
-| Page | Static HTML + CSS + JS | No framework. Single `index.html`. |
+| Page | Static HTML + CSS + JS | No framework, no build step. Single `index.html`. |
 | Styles | Plain CSS in `css/style.css` | No Tailwind, no Bootstrap. Full RTL control. |
-| JS | Plain JS in `js/main.js` | Interactions + Supabase polling (live feed + progress bar) |
-| Payments | Grow Payments | See `docs/grow-plan.md` for exact integration approach |
-| Hosting | Static file on levyam.com via GoDaddy | DNS already configured |
-| Webhook endpoint | Cloudflare Worker | Deployed separately on workers.dev |
+| JS | Plain JS in `js/main.js` | i18n, WhatsApp planner, header state, floating button, Dynatrace events |
+| Conversion | WhatsApp `wa.me` links | Number `972506669138`; planner composes the message client-side |
+| Analytics | Dynatrace RUM + `dynatrace.sendBizEvent` | Tag is sync in `<head>`; CORS-blocked on localhost (expected) |
+| Hosting | GitHub Pages from `main` | `CNAME` = `b2b.levyam.com`. Merging to `main` deploys. |
+| Legacy | Cloudflare Worker + Supabase | Deployed, unused by the page. See `docs/grow-plan.md`. |
 
 ---
 
-## Page structure
+## Page structure (final, approved by Or 2026-10-12)
 
-To be updated based on the final design. Read `content/copy.md` for all section copy.
-Do not build any section without confirming structure with Or first.
+0. Sticky header — logo mark, anchors (המרחב · האוכל · התוכן · למי זה מתאים · צרו קשר), HE/AR, WhatsApp (desktop ≥900px)
+1. Hero `#hero` — eyebrow, H1 "יוצאים מהשגרה. נפגשים אחרת.", subtitle, lead, CTAs → `#plan` / `#why`; vertical video on all screens
+2. Facts strip `#facts` — hidden until data
+3. Why `#why` — two intro sentences, H2, story split into short paragraphs, pull quote, photo
+3b. Testimonials + logos `#testimonials` — hidden until content
+4. Three components `#space` `#food` `#content` — alternating photo/text rows, checklists, rental options
+5. Fit `#fit` — "יום אחד. בדיוק בשבילכם." + 6 icon tiles + CTA
+6. Impact `#impact` — full-bleed photo, short text
+7. Plan `#plan` — the finale: blue full-bleed section, one white card with three label + chips rows,
+   the message in large type (selections highlighted in orange marker), one orange CTA. No direct
+   number (removed). No decorations — Or rejected a busier version.
+8. Footer — removed for now (Or, 2026-10-12). Copy kept in `content/copy.md` for when it returns.
+— Floating WhatsApp button, mobile only; hides while `#plan-cta` or the footer is on screen.
+
+One WhatsApp entry point per viewport: header button on desktop, floating button on mobile.
 
 ---
 
 ## Design principles
 
 - **RTL-first.** Don't build LTR and flip — build RTL from the start.
-- **Mobile-first.** Most visitors will be on phones. Test at 375px width.
-- **Fast.** No CDN libraries unless absolutely necessary. No heavy JS.
-- **No CSS framework.** We own the layout. Full control for RTL.
+- **Mobile-first.** Most visitors will be on phones. Test at 375px width; photo before text on mobile.
+- **Fast.** No CDN libraries unless absolutely necessary. No heavy JS. Hero video stays ≤ ~2.5 MB.
+- **No CSS framework.** We own the layout.
+- **Brand colours only** (Or, 2026-10-12): orange `#f49834`, cream `#fff7ea`, blue `#2c92bf`, plus white
+  and a neutral dark for text. No navy, teal, mint or extra tints; tints are the brand colours at low
+  alpha. Blue is the dark background; orange is for CTAs, selected states and accents.
+- **Brand icons** from `content/brand/` (palm, house, double heart, pinwheel) plus the sun and arch drawn
+  in brand colours in the SVG sprite. No generic icon sets.
+- **Accessible.** Dark text on orange (white on orange fails contrast); blue text only at heading sizes;
+  white text on blue only at ≥ 19px bold. Skip link, `aria-pressed` on chips and language buttons,
+  `prefers-reduced-motion` respected.
 - Colors, fonts, and logo are in `content/brand/`. Use them exactly.
 
 ---
 
-## Worker deployment (Sprint 2 — already scaffolded)
+## Media
 
-`worker/` is fully scaffolded. On hackathon day, Yair runs:
-
-```bash
-cd worker
-npm install
-npx wrangler deploy
-# Then set each secret:
-npx wrangler secret put GROW_WEBHOOK_KEY
-npx wrangler secret put SUPABASE_URL
-npx wrangler secret put SUPABASE_ANON_KEY
-```
-
-After deploy, test with `./test-webhook.sh` from the repo root. Expected: HTTP 200, new row in `levyam-b2b` table.
+New photos: put the original in `content/images/` and run
+`python3 scripts/build_media.py content/images/<file>` to get `-1600.jpg`, `-1600.webp`, `-800.webp`,
+then use a `<picture>` with `srcset`/`sizes` as in `index.html`. Hero video: `--video`, OG image: `--og`.
+Requires `ffmpeg` and Pillow.
 
 ---
 
-## Payments integration
+## Verifying
 
-Full plan is in `docs/grow-plan.md`. Read it before touching Sprint 2.
+```bash
+python3 -m http.server 8081   # then open http://127.0.0.1:8081/
+```
 
-The short version:
-- Grow Payments is an Israeli gateway (grow.co.il)
-- Each package CTA button is a direct link to a pre-built Grow static payment page (redirect)
-- On successful payment, Grow POSTs a webhook to the Cloudflare Worker
-- The Worker verifies the webhookKey and writes the purchase to Supabase
-- The landing page polls Supabase every 5 seconds to update the live purchase feed and progress bar
-
-Credentials are in `.env`. Never hardcode them. Read from environment.
+Check at 375px and 1440px, in Hebrew and Arabic: no horizontal overflow, every `data-i18n` key exists
+in both dictionaries, planner message reads naturally, floating button hides at `#plan`.
 
 ---
 
@@ -101,18 +121,16 @@ lev-yam-b2b/
 ├── index.html
 ├── css/style.css
 ├── js/main.js
-├── worker/
-│   └── index.js         ← Cloudflare Worker — webhook receiver
+├── scripts/build_media.py   ← photo/video/OG asset generation
 ├── content/
-│   ├── copy.md          ← all Hebrew page text — read this first
-│   ├── packages.md      ← package names, prices, inclusions + Grow page URLs
-│   ├── images/          ← hero, venue, Nimer portrait
-│   └── brand/           ← logo, colors, fonts
-├── docs/
-│   └── grow-plan.md     ← Grow Payments + Worker implementation plan
-├── .env                 ← credentials (never commit)
-├── .env.example
-├── CLAUDE.md            ← this file
+│   ├── copy.md              ← all page text (he) — read this first
+│   ├── packages.md          ← legacy, not displayed
+│   ├── images/              ← hero.mp4 + hero-poster.jpg, og-image.jpg (brand). No photos yet
+│   └── brand/               ← logos, icons, brand-guide.md, colors.md, fonts.md
+├── worker/                  ← legacy Cloudflare Worker (webhook → Supabase)
+├── docs/grow-plan.md        ← legacy payments plan
+├── .env / .env.example      ← legacy credentials (never commit .env)
+├── CLAUDE.md                ← this file
 └── README.md
 ```
 
@@ -122,7 +140,7 @@ lev-yam-b2b/
 
 - Indent: 2 spaces
 - No inline styles — everything in `css/style.css` with clear class names
-- JS: vanilla, no `var`, use `const`/`let`, comment payment-related logic
+- JS: vanilla, no `var`, use `const`/`let`; keep analytics calls wrapped so they can never break the page
 - Commit working states often — if something works, commit before adding more
 - If something is ambiguous, **ask Or before guessing**
 
@@ -132,18 +150,15 @@ lev-yam-b2b/
 
 | Person | Role | Talk to them about |
 |--------|------|-------------------|
-| **Or** | Project owner | Any blocker, content questions, credentials |
-| **Moran** | Content | If copy in `content/` seems wrong or missing |
+| **Or** | Project owner | Any blocker, content questions, assets, deploy decisions |
+| **Moran** | Content & brand | If copy in `content/` seems wrong or missing |
+| **Mayula** | Copy doc owner | The Google Doc that drives `content/copy.md` |
 | **Yair** | Engineer driving Claude Code | Technical decisions |
 
 ---
 
-## Hackathon mindset
+## Working mindset
 
-We have 4 hours. The goal is a live page with a real payment. Prioritize:
-
-1. Working > perfect
-2. Deployed > polished
-3. Ask > assume
-
-If you're blocked, say so immediately. Don't silently spin.
+1. Perfect the page before migrating it.
+2. Ask > assume — especially about copy, images, and anything that goes live.
+3. If you're blocked, say so immediately. Don't silently spin.
