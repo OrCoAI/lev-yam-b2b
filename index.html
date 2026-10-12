@@ -70,7 +70,7 @@
         <button type="button" class="lang-btn" data-lang="he" aria-pressed="true" lang="he">עב</button>
         <button type="button" class="lang-btn" data-lang="ar" aria-pressed="false" lang="ar">عر</button>
       </div>
-      <a href="#" class="btn btn-wa btn-wa-sm" data-wa="header" target="_blank" rel="noopener noreferrer" aria-label="דברו איתנו בוואטסאפ" data-i18n-aria="wa-aria">
+      <a href="https://wa.me/972506669138" class="btn btn-wa btn-wa-sm" data-wa="header" target="_blank" rel="noopener noreferrer" aria-label="דברו איתנו בוואטסאפ" data-i18n-aria="wa-aria">
         <svg class="wa-icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-wa"/></svg>
         <span class="btn-wa-label" data-i18n="nav-wa">דברו איתנו</span>
       </a>
@@ -339,52 +339,173 @@
       <p data-i18n="plan-p2">ספרו לנו מה אתם מתכננים, כמה אנשים אתם ומה הייתם רוצים לחוות ונשמח ליצור יחד יום שמתאים בדיוק לכם.</p>
     </div>
 
+    <!-- The planner: four questions, one at a time, one tap each (the flow moves on by
+         itself), then a "ready" step. The message beside it (below on phones) writes
+         itself with every answer, and the button sends it to WhatsApp at any point.
+         Orange always marks the one thing to press next: a chosen answer, "המשך" and,
+         once the message is ready, the send button. Without JS only the message and
+         the button show (.flow is hidden until js/main.js enhances the card). -->
     <div class="planner" id="planner">
-      <div class="planner-row" role="group" aria-labelledby="plan-q1">
-        <h3 class="planner-q" id="plan-q1" data-i18n="plan-q1">מה אתם מתכננים?</h3>
-        <div class="chips">
-          <button type="button" class="chip" data-group="event" data-value="team" data-msg="plan-ev1-msg" aria-pressed="false" data-i18n="fit-li1">ימי גיבוש וצוות</button>
-          <button type="button" class="chip" data-group="event" data-value="mgmt" data-msg="plan-ev2-msg" aria-pressed="false" data-i18n="fit-li2">מפגשי הנהלה וימי אסטרטגיה</button>
-          <button type="button" class="chip" data-group="event" data-value="workshop" data-msg="plan-ev3-msg" aria-pressed="false" data-i18n="fit-li3">סדנאות והכשרות</button>
-          <button type="button" class="chip" data-group="event" data-value="thinking" data-msg="plan-ev4-msg" aria-pressed="false" data-i18n="fit-li4">ימי חשיבה ויצירה</button>
-          <button type="button" class="chip" data-group="event" data-value="company" data-msg="plan-ev5-msg" aria-pressed="false" data-i18n="fit-li5">אירועי חברה ומפגשים מקצועיים</button>
-          <button type="button" class="chip" data-group="event" data-value="community" data-msg="plan-ev6-msg" aria-pressed="false" data-i18n="fit-li6">מפגשי קהילה וארגונים</button>
+
+      <div class="flow" hidden>
+        <div class="flow-top">
+          <button type="button" class="flow-back" aria-label="חזרה" data-i18n-aria="plan-back">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <div class="flow-progress" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+          <p class="flow-count" id="flow-count"><span class="flow-count-num" aria-hidden="true">1/4</span><span class="sr-only">שאלה 1 מתוך 4</span></p>
+          <button type="button" class="flow-skip" data-i18n="plan-skip">דלגו</button>
+          <button type="button" class="flow-restart" data-i18n="plan-restart">מתחילים מחדש</button>
+        </div>
+
+        <div class="flow-steps">
+
+          <!-- 1 | What are you planning — the six types from #fit, with the same icons -->
+          <div class="step" data-step="event" role="group" aria-labelledby="plan-q1" aria-describedby="flow-count">
+            <h3 class="step-q" id="plan-q1" tabindex="-1" data-i18n="plan-q1">מה אתם מתכננים?</h3>
+            <div class="choices choices-event">
+              <button type="button" class="choice" data-group="event" data-value="team" data-msg="plan-ev1-msg" data-label="fit-li1" aria-pressed="false">
+                <span class="choice-icon" aria-hidden="true"><img src="content/brand/icons-16.png" alt="" width="444" height="392"></span>
+                <span class="choice-label" data-i18n="fit-li1">ימי גיבוש וצוות</span>
+                <span class="choice-check" aria-hidden="true"></span>
+              </button>
+              <button type="button" class="choice" data-group="event" data-value="mgmt" data-msg="plan-ev2-msg" data-label="fit-li2" aria-pressed="false">
+                <span class="choice-icon" aria-hidden="true"><img src="content/brand/icons-4.png" alt="" width="469" height="310"></span>
+                <span class="choice-label" data-i18n="fit-li2">מפגשי הנהלה וימי אסטרטגיה</span>
+                <span class="choice-check" aria-hidden="true"></span>
+              </button>
+              <button type="button" class="choice" data-group="event" data-value="workshop" data-msg="plan-ev3-msg" data-label="fit-li3" aria-pressed="false">
+                <span class="choice-icon" aria-hidden="true"><img src="content/brand/icons-22.png" alt="" width="372" height="337"></span>
+                <span class="choice-label" data-i18n="fit-li3">סדנאות והכשרות</span>
+                <span class="choice-check" aria-hidden="true"></span>
+              </button>
+              <button type="button" class="choice" data-group="event" data-value="thinking" data-msg="plan-ev4-msg" data-label="fit-li4" aria-pressed="false">
+                <span class="choice-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#icon-sun"/></svg></span>
+                <span class="choice-label" data-i18n="fit-li4">ימי חשיבה ויצירה</span>
+                <span class="choice-check" aria-hidden="true"></span>
+              </button>
+              <button type="button" class="choice" data-group="event" data-value="company" data-msg="plan-ev5-msg" data-label="fit-li5" aria-pressed="false">
+                <span class="choice-icon" aria-hidden="true"><img src="content/brand/icons-1.png" alt="" width="613" height="951"></span>
+                <span class="choice-label" data-i18n="fit-li5">אירועי חברה ומפגשים מקצועיים</span>
+                <span class="choice-check" aria-hidden="true"></span>
+              </button>
+              <button type="button" class="choice" data-group="event" data-value="community" data-msg="plan-ev6-msg" data-label="fit-li6" aria-pressed="false">
+                <span class="choice-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#icon-arch"/></svg></span>
+                <span class="choice-label" data-i18n="fit-li6">מפגשי קהילה וארגונים</span>
+                <span class="choice-check" aria-hidden="true"></span>
+              </button>
+            </div>
+          </div>
+
+          <!-- 2 | Group size — the dots grow with the group -->
+          <div class="step" data-step="size" role="group" aria-labelledby="plan-q2" aria-describedby="flow-count">
+            <h3 class="step-q" id="plan-q2" tabindex="-1" data-i18n="plan-q2">כמה אנשים אתם?</h3>
+            <div class="choices choices-size">
+              <button type="button" class="choice" data-group="size" data-value="lt15" aria-pressed="false">
+                <span class="choice-num" data-i18n="plan-size1">עד 15</span>
+                <span class="choice-unit" data-i18n="plan-size-unit">אנשים</span>
+                <span class="choice-dots" aria-hidden="true"><i></i></span>
+                <span class="choice-check" aria-hidden="true"></span>
+              </button>
+              <button type="button" class="choice" data-group="size" data-value="15-30" aria-pressed="false">
+                <span class="choice-num" dir="ltr">15–30</span>
+                <span class="choice-unit" data-i18n="plan-size-unit">אנשים</span>
+                <span class="choice-dots" aria-hidden="true"><i></i><i></i></span>
+                <span class="choice-check" aria-hidden="true"></span>
+              </button>
+              <button type="button" class="choice" data-group="size" data-value="30-50" aria-pressed="false">
+                <span class="choice-num" dir="ltr">30–50</span>
+                <span class="choice-unit" data-i18n="plan-size-unit">אנשים</span>
+                <span class="choice-dots" aria-hidden="true"><i></i><i></i><i></i></span>
+                <span class="choice-check" aria-hidden="true"></span>
+              </button>
+              <button type="button" class="choice" data-group="size" data-value="50plus" aria-pressed="false">
+                <span class="choice-num" dir="ltr">50+</span>
+                <span class="choice-unit" data-i18n="plan-size-unit">אנשים</span>
+                <span class="choice-dots" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+                <span class="choice-check" aria-hidden="true"></span>
+              </button>
+            </div>
+          </div>
+
+          <!-- 3 | When — js/main.js adds the next six months before the two fixed answers -->
+          <div class="step" data-step="when" role="group" aria-labelledby="plan-q-when" aria-describedby="flow-count">
+            <h3 class="step-q" id="plan-q-when" tabindex="-1" data-i18n="plan-q-when">מתי תרצו להגיע?</h3>
+            <div class="choices choices-when" id="when-choices">
+              <button type="button" class="choice choice-wide" data-group="when" data-value="later" aria-pressed="false">
+                <span class="choice-label" data-i18n="plan-when-later">מאוחר יותר</span>
+                <span class="choice-check" aria-hidden="true"></span>
+              </button>
+              <button type="button" class="choice choice-wide" data-group="when" data-value="open" aria-pressed="false">
+                <span class="choice-label" data-i18n="plan-when-open">עוד לא סגרנו תאריך</span>
+                <span class="choice-check" aria-hidden="true"></span>
+              </button>
+            </div>
+          </div>
+
+          <!-- 4 | Components — several allowed; icons and lines from the three components above -->
+          <div class="step" data-step="comp" role="group" aria-labelledby="plan-q3" aria-describedby="flow-count">
+            <div class="step-head">
+              <h3 class="step-q" id="plan-q3" tabindex="-1" data-i18n="plan-q3">מה הייתם רוצים לחוות?</h3>
+              <p class="step-hint" data-i18n="plan-q3-hint">אפשר לבחור יותר מאחד</p>
+            </div>
+            <div class="choices choices-comp">
+              <button type="button" class="choice" data-group="comp" data-value="space" data-label="plan-comp1" aria-pressed="false">
+                <span class="choice-icon" aria-hidden="true"><img src="content/brand/icons-4.png" alt="" width="469" height="310"></span>
+                <span class="choice-text">
+                  <span class="choice-label" data-i18n="plan-comp1">המרחב</span>
+                  <span class="choice-sub" data-i18n="p1-h3">משנים אווירה. פותחים את הראש.</span>
+                </span>
+                <span class="choice-check" aria-hidden="true"></span>
+              </button>
+              <button type="button" class="choice" data-group="comp" data-value="food" data-label="plan-comp2" aria-pressed="false">
+                <span class="choice-icon" aria-hidden="true"><img src="content/brand/icons-1.png" alt="" width="613" height="951"></span>
+                <span class="choice-text">
+                  <span class="choice-label" data-i18n="plan-comp2">האוכל</span>
+                  <span class="choice-sub" data-i18n="p2-h3">טעמים מקומיים. אירוח מכל הלב.</span>
+                </span>
+                <span class="choice-check" aria-hidden="true"></span>
+              </button>
+              <button type="button" class="choice" data-group="comp" data-value="content" data-label="plan-comp3" aria-pressed="false">
+                <span class="choice-icon" aria-hidden="true"><img src="content/brand/icons-22.png" alt="" width="372" height="337"></span>
+                <span class="choice-text">
+                  <span class="choice-label" data-i18n="plan-comp3">התוכן</span>
+                  <span class="choice-sub" data-i18n="p3-h3">חוויות שמחברות בין אנשים.</span>
+                </span>
+                <span class="choice-check" aria-hidden="true"></span>
+              </button>
+            </div>
+            <div class="step-foot">
+              <button type="button" class="btn btn-primary step-next" data-i18n="plan-next">המשך</button>
+            </div>
+          </div>
+
+          <!-- Ready — the brand stamp lands; each answer can be changed from here,
+               and "מתחילים מחדש" takes the place of "דלגו" in the top row -->
+          <div class="step step-ready" data-step="ready" role="group" aria-labelledby="plan-ready-h">
+            <img class="ready-stamp" src="content/brand/logo-stamp-160.png" alt="" width="160" height="227">
+            <h3 class="step-q" id="plan-ready-h" tabindex="-1" data-i18n="plan-ready-h">ההודעה מוכנה!</h3>
+            <p class="ready-p" data-i18n="plan-ready-p">עוד לחיצה אחת ואנחנו מדברים בוואטסאפ.</p>
+            <ul class="answers" id="plan-answers"></ul>
+          </div>
+
         </div>
       </div>
 
-      <div class="planner-row" role="group" aria-labelledby="plan-q2">
-        <h3 class="planner-q" id="plan-q2" data-i18n="plan-q2">כמה אנשים אתם?</h3>
-        <div class="chips">
-          <button type="button" class="chip chip-num" data-group="size" data-value="lt15" aria-pressed="false" data-i18n="plan-size1">עד 15</button>
-          <button type="button" class="chip chip-num" data-group="size" data-value="15-30" aria-pressed="false" dir="ltr">15–30</button>
-          <button type="button" class="chip chip-num" data-group="size" data-value="30-50" aria-pressed="false" dir="ltr">30–50</button>
-          <button type="button" class="chip chip-num" data-group="size" data-value="50plus" aria-pressed="false" dir="ltr">50+</button>
-        </div>
-      </div>
-
-      <div class="planner-row" role="group" aria-labelledby="plan-q3">
-        <h3 class="planner-q" id="plan-q3" data-i18n="plan-q3">מה הייתם רוצים לחוות?</h3>
-        <div class="chips">
-          <button type="button" class="chip" data-group="comp" data-value="space" data-label="plan-comp1" aria-pressed="false" data-i18n="plan-comp1">המרחב</button>
-          <button type="button" class="chip" data-group="comp" data-value="food" data-label="plan-comp2" aria-pressed="false" data-i18n="plan-comp2">האוכל</button>
-          <button type="button" class="chip" data-group="comp" data-value="content" data-label="plan-comp3" aria-pressed="false" data-i18n="plan-comp3">התוכן</button>
-        </div>
-      </div>
-
-      <!-- The message itself, assembling as chips are tapped; selections are highlighted -->
-      <div class="message" id="chat-bubble">
-        <svg class="wa-icon message-icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-wa"/></svg>
-        <div class="message-body">
-          <p class="chat-text" id="chat-text" aria-live="polite">היי, אנחנו רוצים לתכנן יום בלב ים. נשמח לשמוע פרטים.</p>
-          <p class="message-caption" data-i18n="chat-caption">זו ההודעה שתישלח. אפשר לערוך אותה בוואטסאפ לפני השליחה.</p>
-        </div>
-      </div>
-
-      <div class="planner-actions">
-        <a href="#" class="btn btn-wa btn-xl" id="plan-cta" data-wa="planner" target="_blank" rel="noopener noreferrer">
+      <!-- The message itself — the exact text the button opens in WhatsApp -->
+      <div class="msg" id="chat-bubble">
+        <p class="msg-label">
           <svg class="wa-icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-wa"/></svg>
-          <span data-i18n="cta-plan">בואו נתכנן את היום שלכם</span>
-        </a>
+          <span data-i18n="plan-msg-label">ההודעה שלכם</span>
+        </p>
+        <p class="chat-text" id="chat-text">היי, אנחנו רוצים לתכנן יום בלב ים. נשמח לשמוע פרטים.</p>
+        <div class="msg-foot">
+          <a href="https://wa.me/972506669138" class="btn btn-wa btn-xl planner-cta" id="plan-cta" data-wa="planner" target="_blank" rel="noopener noreferrer">
+            <svg class="wa-icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-wa"/></svg>
+            <span data-i18n="plan-send">שלחו בוואטסאפ</span>
+          </a>
+          <p class="msg-caption" data-i18n="chat-caption">זו ההודעה שתישלח. אפשר לערוך אותה בוואטסאפ לפני השליחה.</p>
+        </div>
       </div>
     </div>
   </div>
@@ -395,7 +516,7 @@
 <!-- Footer removed for now (Or, 2026-10-12). Language switch lives in the header. -->
 
 <!-- ── Floating WhatsApp ────────────────────── -->
-<a href="#" class="wa-float" id="wa-float" data-wa="floating" target="_blank" rel="noopener noreferrer" aria-label="דברו איתנו בוואטסאפ" data-i18n-aria="wa-aria">
+<a href="https://wa.me/972506669138" class="wa-float" id="wa-float" data-wa="floating" target="_blank" rel="noopener noreferrer" aria-label="דברו איתנו בוואטסאפ" data-i18n-aria="wa-aria">
   <svg class="wa-icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-wa"/></svg>
   <span class="wa-float-label" data-i18n="nav-wa">דברו איתנו</span>
 </a>

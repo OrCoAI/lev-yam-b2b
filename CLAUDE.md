@@ -72,9 +72,17 @@ logos, footer contact details. Switch on by removing `hidden` once real content 
    **Never remove copy to fix layout** — Or wants all text kept; solve it with structure and spacing.
 5. Fit `#fit` — "יום אחד. בדיוק בשבילכם." + 6 icon tiles + CTA
 6. Impact `#impact` — full-bleed photo, short text
-7. Plan `#plan` — the finale: blue full-bleed section, one white card with three label + chips rows,
-   the message in large type (selections highlighted in orange marker), one orange CTA. No direct
-   number (removed). No decorations — Or rejected a busier version.
+7. Plan `#plan` — the finale: blue full-bleed section, one white card in two parts (side by side from
+   900px, stacked below): the questions and the cream message panel. Four questions, one at a time,
+   one tap each, and the flow moves on by itself: what (6 types, #fit icons) → how many (4 sizes) →
+   when (next 6 months, built by JS, + "later" / "not decided") → what to include (several; "המשך").
+   Then a ready step: the brand stamp lands and the answers show as pills that can be changed.
+   The message rewrites itself with every answer (new fragment drawn in orange marker). The send
+   button stays white until the ready step, then turns orange; it works at every step. Back and
+   skip in the top row. All answers optional. Without JS only the message and button show.
+   The fun is in the motion, not in decoration — a busy chat-card version was rejected; keep it
+   clean. No direct number (removed). Group-size ranges in the message use a plain hyphen
+   (an en dash shows reversed in RTL/WhatsApp).
 8. Footer — removed for now (Or, 2026-10-12). Copy kept in `content/copy.md` for when it returns.
 — Floating WhatsApp button, mobile only; hides while `#plan-cta` or the footer is on screen.
 
@@ -94,8 +102,8 @@ One WhatsApp entry point per viewport: header button on desktop, floating button
 - **Brand icons** from `content/brand/` (palm, house, double heart, pinwheel) plus the sun and arch drawn
   in brand colours in the SVG sprite. No generic icon sets.
 - **Accessible.** Dark text on orange (white on orange fails contrast); blue text only at heading sizes;
-  white text on blue only at ≥ 19px bold. Skip link, `aria-pressed` on chips and language buttons,
-  `prefers-reduced-motion` respected.
+  white text on blue only at ≥ 19px bold. Skip link, `aria-pressed` on planner answers and language
+  buttons, focus moves to each new planner question, `prefers-reduced-motion` respected.
 - Colors, fonts, and logo are in `content/brand/`. Use them exactly.
 
 ---

@@ -119,15 +119,29 @@ const TRANSLATIONS = {
     'plan-p2': 'ספרו לנו מה אתם מתכננים, כמה אנשים אתם ומה הייתם רוצים לחוות ונשמח ליצור יחד יום שמתאים בדיוק לכם.',
     'plan-q1': 'מה אתם מתכננים?',
     'plan-q2': 'כמה אנשים אתם?',
+    'plan-q-when': 'מתי תרצו להגיע?',
     'plan-q3': 'מה הייתם רוצים לחוות?',
+    'plan-q3-hint': 'אפשר לבחור יותר מאחד',
     'plan-size1': 'עד 15',
+    'plan-size-unit': 'אנשים',
+    'plan-when-later': 'מאוחר יותר',
+    'plan-when-open': 'עוד לא סגרנו תאריך',
     'plan-comp1': 'המרחב',
     'plan-comp2': 'האוכל',
     'plan-comp3': 'התוכן',
-    'plan-help': 'אפשר גם לדלג ולכתוב לנו חופשי.',
-    'plan-or': 'או ישירות בוואטסאפ:',
+    'plan-back': 'חזרה',
+    'plan-skip': 'דלגו',
+    'plan-next': 'המשך',
+    'plan-step': 'שאלה {n} מתוך {total}',
+    'plan-ready-h': 'ההודעה מוכנה!',
+    'plan-ready-p': 'עוד לחיצה אחת ואנחנו מדברים בוואטסאפ.',
+    'plan-edit': 'שינוי',
+    'plan-restart': 'מתחילים מחדש',
+    'plan-msg-label': 'ההודעה שלכם',
+    'plan-send': 'שלחו בוואטסאפ',
 
-    // WhatsApp message building blocks
+    // WhatsApp message building blocks. Ranges use a plain hyphen: with an en dash,
+    // Hebrew and Arabic text (and WhatsApp) shows "15–30" reversed as "30–15".
     'plan-ev1-msg': 'יום גיבוש וצוות',
     'plan-ev2-msg': 'מפגש הנהלה / יום אסטרטגיה',
     'plan-ev3-msg': 'סדנה או הכשרה',
@@ -135,9 +149,12 @@ const TRANSLATIONS = {
     'plan-ev5-msg': 'אירוע חברה / מפגש מקצועי',
     'plan-ev6-msg': 'מפגש קהילה / ארגון',
     'size-lt15': 'עד 15 אנשים',
-    'size-15-30': '15–30 אנשים',
-    'size-30-50': '30–50 אנשים',
+    'size-15-30': '15-30 אנשים',
+    'size-30-50': '30-50 אנשים',
     'size-50plus': 'מעל 50 אנשים',
+    'when-month-msg': 'ב{month}',
+    'when-later-msg': 'בעוד חצי שנה או יותר',
+    'when-open-msg': 'עוד לא סגרנו תאריך.',
     'chat-caption': 'זו ההודעה שתישלח. אפשר לערוך אותה בוואטסאפ לפני השליחה.',
     'wa-default': 'היי, אנחנו רוצים לתכנן יום בלב ים. נשמח לשמוע פרטים.',
 
@@ -246,13 +263,26 @@ const TRANSLATIONS = {
     'plan-p2': 'أخبرونا ما الذي تخططون له، كم عددكم وما الذي تودّون تجربته، ويسعدنا أن نصنع معاً يوماً يناسبكم تماماً.',
     'plan-q1': 'ما الذي تخططون له؟',
     'plan-q2': 'كم عددكم؟',
+    'plan-q-when': 'متى تودّون القدوم؟',
     'plan-q3': 'ما الذي تودّون تجربته؟',
+    'plan-q3-hint': 'يمكن اختيار أكثر من خيار',
     'plan-size1': 'حتى 15',
+    'plan-size-unit': 'شخصاً',
+    'plan-when-later': 'لاحقاً',
+    'plan-when-open': 'لم نحدد موعداً بعد',
     'plan-comp1': 'المكان',
     'plan-comp2': 'الطعام',
     'plan-comp3': 'المحتوى',
-    'plan-help': 'يمكنكم أيضاً تخطي هذا والكتابة لنا بحرية.',
-    'plan-or': 'أو مباشرة عبر واتساب:',
+    'plan-back': 'رجوع',
+    'plan-skip': 'تخطّي',
+    'plan-next': 'متابعة',
+    'plan-step': 'سؤال {n} من {total}',
+    'plan-ready-h': 'الرسالة جاهزة!',
+    'plan-ready-p': 'نقرة واحدة ونتحدث عبر واتساب.',
+    'plan-edit': 'تعديل',
+    'plan-restart': 'البدء من جديد',
+    'plan-msg-label': 'رسالتكم',
+    'plan-send': 'أرسلوا عبر واتساب',
 
     'plan-ev1-msg': 'يوم تعزيز فريق',
     'plan-ev2-msg': 'لقاء إدارة / يوم استراتيجية',
@@ -261,9 +291,12 @@ const TRANSLATIONS = {
     'plan-ev5-msg': 'فعالية شركة / لقاء مهني',
     'plan-ev6-msg': 'لقاء مجتمعي / منظمة',
     'size-lt15': 'حتى 15 شخصاً',
-    'size-15-30': '15–30 شخصاً',
-    'size-30-50': '30–50 شخصاً',
+    'size-15-30': '15-30 شخصاً',
+    'size-30-50': '30-50 شخصاً',
     'size-50plus': 'أكثر من 50 شخصاً',
+    'when-month-msg': 'في شهر {month}',
+    'when-later-msg': 'بعد نصف سنة أو أكثر',
+    'when-open-msg': 'لم نحدد موعداً بعد.',
     'chat-caption': 'هذه هي الرسالة التي ستُرسل. يمكنكم تعديلها في واتساب قبل الإرسال.',
     'wa-default': 'مرحباً، نرغب في التخطيط ليوم في لب يام. يسعدنا الحصول على التفاصيل.',
 
@@ -308,7 +341,9 @@ function applyLanguage(lang) {
     btn.setAttribute('aria-pressed', String(btn.dataset.lang === lang));
   });
 
+  labelMonthChoices();
   refreshWhatsAppLinks();
+  renderStep();
   syncPillarLabels();
   alignPillarRows();
   try { localStorage.setItem('lang', lang); } catch (_) { /* ignore */ }
@@ -327,8 +362,22 @@ function initLangSwitch() {
 }
 
 // ── WhatsApp planner ──────────────────────────────────────────
-// Three optional questions → one composed message. Nothing is stored.
-const planner = { event: null, size: null, comps: [] };
+// Four optional questions, one at a time (one tap each; the flow moves on by
+// itself), then a "ready" step. Every answer rewrites the message, and every
+// WhatsApp button sends whatever is there at any point. Nothing is stored.
+const STEPS = ['event', 'size', 'when', 'comp', 'ready'];
+const QUESTION_KEYS = { event: 'plan-q1', size: 'plan-q2', when: 'plan-q-when', comp: 'plan-q3' };
+const ADVANCE_MS = 450;  // long enough to see the tile turn orange before the next question
+const planner = { event: null, size: null, when: null, comps: [] };
+let currentStep = 'event';
+let returnToReady = false;  // set while one answer is being changed from the ready step
+let advanceTimer = 0;
+
+const prefersReducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+function fill(template, vars) {
+  return template.replace(/\{(\w+)\}/g, (_, key) => String(vars[key] ?? ''));
+}
 
 function joinList(items) {
   if (items.length <= 1) return items.join('');
@@ -338,30 +387,77 @@ function joinList(items) {
   return currentLang === 'ar' ? `${head} و${last}` : `${head} ו${last}`;
 }
 
-// The message as a list of fragments; the ones the user chose are marked so
-// the preview can highlight them. The WhatsApp link uses the plain join.
+// "When": the next six months, named in the page language, plus "later" and "not decided"
+function monthName(value) {
+  const [year, month] = value.split('-').map(Number);
+  return new Intl.DateTimeFormat(currentLang, { month: 'long' }).format(new Date(year, month - 1, 1));
+}
+
+function buildMonthChoices() {
+  const grid = document.getElementById('when-choices');
+  if (!grid) return;
+  const fixedAnswers = grid.firstElementChild;  // the months go in front of "later" / "not decided"
+  const now = new Date();
+  for (let i = 0; i < 6; i += 1) {
+    const d = new Date(now.getFullYear(), now.getMonth() + i, 1);
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'choice choice-month';
+    btn.dataset.group = 'when';
+    btn.dataset.value = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+    btn.setAttribute('aria-pressed', 'false');
+    btn.innerHTML = '<span class="choice-label"></span> <span class="choice-year"></span><span class="choice-check" aria-hidden="true"></span>';
+    grid.insertBefore(btn, fixedAnswers);
+  }
+  labelMonthChoices();
+}
+
+function labelMonthChoices() {
+  document.querySelectorAll('.choice-month').forEach((btn) => {
+    btn.querySelector('.choice-label').textContent = monthName(btn.dataset.value);
+    btn.querySelector('.choice-year').textContent = btn.dataset.value.slice(0, 4);
+  });
+}
+
+// "בנובמבר", or "בינואר 2027" once the month is in another year
+function whenFragment() {
+  const when = planner.when;
+  if (!when || when === 'open') return null;
+  if (when === 'later') return t('when-later-msg');
+  const year = Number(when.slice(0, 4));
+  const month = year === new Date().getFullYear() ? monthName(when) : `${monthName(when)} ${year}`;
+  return fill(t('when-month-msg'), { month });
+}
+
+// The message as a list of fragments. Each chosen fragment carries its question
+// (mark) so the preview can highlight it and draw the newest one in.
+// The WhatsApp link uses the plain join.
 function composeParts() {
   const evMsg = planner.event ? t(planner.event.msgKey) : null;
   const sizeMsg = planner.size ? t(`size-${planner.size}`) : null;
+  const whenMsg = whenFragment();
   const compLabels = planner.comps.map((c) => t(c.labelKey));
-  const hasSelection = Boolean(evMsg || sizeMsg || compLabels.length);
+  const hasSelection = Boolean(evMsg || sizeMsg || planner.when || compLabels.length);
   if (!hasSelection) return [{ text: t('wa-default') }];
 
   const parts = [];
+  const openDate = planner.when === 'open' ? [{ text: ' ' }, { text: t('when-open-msg'), mark: 'when' }] : [];
   if (currentLang === 'ar') {
-    if (evMsg) parts.push({ text: 'مرحباً، نخطط لتنظيم ' }, { text: evMsg, mark: true }, { text: ' في لب يام' });
+    if (evMsg) parts.push({ text: 'مرحباً، نخطط لتنظيم ' }, { text: evMsg, mark: 'event' }, { text: ' في لب يام' });
     else parts.push({ text: 'مرحباً، نرغب في التخطيط ليوم في لب يام' });
-    if (sizeMsg) parts.push({ text: '، عددنا ' }, { text: sizeMsg, mark: true });
-    if (compLabels.length) parts.push({ text: '، ونرغب بدمج ' }, { text: joinList(compLabels), mark: true });
-    parts.push({ text: '. يسعدنا أن نخطط معاً!' });
+    if (sizeMsg) parts.push({ text: '، عددنا ' }, { text: sizeMsg, mark: 'size' });
+    if (whenMsg) parts.push({ text: '، ' }, { text: whenMsg, mark: 'when' });
+    if (compLabels.length) parts.push({ text: '، ونرغب بدمج ' }, { text: joinList(compLabels), mark: 'comp' });
+    parts.push({ text: '.' }, ...openDate, { text: ' يسعدنا أن نخطط معاً!' });
     return parts;
   }
 
-  if (evMsg) parts.push({ text: 'היי, אנחנו מתכננים ' }, { text: evMsg, mark: true }, { text: ' בלב ים' });
+  if (evMsg) parts.push({ text: 'היי, אנחנו מתכננים ' }, { text: evMsg, mark: 'event' }, { text: ' בלב ים' });
   else parts.push({ text: 'היי, אנחנו רוצים לתכנן יום בלב ים' });
-  if (sizeMsg) parts.push({ text: ' לקבוצה של ' }, { text: sizeMsg, mark: true });
-  if (compLabels.length) parts.push({ text: ', ורוצים לשלב את ' }, { text: joinList(compLabels), mark: true });
-  parts.push({ text: '. נשמח לתכנן יחד!' });
+  if (sizeMsg) parts.push({ text: ' לקבוצה של ' }, { text: sizeMsg, mark: 'size' });
+  if (whenMsg) parts.push({ text: ' ' }, { text: whenMsg, mark: 'when' });
+  if (compLabels.length) parts.push({ text: ', ורוצים לשלב את ' }, { text: joinList(compLabels), mark: 'comp' });
+  parts.push({ text: '.' }, ...openDate, { text: ' נשמח לתכנן יחד!' });
   return parts;
 }
 
@@ -373,9 +469,12 @@ function escapeHtml(s) {
   return s.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 }
 
-function composePreviewHtml() {
+function composePreviewHtml(changed) {
   return composeParts()
-    .map((p) => (p.mark ? `<mark class="sel">${escapeHtml(p.text)}</mark>` : escapeHtml(p.text)))
+    .map((p) => {
+      if (!p.mark) return escapeHtml(p.text);
+      return `<mark class="sel${p.mark === changed ? ' is-new' : ''}">${escapeHtml(p.text)}</mark>`;
+    })
     .join('');
 }
 
@@ -383,73 +482,209 @@ function waUrl(message) {
   return `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(message)}`;
 }
 
-// Every [data-wa] link gets a language-aware href; the planner CTA gets the composed one.
-function refreshWhatsAppLinks({ animate = false } = {}) {
-  document.querySelectorAll('[data-wa]').forEach((link) => {
-    const message = link.dataset.wa === 'planner' ? composeMessage() : t('wa-default');
-    link.href = waUrl(message);
-  });
-  updateChatPreview(animate);
+// Every WhatsApp button sends the same language-aware message: the default
+// one, or the one the visitor built in the planner, so it's never lost.
+function refreshWhatsAppLinks({ changed = null } = {}) {
+  const href = waUrl(composeMessage());
+  document.querySelectorAll('[data-wa]').forEach((link) => { link.href = href; });
+  updateChatPreview(changed);
 }
 
-// The chat card mirrors the exact message the button will open in WhatsApp.
-let chatTimer = null;
+// The message panel mirrors the exact text the button opens in WhatsApp
 let lastPreview = '';
-function updateChatPreview(animate) {
+function updateChatPreview(changed) {
   const text = document.getElementById('chat-text');
   if (!text) return;
   const next = composeMessage();
   if (next === lastPreview) return;
   lastPreview = next;
-  const render = () => { text.innerHTML = composePreviewHtml(); };
-  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (!animate || reduced) { render(); return; }
-  clearTimeout(chatTimer);
-  text.classList.add('is-updating');
-  chatTimer = setTimeout(() => {
-    render();
-    text.classList.remove('is-updating');
-    const bubble = document.getElementById('chat-bubble');
-    if (bubble) {
-      bubble.classList.remove('is-pop');
-      void bubble.offsetWidth; // restart the pop animation
-      bubble.classList.add('is-pop');
+  text.innerHTML = composePreviewHtml(changed);
+}
+
+// ── Planner steps ──
+function nextStep() {
+  if (returnToReady) return 'ready';
+  return STEPS[Math.min(STEPS.indexOf(currentStep) + 1, STEPS.length - 1)];
+}
+
+function answerText(step) {
+  if (step === 'event') return planner.event ? t(planner.event.labelKey) : '';
+  if (step === 'size') return planner.size ? t(`size-${planner.size}`) : '';
+  if (step === 'when') {
+    if (!planner.when) return '';
+    if (planner.when === 'later') return t('plan-when-later');
+    if (planner.when === 'open') return t('plan-when-open');
+    return `${monthName(planner.when)} ${planner.when.slice(0, 4)}`;
+  }
+  return joinList(planner.comps.map((c) => t(c.labelKey)));
+}
+
+// Ready step: one pill per question. A pill takes the visitor back to that
+// question, and answering it returns straight here.
+function renderAnswers() {
+  const list = document.getElementById('plan-answers');
+  if (!list) return;
+  list.textContent = '';
+  STEPS.filter((step) => QUESTION_KEYS[step]).forEach((step) => {
+    const answer = answerText(step);
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = answer ? 'answer' : 'answer is-empty';
+    btn.dataset.edit = step;
+    btn.textContent = answer || t(QUESTION_KEYS[step]);
+    btn.setAttribute('aria-label', `${t('plan-edit')}: ${btn.textContent}`);
+    const li = document.createElement('li');
+    li.appendChild(btn);
+    list.appendChild(li);
+  });
+}
+
+function renderStep({ animate = false, back = false } = {}) {
+  const root = document.getElementById('planner');
+  if (!root) return;
+  const index = STEPS.indexOf(currentStep);
+  root.dataset.step = currentStep;
+  root.classList.toggle('is-ready', currentStep === 'ready');
+
+  root.querySelectorAll('.step').forEach((step) => {
+    const active = step.dataset.step === currentStep;
+    step.classList.toggle('is-active', active);
+    step.classList.remove('is-in', 'is-back');
+    if (active && animate) {
+      void step.offsetWidth;  // restart the entrance animation
+      step.classList.add('is-in');
+      step.classList.toggle('is-back', back);
     }
-  }, 180);
+  });
+
+  root.querySelectorAll('.flow-progress span').forEach((seg, i) => seg.classList.toggle('is-done', i <= index));
+  const count = document.getElementById('flow-count');
+  if (count && QUESTION_KEYS[currentStep]) {
+    const total = Object.keys(QUESTION_KEYS).length;
+    count.querySelector('.flow-count-num').textContent = `${index + 1}/${total}`;
+    count.querySelector('.sr-only').textContent = fill(t('plan-step'), { n: index + 1, total });
+  }
+  if (currentStep === 'ready') renderAnswers();
+}
+
+// Below 900px only the current step takes room, so the message sits right under
+// the answers; the box glides from the old step's height to the new one. (From
+// 900px all steps share one grid cell and the height never changes.)
+let heightAnim = null;
+function glideStepsHeight(box, fromHeight) {
+  if (heightAnim) heightAnim.cancel();
+  heightAnim = null;
+  const toHeight = box.getBoundingClientRect().height;
+  if (Math.abs(toHeight - fromHeight) < 1 || typeof box.animate !== 'function') {
+    box.style.overflowY = '';
+    return Promise.resolve();
+  }
+  box.style.overflowY = 'clip';  // a taller step must not spill over the message while it grows
+  const anim = box.animate(
+    [{ height: `${fromHeight}px` }, { height: `${toHeight}px` }],
+    { duration: 320, easing: 'cubic-bezier(0.2, 0.7, 0.2, 1)' },
+  );
+  heightAnim = anim;
+  return anim.finished.catch(() => {}).then(() => {
+    if (heightAnim !== anim) return;
+    heightAnim = null;
+    box.style.overflowY = '';
+  });
+}
+
+// On phones the message panel sits under the questions; once the message is
+// ready, scroll just enough to bring the send button into view.
+function revealSendButton() {
+  const cta = document.getElementById('plan-cta');
+  if (!cta) return;
+  const hidden = cta.getBoundingClientRect().bottom - window.innerHeight + 20;
+  if (hidden > 0) window.scrollBy({ top: hidden, behavior: prefersReducedMotion() ? 'auto' : 'smooth' });
+}
+
+function goToStep(step, { via = 'next' } = {}) {
+  clearTimeout(advanceTimer);
+  if (step === currentStep) return;
+  const from = currentStep;
+  const back = STEPS.indexOf(step) < STEPS.indexOf(from);
+  const animate = !prefersReducedMotion();
+  const box = document.querySelector('.flow-steps');
+  const fromHeight = box ? box.getBoundingClientRect().height : 0;
+  currentStep = step;
+  if (step === 'ready') returnToReady = false;
+  renderStep({ animate, back });
+  const settled = box && animate ? glideStepsHeight(box, fromHeight) : Promise.resolve();
+  // Screen readers hear the new question; keyboard users continue from it
+  const heading = document.querySelector(`.step[data-step="${step}"] .step-q`);
+  if (heading) heading.focus({ preventScroll: true });
+  if (step === 'ready') settled.then(revealSendButton);
+  sendBizEvent('levyam.planner.step', { from, to: step, via });
+}
+
+function choose(btn) {
+  const { group, value } = btn.dataset;
+  const wasPressed = btn.getAttribute('aria-pressed') === 'true';
+
+  if (group === 'comp') {
+    // several allowed; "המשך" moves on
+    btn.setAttribute('aria-pressed', String(!wasPressed));
+    planner.comps = wasPressed
+      ? planner.comps.filter((c) => c.value !== value)
+      : [...planner.comps, { value, labelKey: btn.dataset.label }];
+    refreshWhatsAppLinks({ changed: 'comp' });
+    sendBizEvent('levyam.planner.select', { group, value, selected: !wasPressed });
+    return;
+  }
+
+  // One answer per question: press it, release the others, move on
+  document.querySelectorAll(`.choice[data-group="${group}"]`).forEach((c) => {
+    c.setAttribute('aria-pressed', String(c === btn));
+  });
+  planner[group] = group === 'event'
+    ? { value, msgKey: btn.dataset.msg, labelKey: btn.dataset.label }
+    : value;
+  refreshWhatsAppLinks({ changed: group });
+  if (!wasPressed) sendBizEvent('levyam.planner.select', { group, value, selected: true });
+  clearTimeout(advanceTimer);
+  advanceTimer = setTimeout(() => goToStep(nextStep(), { via: 'answer' }), ADVANCE_MS);
+}
+
+function restartPlanner() {
+  planner.event = null;
+  planner.size = null;
+  planner.when = null;
+  planner.comps = [];
+  returnToReady = false;
+  document.querySelectorAll('.choice[aria-pressed="true"]').forEach((c) => c.setAttribute('aria-pressed', 'false'));
+  refreshWhatsAppLinks();
+  goToStep('event', { via: 'restart' });
 }
 
 function initPlanner() {
-  const chips = document.querySelectorAll('.chip[data-group]');
-  if (!chips.length) return;
+  const root = document.getElementById('planner');
+  const flow = root && root.querySelector('.flow');
+  if (!flow) return;
+  buildMonthChoices();
+  flow.hidden = false;
+  root.classList.add('is-enhanced');
 
-  chips.forEach((chip) => {
-    chip.addEventListener('click', () => {
-      const { group, value } = chip.dataset;
-      const wasPressed = chip.getAttribute('aria-pressed') === 'true';
-
-      if (group === 'comp') {
-        // multi-select
-        chip.setAttribute('aria-pressed', String(!wasPressed));
-        planner.comps = wasPressed
-          ? planner.comps.filter((c) => c.value !== value)
-          : [...planner.comps, { value, labelKey: chip.dataset.label }];
-      } else {
-        // single-select: unpress siblings in the same group
-        document.querySelectorAll(`.chip[data-group="${group}"]`).forEach((c) => {
-          c.setAttribute('aria-pressed', 'false');
-        });
-        if (wasPressed) {
-          planner[group] = null;
-        } else {
-          chip.setAttribute('aria-pressed', 'true');
-          planner[group] = group === 'event' ? { value, msgKey: chip.dataset.msg } : value;
-        }
-      }
-
-      refreshWhatsAppLinks({ animate: true });
-      sendBizEvent('levyam.planner.select', { group, value, selected: !wasPressed });
-    });
+  root.addEventListener('click', (e) => {
+    const choice = e.target.closest('.choice');
+    if (choice) { choose(choice); return; }
+    const edit = e.target.closest('.answer');
+    if (edit) {
+      returnToReady = true;
+      goToStep(edit.dataset.edit, { via: 'edit' });
+    } else if (e.target.closest('.flow-back')) {
+      goToStep(STEPS[Math.max(STEPS.indexOf(currentStep) - 1, 0)], { via: 'back' });
+    } else if (e.target.closest('.flow-skip')) {
+      goToStep(nextStep(), { via: 'skip' });
+    } else if (e.target.closest('.step-next')) {
+      goToStep('ready', { via: 'next' });
+    } else if (e.target.closest('.flow-restart')) {
+      restartPlanner();
+    }
   });
+  renderStep();
 }
 
 // ── Click tracking ────────────────────────────────────────────
@@ -461,8 +696,10 @@ function initTracking() {
         source: wa.dataset.wa,
         event_type: planner.event ? planner.event.value : '',
         group_size: planner.size || '',
+        when: planner.when || '',
         components: planner.comps.map((c) => c.value).join(','),
-        has_selection: Boolean(planner.event || planner.size || planner.comps.length),
+        has_selection: Boolean(planner.event || planner.size || planner.when || planner.comps.length),
+        planner_step: currentStep,
       });
       return;
     }
@@ -489,7 +726,7 @@ function initHeader() {
 }
 
 // ── Floating WhatsApp button ──────────────────────────────────
-// Hidden while the planner (chips, message, send button) is on screen, so there
+// Hidden while the planner (questions, message, send button) is on screen, so there
 // is never a second WhatsApp button competing with the one the user is about to tap.
 function initFloatingButton() {
   const float = document.getElementById('wa-float');

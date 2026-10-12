@@ -25,10 +25,11 @@ Merging to `main` deploys.
 - Hebrew (RTL) with an Arabic version (language switch; Arabic translation is a draft pending native review)
 - Hero with a muted background video, three "components" (space / food / content), who it suits,
   community impact, and a closing section with a **WhatsApp planner**
-- The planner has three optional questions (event type, group size, what to include) that compose a
-  pre-filled WhatsApp message — no form, no backend, nothing stored
+- The planner asks four optional questions, one at a time and one tap each (event type, group size,
+  month, what to include), then shows a "ready" step; the answers compose a pre-filled WhatsApp
+  message that is visible while it's built — no form, no backend, nothing stored
 - Dynatrace RUM + business events: `levyam.whatsapp.click`, `levyam.cta.click`,
-  `levyam.planner.select`, `levyam.lang.switch`
+  `levyam.planner.select`, `levyam.planner.step`, `levyam.pillar.toggle`, `levyam.lang.switch`
 - Sections waiting for content are in the HTML with `hidden` + `data-pending="…"`:
   facts strip, testimonials, company logos, footer contact details
 
@@ -46,7 +47,7 @@ Merging to `main` deploys.
 | 4 | Three components — 01 space, 02 food, 03 content; folded (desktop cards open together, mobile list one at a time) | `#space` `#food` `#content` |
 | 5 | One day, exactly for you — 6 tiles + CTA | `#fit` |
 | 6 | Good experience, good impact | `#impact` |
-| 7 | Let's meet — closing + WhatsApp planner (blue finale, one white card) | `#plan` |
+| 7 | Let's meet — closing + WhatsApp planner: four one-tap questions beside the message they write (blue finale, one white card) | `#plan` |
 | 8 | Footer — removed for now (Or, 2026-10-12); its copy is kept in `content/copy.md` | — |
 | — | Floating WhatsApp button (mobile only) | `#wa-float` |
 
