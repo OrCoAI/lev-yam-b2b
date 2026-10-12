@@ -74,7 +74,7 @@ lev-yam-b2b/
 ├── content/
 │   ├── copy.md             # All page copy, from the Google Doc — read before changing text
 │   ├── packages.md         # Legacy packages/prices — not shown on the page, used for quotes only
-│   ├── images/             # Hero video + poster, photos (+ generated -1600/-800 WebP/JPEG), OG image
+│   ├── images/             # Hero video + poster, brand OG image. No photos yet — the page shows brand placeholders
 │   └── brand/              # Logos, icons, brand guide, colors, fonts
 ├── scripts/build_media.py  # Generates WebP/JPEG variants, compressed hero video, poster, OG image
 ├── worker/                 # Legacy Cloudflare Worker (Grow webhook → Supabase) — unused by the page
@@ -90,8 +90,9 @@ lev-yam-b2b/
 1. Copy changes go into `content/copy.md` first (source: the Google Doc), then into `index.html`
    (Hebrew) and the `TRANSLATIONS` dictionary in `js/main.js` (Hebrew + Arabic).
 2. New photos: drop the original in `content/images/`, run the media script (below), then reference
-   the generated variants in a `<picture>` element. Replace a placeholder by swapping the
-   `figure.pillar-media-ph` block and removing `data-pending`.
+   the generated variants in a `<picture>` element. Replace a placeholder by swapping the `div.ph`
+   inside the `figure[data-pending]` for the `<picture>` and removing `data-pending`.
+   Design rule from Or: brand colours only (orange, cream, blue) and the brand icons in `content/brand/`.
 3. Sections marked `hidden data-pending="…"` are switched on by removing `hidden` once real content is in.
 
 ### Media script

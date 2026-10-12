@@ -30,7 +30,8 @@ building or changing any section. Deviations from the doc are marked `[הערה 
 habit: flag, don't silently rewrite. `content/packages.md` is legacy and is **not displayed**.
 
 **Never invent images.** All photos live in `content/images/`. Use only what's there, by filename.
-Missing photos (food, activities, village) are placeholders marked `data-pending` — ask Or for assets.
+No photos are in use yet: the old co-working photos were removed on 2026-10-12 at Or's request, and
+every visual slot is a brand placeholder (`div.ph` inside a `figure[data-pending]`). Ask Or for assets.
 
 **Language:** Hebrew (RTL) is the source; an Arabic version is switched in via `data-i18n` keys and the
 `TRANSLATIONS` dictionary in `js/main.js`. The Arabic is a draft pending native review. Venue name in
@@ -79,8 +80,14 @@ One WhatsApp entry point per viewport: header button on desktop, floating button
 - **Mobile-first.** Most visitors will be on phones. Test at 375px width; photo before text on mobile.
 - **Fast.** No CDN libraries unless absolutely necessary. No heavy JS. Hero video stays ≤ ~2.5 MB.
 - **No CSS framework.** We own the layout.
-- **Accessible.** Dark text on orange buttons (white on orange fails contrast). Skip link, `aria-pressed`
-  on chips and language buttons, `prefers-reduced-motion` respected.
+- **Brand colours only** (Or, 2026-10-12): orange `#f49834`, cream `#fff7ea`, blue `#2c92bf`, plus white
+  and a neutral dark for text. No navy, teal, mint or extra tints; tints are the brand colours at low
+  alpha. Blue is the dark background; orange is for CTAs, selected states and accents.
+- **Brand icons** from `content/brand/` (palm, house, double heart, pinwheel) plus the sun and arch drawn
+  in brand colours in the SVG sprite. No generic icon sets.
+- **Accessible.** Dark text on orange (white on orange fails contrast); blue text only at heading sizes;
+  white text on blue only at ≥ 19px bold. Skip link, `aria-pressed` on chips and language buttons,
+  `prefers-reduced-motion` respected.
 - Colors, fonts, and logo are in `content/brand/`. Use them exactly.
 
 ---
@@ -116,7 +123,7 @@ lev-yam-b2b/
 ├── content/
 │   ├── copy.md              ← all page text (he) — read this first
 │   ├── packages.md          ← legacy, not displayed
-│   ├── images/              ← hero.mp4 + hero-poster.jpg, beachub-N originals + variants, og-image.jpg
+│   ├── images/              ← hero.mp4 + hero-poster.jpg, og-image.jpg (brand). No photos yet
 │   └── brand/               ← logos, icons, brand-guide.md, colors.md, fonts.md
 ├── worker/                  ← legacy Cloudflare Worker (webhook → Supabase)
 ├── docs/grow-plan.md        ← legacy payments plan
