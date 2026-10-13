@@ -70,8 +70,8 @@ logos, footer contact details. Switch on by removing `hidden` once real content 
 4. Three components `#space` `#food` `#content` — straight after the intro. Folded (Or, 2026-10-12).
    Desktop: three cream cards in a row like the old packages; "מידע נוסף" opens all three together.
    Mobile: one grouped list, one item open at a time (an item above closes instantly with scroll
-   compensation). Every item uses the same blocks in the same order and spacing: title → subtitle →
-   paragraph(s) → list label + list → white note box. No 01/02/03 numbers (removed by Or, 2026-10-13).
+   compensation). Every item has Or's structure (text by Or, 2026-10-13), with the same spacing: title +
+   tagline → entry paragraph → list label + six bullets → end paragraph (white box). No 01/02/03 numbers.
    On desktop, JS lines up matching blocks across the cards (`data-row`, `--row-*`). Header links open
    the item. Real photos go at the top of each `.pillar-body`.
    **Never remove copy to fix layout** — Or wants all text kept; solve it with structure and spacing.
