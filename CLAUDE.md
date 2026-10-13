@@ -76,7 +76,12 @@ logos, footer contact details. Switch on by removing `hidden` once real content 
    the item. Real photos go at the top of each `.pillar-body`.
    **Never remove copy to fix layout** — Or wants all text kept; solve it with structure and spacing.
 4b. Testimonials + logos `#testimonials` — hidden until content
-5. Fit `#fit` — "יום אחד. בדיוק בשבילכם." + 6 icon tiles + CTA
+5. Fit `#fit` — "יום אחד. בדיוק בשבילכם." + text + "מתאים במיוחד ל:" + CTA. The six types are six
+   ways into the planner (2026-10-13): a row (brand icon, type, arrow) answers the planner's first
+   question, turns orange with a check, and the page glides to the next question; if the visitor had
+   started, they return to where they were. The pick stays orange here and follows the planner.
+   Rows rise in on first view and the arrows wave once. Phones: one column; 600px: two; from 900px:
+   text + button on one side, the list on the other. Without JS they are links to `#plan`.
 6. Impact `#impact` — full-bleed photo, short text
 7. Plan `#plan` — the finale: blue full-bleed section, one white card in two parts (side by side from
    900px, stacked below): the questions and the cream message panel. Four questions, one at a time,

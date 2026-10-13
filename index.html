@@ -276,24 +276,30 @@
 
 <!-- ── Fit ──────────────────────────────────── -->
 <section class="section section-cream fit" id="fit">
-  <div class="container narrow">
-    <h2 class="center h2-accent" data-i18n="fit-h2">יום אחד. בדיוק בשבילכם.</h2>
-    <div class="fit-text center">
+  <!-- Phones: one column. From 900px the text and the button sit on one side and
+       "מתאים במיוחד ל:" on the other. -->
+  <div class="container fit-layout">
+    <h2 class="h2-accent fit-h2" data-i18n="fit-h2">יום אחד. בדיוק בשבילכם.</h2>
+    <div class="fit-text">
       <p data-i18n="fit-p1">אין שני צוותים זהים, ולכן גם אין שני ימים זהים בלב ים.</p>
       <p data-i18n="fit-p2">יש צוותים שמגיעים ליום עבודה וחשיבה, אחרים מחפשים גיבוש וחוויה משותפת, ויש מי שרוצים פשוט לצאת מהמשרד ולבלות יחד במקום יפה ומיוחד.</p>
       <p data-i18n="fit-p3">אנחנו כאן כדי להקשיב, להציע ולבנות יחד את השילוב הנכון של מרחב, אוכל ותוכן.</p>
     </div>
-    <h3 class="center list-title list-title-lg" data-i18n="fit-list-title">מתאים במיוחד ל:</h3>
-    <!-- Icons from the brand kit (content/brand): double heart, house, pinwheel, sun, palm, arch -->
-    <ul class="tiles">
-      <li class="tile"><span class="tile-icon"><img src="content/brand/icons-16.png" alt="" width="444" height="391"></span><span data-i18n="fit-li1">ימי גיבוש וצוות</span></li>
-      <li class="tile"><span class="tile-icon"><img src="content/brand/icons-4.png" alt="" width="469" height="310"></span><span data-i18n="fit-li2">מפגשי הנהלה וימי אסטרטגיה</span></li>
-      <li class="tile"><span class="tile-icon"><img src="content/brand/icons-22.png" alt="" width="370" height="340"></span><span data-i18n="fit-li3">סדנאות והכשרות</span></li>
-      <li class="tile"><span class="tile-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-sun"/></svg></span><span data-i18n="fit-li4">ימי חשיבה ויצירה</span></li>
-      <li class="tile"><span class="tile-icon"><img src="content/brand/icons-1.png" alt="" width="613" height="949"></span><span data-i18n="fit-li5">אירועי חברה ומפגשים מקצועיים</span></li>
-      <li class="tile"><span class="tile-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-arch"/></svg></span><span data-i18n="fit-li6">מפגשי קהילה וארגונים</span></li>
-    </ul>
-    <div class="center">
+    <!-- The six types are six ways into the planner: a pick answers its first question
+         (the same six, with the same brand icons), turns orange, and the page glides to
+         the next question with the message already written. Without JS they link to #plan. -->
+    <div class="fit-picks">
+      <h3 class="fit-picks-title" id="fit-list-title" data-i18n="fit-list-title">מתאים במיוחד ל:</h3>
+      <ul class="fit-list" aria-labelledby="fit-list-title">
+        <li><a class="fit-pick" href="#plan" data-pick="team" data-track="fit-pick"><span class="fit-pick-icon" aria-hidden="true"><img src="content/brand/icons-16.png" alt="" width="444" height="391"></span><span class="fit-pick-label" data-i18n="fit-li1">ימי גיבוש וצוות</span><span class="fit-pick-go" aria-hidden="true"></span></a></li>
+        <li><a class="fit-pick" href="#plan" data-pick="mgmt" data-track="fit-pick"><span class="fit-pick-icon" aria-hidden="true"><img src="content/brand/icons-4.png" alt="" width="469" height="310"></span><span class="fit-pick-label" data-i18n="fit-li2">מפגשי הנהלה וימי אסטרטגיה</span><span class="fit-pick-go" aria-hidden="true"></span></a></li>
+        <li><a class="fit-pick" href="#plan" data-pick="workshop" data-track="fit-pick"><span class="fit-pick-icon" aria-hidden="true"><img src="content/brand/icons-22.png" alt="" width="370" height="340"></span><span class="fit-pick-label" data-i18n="fit-li3">סדנאות והכשרות</span><span class="fit-pick-go" aria-hidden="true"></span></a></li>
+        <li><a class="fit-pick" href="#plan" data-pick="thinking" data-track="fit-pick"><span class="fit-pick-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#icon-sun"/></svg></span><span class="fit-pick-label" data-i18n="fit-li4">ימי חשיבה ויצירה</span><span class="fit-pick-go" aria-hidden="true"></span></a></li>
+        <li><a class="fit-pick" href="#plan" data-pick="company" data-track="fit-pick"><span class="fit-pick-icon" aria-hidden="true"><img src="content/brand/icons-1.png" alt="" width="613" height="949"></span><span class="fit-pick-label" data-i18n="fit-li5">אירועי חברה ומפגשים מקצועיים</span><span class="fit-pick-go" aria-hidden="true"></span></a></li>
+        <li><a class="fit-pick" href="#plan" data-pick="community" data-track="fit-pick"><span class="fit-pick-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#icon-arch"/></svg></span><span class="fit-pick-label" data-i18n="fit-li6">מפגשי קהילה וארגונים</span><span class="fit-pick-go" aria-hidden="true"></span></a></li>
+      </ul>
+    </div>
+    <div class="fit-cta">
       <a href="#plan" class="btn btn-primary btn-lg" data-track="fit-plan" data-i18n="fit-cta">בואו ליצור את היום שלכם</a>
     </div>
   </div>

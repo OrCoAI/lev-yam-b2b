@@ -27,6 +27,7 @@
   --gutter: 1.25rem;
   --header-h: 64px;
   --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --spring: cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 /* ── Reset & base ────────────────────────────── */
@@ -131,14 +132,6 @@ html[lang="ar"] .h2-accent { padding-bottom: 1.5rem; }
   height: 12px;
   background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 12'%3E%3Cpath d='M0 9 L8 3 L16 9 L24 3 L32 9' fill='none' stroke='%23f49834' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") repeat-x left center / 32px 12px;
 }
-
-.list-title {
-  font-size: 1.0625rem;
-  font-weight: 700;
-  color: var(--ink);
-  margin: 1.4rem 0 0.6rem;
-}
-.list-title-lg { font-size: 1.25rem; margin: 2rem 0 1rem; }
 
 /* ── Layout ──────────────────────────────────── */
 .container {
@@ -645,44 +638,156 @@ html[lang="ar"] .h2-accent { padding-bottom: 1.5rem; }
 }
 
 /* ── Fit ─────────────────────────────────────── */
-.fit-text { max-width: 680px; margin: 0 auto; color: var(--ink-soft); }
+/* Phones: one centred column — title, text, "מתאים במיוחד ל:", button.
+   From 900px: the text and the button on the start side, the six picks on
+   the other, the two titles on one line. */
+.fit-layout {
+  display: grid;
+  justify-items: center;
+  text-align: center;
+}
+.fit-text { max-width: 680px; color: var(--ink-soft); }
 .fit-text p:first-child { color: var(--ink); font-weight: 700; font-size: 1.15rem; }
 
-.tiles {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 0.75rem;
-  margin: 0 auto 2.25rem;
+.fit-picks { width: 100%; max-width: 560px; margin-top: 2.5rem; }
+.fit-picks-title {
+  margin-bottom: 1rem;
+  font-size: 1.35rem;
+  color: var(--ink);
 }
-@media (min-width: 768px) { .tiles { grid-template-columns: repeat(3, 1fr); gap: 1rem; } }
-.tile {
+.fit-list { display: grid; gap: 0.65rem; text-align: start; }
+.fit-cta { margin-top: 2.25rem; }
+
+@media (min-width: 600px) {
+  .fit-picks { max-width: none; }
+  .fit-list { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.75rem; }
+}
+
+@media (min-width: 900px) {
+  .fit-layout {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+    grid-template-rows: auto auto 1fr;
+    grid-template-areas:
+      "head picks"
+      "text picks"
+      "cta  picks";
+    column-gap: clamp(3rem, 7vw, 6.5rem);
+    justify-items: stretch;
+    align-items: start;
+    text-align: start;
+  }
+  .fit-h2 { grid-area: head; text-wrap: balance; }
+  .fit-h2.h2-accent::after { margin-inline: 0 auto; }  /* the wave starts under the title */
+  .fit-text { grid-area: text; }
+  .fit-cta { grid-area: cta; margin-top: 2rem; }
+  .fit-picks { grid-area: picks; margin-top: 0; }
+  .fit-picks-title { padding-top: 0.35rem; }
+  .fit-list { grid-template-columns: minmax(0, 1fr); gap: 0.7rem; }
+}
+
+/* One pick: brand icon, the type, and an arrow — the whole row is the link.
+   Pointing at it lifts it and turns the arrow orange; the chosen one is
+   orange with a check, here and in the planner's first question. */
+.fit-pick {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 0.7rem;
-  padding: 1.25rem 0.75rem;
+  gap: 0.85rem;
+  min-height: 68px;
+  padding: 0.6rem 0.65rem;
+  border: 1.5px solid transparent;
+  border-radius: 18px;
   background: var(--white);
-  border-radius: var(--radius);
   box-shadow: var(--shadow-sm);
-  text-align: center;
+  color: var(--ink);
+  font-size: 1.05rem;
   font-weight: 700;
-  font-size: 0.95rem;
-  line-height: 1.35;
-  transition: transform 0.2s var(--ease), box-shadow 0.2s var(--ease);
+  line-height: 1.3;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  transition: background-color 0.2s var(--ease), border-color 0.2s var(--ease),
+              box-shadow 0.25s var(--ease), transform 0.25s var(--ease);
 }
-.tile:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
-/* Brand icons sit in a cream circle; sizes vary, so cap both dimensions */
-.tile-icon {
+@media (min-width: 900px) { .fit-pick { min-height: 72px; font-size: 1.1rem; } }
+.fit-pick-icon {
+  flex: none;
   display: grid;
   place-items: center;
-  width: 64px;
-  height: 64px;
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
   background: var(--cream);
+  transition: background-color 0.2s var(--ease), transform 0.4s var(--spring);
 }
-.tile-icon img,
-.tile-icon svg { width: auto; height: auto; max-width: 34px; max-height: 34px; }
-.tile-icon svg { width: 34px; height: 34px; }
+/* Brand icons vary in shape, so cap both dimensions */
+.fit-pick-icon img { width: auto; height: auto; max-width: 28px; max-height: 28px; }
+.fit-pick-icon svg { width: 28px; height: 28px; }
+.fit-pick-label { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+/* Both languages are RTL, so "go" points left */
+.fit-pick-go {
+  flex: none;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--blue-soft) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M19 12H6M11 6.5 5.5 12l5.5 5.5' fill='none' stroke='%232c92bf' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / 17px no-repeat;
+  transition: background-color 0.2s var(--ease), translate 0.35s var(--spring);
+}
+html[dir="ltr"] .fit-pick-go { scale: -1 1; }
+
+/* Pointing (mouse) or tabbing to a pick: the arrow turns orange and steps forward */
+.fit-pick {
+  --go-on: var(--orange) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M19 12H6M11 6.5 5.5 12l5.5 5.5' fill='none' stroke='%23222' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / 17px no-repeat;
+  --go-step: -4px;
+}
+html[dir="ltr"] .fit-pick { --go-step: 4px; }
+@media (hover: hover) {
+  .fit-pick:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+  .fit-pick:hover .fit-pick-icon { transform: rotate(-10deg) scale(1.1); }
+  .fit-pick:hover .fit-pick-go { background: var(--go-on); translate: var(--go-step) 0; }
+}
+.fit-pick:focus-visible .fit-pick-go { background: var(--go-on); translate: var(--go-step) 0; }
+.fit-pick:active { transform: scale(0.98); }
+
+/* The first time they come into view the six rise in one after another, each
+   icon pops, and then the arrows step forward once in a wave — "tap me".
+   (js/main.js adds .will-rise, then .is-risen; never with reduced motion) */
+.fit-list > li:nth-child(2) { --i: 1; }
+.fit-list > li:nth-child(3) { --i: 2; }
+.fit-list > li:nth-child(4) { --i: 3; }
+.fit-list > li:nth-child(5) { --i: 4; }
+.fit-list > li:nth-child(6) { --i: 5; }
+.fit-list.will-rise > li { opacity: 0; }
+.fit-list.will-rise.is-risen > li { opacity: 1; animation: pick-rise 0.55s var(--ease) calc(var(--i, 0) * 70ms) backwards; }
+.fit-list.is-risen .fit-pick-icon { animation: icon-pop 0.6s var(--spring) calc(120ms + var(--i, 0) * 70ms) backwards; }
+.fit-list.is-risen .fit-pick-go { animation: go-wave 0.7s var(--ease) calc(800ms + var(--i, 0) * 90ms); }
+@keyframes pick-rise {
+  from { opacity: 0; transform: translateY(18px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes icon-pop {
+  from { transform: scale(0.3) rotate(-25deg); }
+  to { transform: none; }
+}
+@keyframes go-wave {
+  0%, 100% { transform: none; }
+  40% { transform: translateX(var(--go-step)); }
+}
+
+/* Chosen: orange with a check, as in the planner (after the rise, so its check pops at once) */
+.fit-pick[aria-current="true"] {
+  border-color: var(--orange);
+  background: var(--orange);
+  box-shadow: 0 8px 18px rgba(244, 152, 52, 0.35);
+}
+.fit-pick[aria-current="true"] .fit-pick-icon { background: var(--white); transform: scale(1.06); }
+.fit-pick[aria-current="true"] .fit-pick-go {
+  background: var(--white) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M5.5 10.5 L8.5 13.5 L14.5 7' fill='none' stroke='%23222' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / 18px no-repeat;
+  translate: none;
+  animation: go-check 0.4s var(--spring);
+}
+@keyframes go-check {
+  from { transform: scale(0.4); }
+  to { transform: none; }
+}
 
 /* ── Impact ──────────────────────────────────── */
 .impact { background: var(--white); text-align: center; }
@@ -717,7 +822,6 @@ html[lang="ar"] .h2-accent { padding-bottom: 1.5rem; }
   /* How far a question slides in. Both languages are RTL, so the next
      question arrives from the left (the reading direction). */
   --flow-in: -28px;
-  --spring: cubic-bezier(0.34, 1.56, 0.64, 1);
   max-width: 1040px;
   margin: 2.5rem auto 0;
   background: var(--white);
