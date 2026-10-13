@@ -56,20 +56,25 @@ logos, footer contact details. Switch on by removing `hidden` once real content 
 
 ---
 
-## Page structure (final, approved by Or 2026-10-12)
+## Page structure (approved by Or 2026-10-12, order updated 2026-10-13)
 
-0. Sticky header — logo mark, anchors (המרחב · האוכל · התוכן · למי זה מתאים · צרו קשר), HE/AR, WhatsApp (desktop ≥900px)
-1. Hero `#hero` — eyebrow, H1 "יוצאים מהשגרה. נפגשים אחרת.", subtitle, lead, CTAs → `#plan` / `#why`; vertical video on all screens
+0. Sticky header — logo mark, anchors (המרחב · האוכל · התוכן · למי זה מתאים · צרו קשר), HE/AR, WhatsApp
+   (desktop ≥900px). At the very top the logo mark is hidden (the hero stamp is the logo); it fades in on scroll.
+1. Hero `#hero` — the brand stamp (lands on load; the place-name eyebrow was removed by Or), H1
+   "יוצאים מהשגרה. נפגשים אחרת.", subtitle, lead with "לב ים" bold (as in the doc), CTAs
+   "בואו נתכנן את היום שלכם!" → `#plan` / "גלו את לב ים" → `#pillars`; vertical video on all screens
 2. Facts strip `#facts` — hidden until data
-3. Why `#why` — two intro sentences, H2, story split into short paragraphs, pull quote, photo
-3b. Testimonials + logos `#testimonials` — hidden until content
-4. Three components `#space` `#food` `#content` — folded (Or, 2026-10-12). Desktop: three cream cards in
-   a row like the old packages; "מידע נוסף" opens all three together. Mobile: one grouped list, one item
-   open at a time (an item above closes instantly with scroll compensation). Every item uses the same
-   blocks in the same order and spacing: title → subtitle → paragraph(s) → list label + list → white note
-   box. On desktop, JS lines up matching blocks across the cards (`data-row`, `--row-*`). Header links open
+3. Three components `#space` `#food` `#content` — straight after the hero (Or, 2026-10-13), on cream with
+   white cards. Folded (Or, 2026-10-12). Desktop: three cards in a row like the old packages; "מידע נוסף"
+   opens all three together. Mobile: one grouped list, one item open at a time (an item above closes
+   instantly with scroll compensation). Every item uses the same blocks in the same order and spacing:
+   title → subtitle → paragraph(s) → list label + list → cream note box. No 01/02/03 numbers (removed by Or).
+   On desktop, JS lines up matching blocks across the cards (`data-row`, `--row-*`). Header links open
    the item. Real photos go at the top of each `.pillar-body`.
    **Never remove copy to fix layout** — Or wants all text kept; solve it with structure and spacing.
+4. Why `#why` — on white: H2, story split into short paragraphs, pull quote, photo (placeholder: the full
+   logo). The two intro sentences that opened it were removed by Or (2026-10-13).
+4b. Testimonials + logos `#testimonials` — hidden until content
 5. Fit `#fit` — "יום אחד. בדיוק בשבילכם." + 6 icon tiles + CTA
 6. Impact `#impact` — full-bleed photo, short text
 7. Plan `#plan` — the finale: blue full-bleed section, one white card in two parts (side by side from

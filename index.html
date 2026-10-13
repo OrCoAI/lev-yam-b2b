@@ -86,16 +86,17 @@
     <source src="content/images/hero.mp4" type="video/mp4">
   </video>
   <div class="hero-content">
-    <p class="eyebrow" data-i18n="hero-eyebrow">לב ים · כפר הדייגים, ג׳יסר א-זרקא</p>
+    <!-- The brand stamp opens the page (it lands again when the planner's message is ready) -->
+    <img class="hero-stamp" src="content/brand/logo-stamp-320.png" alt="לב ים" data-i18n-alt="brand-name" width="320" height="454">
     <h1>
       <span class="h1-line" data-i18n="hero-h1a">יוצאים מהשגרה.</span>
       <span class="h1-line" data-i18n="hero-h1b">נפגשים אחרת.</span>
     </h1>
     <p class="hero-sub" data-i18n="hero-sub">ימי צוות, מפגשי הנהלה ואירועי חברה במקום קצת אחר.</p>
-    <p class="hero-lead" data-i18n="hero-lead">בכפר הדייגים ג׳יסר א-זרקא, בין הים לטבע, מחכה לכם לב ים - מרחב אירוח ייחודי המשלב נוף עוצר נשימה, אוכל מקומי, תוכן מעשיר ומפגש אנושי בגובה העיניים.</p>
+    <p class="hero-lead"><span data-i18n="hero-lead-a">בכפר הדייגים ג׳יסר א-זרקא, בין הים לטבע, מחכה לכם</span> <strong class="hero-name" data-i18n="brand-name">לב ים</strong> <span data-i18n="hero-lead-b">- מרחב אירוח ייחודי המשלב נוף עוצר נשימה, אוכל מקומי, תוכן מעשיר ומפגש אנושי בגובה העיניים.</span></p>
     <div class="hero-ctas">
-      <a href="#plan" class="btn btn-primary btn-lg" data-track="hero-plan" data-i18n="cta-plan">בואו נתכנן את היום שלכם</a>
-      <a href="#why" class="btn btn-ghost btn-lg" data-track="hero-discover" data-i18n="hero-cta-discover">גלו את לב ים</a>
+      <a href="#plan" class="btn btn-primary btn-lg" data-track="hero-plan" data-i18n="cta-plan">בואו נתכנן את היום שלכם!</a>
+      <a href="#pillars" class="btn btn-ghost btn-lg" data-track="hero-discover" data-i18n="hero-cta-discover">גלו את לב ים</a>
     </div>
   </div>
   <div class="hero-curve" aria-hidden="true"></div>
@@ -113,45 +114,6 @@
   </div>
 </section>
 
-<!-- ── Why ──────────────────────────────────── -->
-<section class="section section-cream why" id="why">
-  <div class="container">
-    <div class="lede">
-      <p data-i18n="intro-p1">מקום לצאת מהשגרה, לפתוח את הראש, להתחבר מחדש ולחזור עם אנרגיה ורעיונות חדשים.</p>
-      <p data-i18n="intro-p2">בין אם אתם מתכננים יום גיבוש, מפגש חשיבה, סדנה או אירוע חברה - ניצור יחד חוויה המותאמת לאנשים ולמטרות שלכם.</p>
-    </div>
-
-    <div class="why-grid">
-      <div class="why-text">
-        <h2 data-i18n="why-h2">למה זה כל כך חשוב להגיע ל'לב ים', כפר הדייגים, ג'יסר א זרקא?</h2>
-        <p class="why-answer" data-i18n="why-p1">האמת? כי זה מה שכל מי שמגיע לפה אומר.</p>
-        <p data-i18n="why-p2">במרחב הקסום מול הים, בכפר דייגים העתיק בלב הטבע הפראי של מישור החוף, זורמת אנרגיה של אותנטיות פשוטה לצד פונקציונליות בריאה – שמייצרים תחושה של קרבה ותום, שפיות וביטחון.</p>
-        <p data-i18n="why-p3">אנחנו מקדשים את הפשוט, מעריכים את הטבעי, מכירים בסדוק ומוקירים על הבלתי שלם, וכל מי שמעז להגיע לפה – גם אם לצד הפחד והספק – זוכה לנווט דרך האתגרים העסקיים, המורכבות הרגשית ומשבר האמון – אל עבר מחוזות ההשראה, הריפוי וההעצמה.</p>
-        <blockquote class="pull-quote">
-          <p data-i18n="why-quote">אנחנו מזמינים אתכם להיות חלק מהנבחרת שבוחרת בשפיות הזו.</p>
-        </blockquote>
-      </div>
-      <!-- Placeholder: replace with a wide photo of the venue when available -->
-      <figure class="why-media" data-pending="venue photo">
-        <div class="ph ph-logo" aria-hidden="true"><img src="content/brand/Logo-fin-(1080_1080pxl)-10.png" alt="" width="1080" height="1080"></div>
-      </figure>
-    </div>
-  </div>
-</section>
-
-<!-- ── Testimonials + logos — hidden until real quotes arrive ── -->
-<section class="section testimonials" id="testimonials" hidden data-pending="2-3 testimonials + company logos">
-  <div class="container">
-    <h2 class="center" data-i18n="testi-h2">מה אומרים מי שכבר היו כאן</h2>
-    <div class="testi-grid">
-      <blockquote class="testi"><p>…</p><footer><cite>שם, תפקיד, חברה</cite></footer></blockquote>
-      <blockquote class="testi"><p>…</p><footer><cite>שם, תפקיד, חברה</cite></footer></blockquote>
-      <blockquote class="testi"><p>…</p><footer><cite>שם, תפקיד, חברה</cite></footer></blockquote>
-    </div>
-    <ul class="logo-row" aria-label="חברות וארגונים שהתארחו בלב ים"></ul>
-  </div>
-</section>
-
 <!-- ── Three components — folded ────────────── -->
 <!-- Every item uses the same blocks, in the same order, with the same spacing:
      title → subtitle → intro paragraph(s) → list → note box. All copy from content/copy.md.
@@ -159,19 +121,19 @@
      and JS lines up the matching blocks across the cards (data-row).
      Mobile: one grouped list; tapping a row opens it and closes the others.
      Photos, when they arrive, go as the first child of each .pillar-body. -->
-<section class="section pillars" id="pillars">
+<section class="section section-cream pillars" id="pillars">
   <div class="container">
     <h2 class="center h2-accent" data-i18n="pillars-h2">שלושה מרכיבים. אינספור אפשרויות.</h2>
 
     <div class="pillar-grid">
 
-      <!-- 01 | המרחב -->
+      <!-- המרחב -->
       <article class="pillar" id="space">
         <h3 class="pillar-heading">
           <button type="button" class="pillar-head" id="pillar-head-space" aria-expanded="false" aria-controls="pillar-panel-space">
             <span class="pillar-icon" aria-hidden="true"><img src="content/brand/icons-4.png" alt="" width="469" height="310"></span>
             <span class="pillar-titles">
-              <span class="pillar-title"><span class="pillar-num">01</span><span data-i18n="nav-space">המרחב</span></span>
+              <span class="pillar-title"><span data-i18n="nav-space">המרחב</span></span>
               <span class="pillar-subtitle" data-row="subtitle" data-i18n="p1-h3">משנים אווירה. פותחים את הראש.</span>
             </span>
             <span class="pillar-chevron" aria-hidden="true"></span>
@@ -210,13 +172,13 @@
         </button>
       </article>
 
-      <!-- 02 | האוכל -->
+      <!-- האוכל -->
       <article class="pillar" id="food">
         <h3 class="pillar-heading">
           <button type="button" class="pillar-head" id="pillar-head-food" aria-expanded="false" aria-controls="pillar-panel-food">
             <span class="pillar-icon" aria-hidden="true"><img src="content/brand/icons-1.png" alt="" width="613" height="949"></span>
             <span class="pillar-titles">
-              <span class="pillar-title"><span class="pillar-num">02</span><span data-i18n="nav-food">האוכל</span></span>
+              <span class="pillar-title"><span data-i18n="nav-food">האוכל</span></span>
               <span class="pillar-subtitle" data-row="subtitle" data-i18n="p2-h3">טעמים מקומיים. אירוח מכל הלב.</span>
             </span>
             <span class="pillar-chevron" aria-hidden="true"></span>
@@ -249,13 +211,13 @@
         </button>
       </article>
 
-      <!-- 03 | התוכן -->
+      <!-- התוכן -->
       <article class="pillar" id="content">
         <h3 class="pillar-heading">
           <button type="button" class="pillar-head" id="pillar-head-content" aria-expanded="false" aria-controls="pillar-panel-content">
             <span class="pillar-icon" aria-hidden="true"><img src="content/brand/icons-22.png" alt="" width="370" height="340"></span>
             <span class="pillar-titles">
-              <span class="pillar-title"><span class="pillar-num">03</span><span data-i18n="nav-content">התוכן</span></span>
+              <span class="pillar-title"><span data-i18n="nav-content">התוכן</span></span>
               <span class="pillar-subtitle" data-row="subtitle" data-i18n="p3-h3">חוויות שמחברות בין אנשים.</span>
             </span>
             <span class="pillar-chevron" aria-hidden="true"></span>
@@ -290,6 +252,40 @@
       </article>
 
     </div>
+  </div>
+</section>
+
+<!-- ── Why ──────────────────────────────────── -->
+<section class="section why" id="why">
+  <div class="container">
+    <div class="why-grid">
+      <div class="why-text">
+        <h2 data-i18n="why-h2">למה זה כל כך חשוב להגיע ל'לב ים', כפר הדייגים, ג'יסר א זרקא?</h2>
+        <p class="why-answer" data-i18n="why-p1">האמת? כי זה מה שכל מי שמגיע לפה אומר.</p>
+        <p data-i18n="why-p2">במרחב הקסום מול הים, בכפר דייגים העתיק בלב הטבע הפראי של מישור החוף, זורמת אנרגיה של אותנטיות פשוטה לצד פונקציונליות בריאה – שמייצרים תחושה של קרבה ותום, שפיות וביטחון.</p>
+        <p data-i18n="why-p3">אנחנו מקדשים את הפשוט, מעריכים את הטבעי, מכירים בסדוק ומוקירים על הבלתי שלם, וכל מי שמעז להגיע לפה – גם אם לצד הפחד והספק – זוכה לנווט דרך האתגרים העסקיים, המורכבות הרגשית ומשבר האמון – אל עבר מחוזות ההשראה, הריפוי וההעצמה.</p>
+        <blockquote class="pull-quote">
+          <p data-i18n="why-quote">אנחנו מזמינים אתכם להיות חלק מהנבחרת שבוחרת בשפיות הזו.</p>
+        </blockquote>
+      </div>
+      <!-- Placeholder: replace with a wide photo of the venue when available -->
+      <figure class="why-media" data-pending="venue photo">
+        <div class="ph ph-logo" aria-hidden="true"><img src="content/brand/logo-full-560.png" alt="" width="560" height="560"></div>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<!-- ── Testimonials + logos — hidden until real quotes arrive ── -->
+<section class="section testimonials" id="testimonials" hidden data-pending="2-3 testimonials + company logos">
+  <div class="container">
+    <h2 class="center" data-i18n="testi-h2">מה אומרים מי שכבר היו כאן</h2>
+    <div class="testi-grid">
+      <blockquote class="testi"><p>…</p><footer><cite>שם, תפקיד, חברה</cite></footer></blockquote>
+      <blockquote class="testi"><p>…</p><footer><cite>שם, תפקיד, חברה</cite></footer></blockquote>
+      <blockquote class="testi"><p>…</p><footer><cite>שם, תפקיד, חברה</cite></footer></blockquote>
+    </div>
+    <ul class="logo-row" aria-label="חברות וארגונים שהתארחו בלב ים"></ul>
   </div>
 </section>
 
@@ -483,7 +479,7 @@
           <!-- Ready — the brand stamp lands; each answer can be changed from here,
                and "מתחילים מחדש" takes the place of "דלגו" in the top row -->
           <div class="step step-ready" data-step="ready" role="group" aria-labelledby="plan-ready-h">
-            <img class="ready-stamp" src="content/brand/logo-stamp-160.png" alt="" width="160" height="227">
+            <img class="ready-stamp" src="content/brand/logo-stamp-320.png" alt="" width="320" height="454">
             <h3 class="step-q" id="plan-ready-h" tabindex="-1" data-i18n="plan-ready-h">ההודעה מוכנה!</h3>
             <p class="ready-p" data-i18n="plan-ready-p">עוד לחיצה אחת ואנחנו מדברים בוואטסאפ.</p>
             <ul class="answers" id="plan-answers"></ul>
