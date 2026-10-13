@@ -45,7 +45,7 @@ Merging to `main` deploys.
 | 3 | Intro — the two opening sentences | `#intro` |
 | 4 | Three components — space, food, content; folded (desktop cards open together, mobile list one at a time) | `#space` `#food` `#content` |
 | 4b | Testimonials + logos *(hidden until content)* | `#testimonials` |
-| 5 | One day, exactly for you — the six types, each a way into the planner (a pick answers its first question) + CTA | `#fit` |
+| 5 | One day, exactly for you — the six types as an icon list + CTA | `#fit` |
 | 6 | Good experience, good impact | `#impact` |
 | 7 | Let's meet — closing + WhatsApp planner: four one-tap questions beside the message they write (blue finale, one white card) | `#plan` |
 | 8 | Footer — removed for now (Or, 2026-10-12); its copy is kept in `content/copy.md` | — |

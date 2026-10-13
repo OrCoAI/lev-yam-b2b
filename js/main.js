@@ -607,11 +607,22 @@ function goToStep(step, { via = 'next' } = {}) {
   sendBizEvent('levyam.planner.step', { from, to: step, via });
 }
 
-// One answer per question: press it and release the others. (source: where it
-// was chosen — the planner itself, or the six picks of #fit for the first question)
-function setAnswer(btn, source = 'planner') {
+function choose(btn) {
   const { group, value } = btn.dataset;
   const wasPressed = btn.getAttribute('aria-pressed') === 'true';
+
+  if (group === 'comp') {
+    // several allowed; "המשך" moves on
+    btn.setAttribute('aria-pressed', String(!wasPressed));
+    planner.comps = wasPressed
+      ? planner.comps.filter((c) => c.value !== value)
+      : [...planner.comps, { value, labelKey: btn.dataset.label }];
+    refreshWhatsAppLinks({ changed: 'comp' });
+    sendBizEvent('levyam.planner.select', { group, value, selected: !wasPressed });
+    return;
+  }
+
+  // One answer per question: press it, release the others, move on
   document.querySelectorAll(`.choice[data-group="${group}"]`).forEach((c) => {
     c.setAttribute('aria-pressed', String(c === btn));
   });
@@ -619,26 +630,7 @@ function setAnswer(btn, source = 'planner') {
     ? { value, msgKey: btn.dataset.msg, labelKey: btn.dataset.label }
     : value;
   refreshWhatsAppLinks({ changed: group });
-  if (group === 'event') syncFitPicks();
-  if (!wasPressed) sendBizEvent('levyam.planner.select', { group, value, selected: true, source });
-}
-
-function choose(btn) {
-  const { group, value } = btn.dataset;
-
-  if (group === 'comp') {
-    // several allowed; "המשך" moves on
-    const wasPressed = btn.getAttribute('aria-pressed') === 'true';
-    btn.setAttribute('aria-pressed', String(!wasPressed));
-    planner.comps = wasPressed
-      ? planner.comps.filter((c) => c.value !== value)
-      : [...planner.comps, { value, labelKey: btn.dataset.label }];
-    refreshWhatsAppLinks({ changed: 'comp' });
-    sendBizEvent('levyam.planner.select', { group, value, selected: !wasPressed, source: 'planner' });
-    return;
-  }
-
-  setAnswer(btn);
+  if (!wasPressed) sendBizEvent('levyam.planner.select', { group, value, selected: true });
   clearTimeout(advanceTimer);
   advanceTimer = setTimeout(() => goToStep(nextStep(), { via: 'answer' }), ADVANCE_MS);
 }
@@ -651,7 +643,6 @@ function restartPlanner() {
   returnToReady = false;
   document.querySelectorAll('.choice[aria-pressed="true"]').forEach((c) => c.setAttribute('aria-pressed', 'false'));
   refreshWhatsAppLinks();
-  syncFitPicks();
   goToStep('event', { via: 'restart' });
 }
 
@@ -683,64 +674,12 @@ function initPlanner() {
   renderStep();
 }
 
-// ── "מתאים במיוחד ל:" — six ways into the planner ─────────────
-// The six types are the planner's first question. A pick answers it, turns
-// orange (here and in the planner), and the page glides to the planner: to the
-// next question, or back to where the visitor was if they had already started.
-const PICK_MS = 380;  // long enough to see the row turn orange before the page moves
-let pickTimer = 0;
-
-function syncFitPicks() {
-  document.querySelectorAll('.fit-pick').forEach((link) => {
-    if (planner.event && planner.event.value === link.dataset.pick) link.setAttribute('aria-current', 'true');
-    else link.removeAttribute('aria-current');
-  });
-}
-
-// The whole card when it fits under the header (centred), otherwise its top
-function glideToPlanner() {
-  const card = document.getElementById('planner');
-  if (!card) return;
-  const header = document.getElementById('site-header');
-  const headerH = header ? header.getBoundingClientRect().height : 0;
-  const room = window.innerHeight - headerH;
-  const rect = card.getBoundingClientRect();
-  const offset = rect.height < room ? headerH + (room - rect.height) / 2 : headerH + 12;
-  window.scrollTo({ top: window.scrollY + rect.top - offset, behavior: prefersReducedMotion() ? 'auto' : 'smooth' });
-}
-
-function pickFromFit(link) {
-  const btn = document.querySelector(`.choice[data-group="event"][data-value="${link.dataset.pick}"]`);
-  if (!btn) return false;
-  setAnswer(btn, 'fit');
-  clearTimeout(advanceTimer);
-  clearTimeout(pickTimer);
-  pickTimer = setTimeout(() => {
-    glideToPlanner();
-    if (currentStep === 'event') {
-      goToStep(nextStep(), { via: 'fit' });
-      return;
-    }
-    if (currentStep === 'ready') renderAnswers();
-    const heading = document.querySelector('.step.is-active .step-q');
-    if (heading) heading.focus({ preventScroll: true });
-  }, prefersReducedMotion() ? 0 : PICK_MS);
-  return true;
-}
-
-function initFitPicks() {
+// ── "מתאים במיוחד ל:" ────────────────────────────────────────
+// The six types rise in one after another the first time they come into view.
+// A plain list: nothing here touches the planner (Or, 2026-10-13).
+function initFitRise() {
   const list = document.querySelector('.fit-list');
-  const root = document.getElementById('planner');
-  if (!list || !root || !root.classList.contains('is-enhanced')) return;  // plain links to #plan
-
-  list.addEventListener('click', (e) => {
-    const link = e.target.closest('.fit-pick');
-    if (!link || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
-    if (pickFromFit(link)) e.preventDefault();
-  });
-
-  // The six rise in, one after another, the first time they come into view
-  if (prefersReducedMotion() || !('IntersectionObserver' in window)) return;
+  if (!list || prefersReducedMotion() || !('IntersectionObserver' in window)) return;
   list.classList.add('will-rise');
   const io = new IntersectionObserver((entries) => {
     if (!entries.some((entry) => entry.isIntersecting)) return;
@@ -950,7 +889,7 @@ function initHeroVideo() {
 document.addEventListener('DOMContentLoaded', () => {
   initLangSwitch();
   initPlanner();
-  initFitPicks();
+  initFitRise();
   initTracking();
   initHeader();
   initFloatingButton();
