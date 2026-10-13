@@ -42,8 +42,8 @@ Merging to `main` deploys.
 | 0 | Sticky header — logo, anchors, language switch, WhatsApp (desktop) | `#site-header` |
 | 1 | Hero — brand stamp, H1, subtitle, lead, two CTAs, video | `#hero` |
 | 2 | Facts strip *(hidden until data)* | `#facts` |
-| 3 | Three components — space, food, content; folded (desktop cards open together, mobile list one at a time) | `#space` `#food` `#content` |
-| 4 | Why Lev Yam — story, pull quote, photo | `#why` |
+| 3 | Intro — the two opening sentences | `#intro` |
+| 4 | Three components — space, food, content; folded (desktop cards open together, mobile list one at a time) | `#space` `#food` `#content` |
 | 4b | Testimonials + logos *(hidden until content)* | `#testimonials` |
 | 5 | One day, exactly for you — 6 tiles + CTA | `#fit` |
 | 6 | Good experience, good impact | `#impact` |
