@@ -643,11 +643,12 @@ html[lang="ar"] .hero h1 { font-size: min(var(--fs-h1), 8.9vw); }
 }
 .pillar-icon img { width: auto; height: auto; max-width: 32px; max-height: 32px; }
 
-/* Photo test (Or, 2026-10-14) — two rotating treatments, one per card; the winner goes to
-   all three. Each frame decides the crop and its photos fill it; .focus-* moves the crop of
-   a photo whose subject sits higher. Each rotator's clock is a CSS animation (the active
-   story bar, the front card's hold) and JS moves on when it ends, so pausing the animation
-   pauses the photos: under the pointer, while the card is open, off screen (JS). */
+/* Photos and videos (Or, 2026-10-14) — on desktop each card has its own frame (A cover,
+   B fan of arches, C its films in its icon). Each frame decides the crop and its photos fill
+   it; .focus-* moves the crop of a photo whose subject sits higher. Each rotator's clock is a
+   CSS animation (the active story bar, the front card's hold) and JS moves on when it ends,
+   so pausing the animation pauses the photos: under the pointer, while the card is open,
+   off screen (JS). */
 .pillar-cover img,
 .deck-card img { width: 100%; height: 100%; object-fit: cover; }
 
@@ -694,16 +695,14 @@ html[lang="ar"] .hero h1 { font-size: min(var(--fs-h1), 8.9vw); }
   display: flex;
   gap: 4px;
 }
-.cover-bars span,
-.story-bars span {
+.cover-bars span {
   flex: 1;
   height: 3px;
   overflow: hidden;
   border-radius: 3px;
   background: rgba(255, 255, 255, 0.4);
 }
-.cover-bars span::after,
-.story-bars span::after {
+.cover-bars span::after {
   content: '';
   display: block;
   height: 100%;
@@ -711,8 +710,7 @@ html[lang="ar"] .hero h1 { font-size: min(var(--fs-h1), 8.9vw); }
   transform: scaleX(0);
   transform-origin: right;
 }
-.cover-bars span.is-done::after,
-.story-bars span.is-done::after { transform: none; }
+.cover-bars span.is-done::after { transform: none; }
 .cover-bars span.is-active::after { animation: cover-bar 5s linear both; }
 .pillar.is-open .pillar-cover .slide,
 .pillar-cover.is-paused .slide { animation-play-state: running, paused; }
@@ -822,78 +820,27 @@ html[lang="ar"] .hero h1 { font-size: min(var(--fs-h1), 8.9vw); }
 .pillar-film .film-title,
 .pillar-film.is-chapters .film-chapter.is-current { opacity: 1; }
 .pillar-film.is-chapters .film-title { opacity: 0; }
+/* With scripting off, browsers force their player controls onto videos; these are decoration
+   and have no source until JS gives them one, so the poster shows on its own */
+.pillar-film video::-webkit-media-controls { display: none !important; }
 
-/* ── Phone photo options (photo test, 2026-10-14) ──
-   Phones and tablets (the list): with JS, html[data-phone] lists the ways the photos show
-   (one option, or two together — "rows stack"); a test switcher picks them, on localhost or
-   with ?phone. Every option keeps
-   the list's rows as they were — icon, title, tagline, chevron — and the desktop cover and
-   fan step aside. Without JS the phone shows the desktop's first photo and still fan. */
+/* ── Phones and tablets (the list): living rows and a flick deck (Or's pick, 2026-10-14) ──
+   With JS (html.phone-media) the list's rows stay as they were — icon, title, tagline,
+   chevron — and the desktop cover, fan and film step aside: the card's photos (or title
+   film) breathe behind the chevron, and an open item ends with a flick deck. Without JS the
+   phone shows the desktop's first photo, still fan and film poster in the icon's place. */
 .pillar-icon-phone { display: none; }
-.pillar-top { position: relative; }
-.pillar-story,
 .row-photos,
 .row-video,
-.pillar-reel,
-.pillar-stack,
-.photo-ribbon { display: none; }
+.pillar-stack { display: none; }
 @media (max-width: 1023px) {
-  html[data-phone] .pillar-head > .pillar-cover,
-  html[data-phone] .pillar-head > .pillar-deck,
-  html[data-phone] .pillar-head > .pillar-film { display: none; }
-  html[data-phone] .pillar-icon-phone { display: grid; }
+  html.phone-media .pillar-head > .pillar-cover,
+  html.phone-media .pillar-head > .pillar-deck,
+  html.phone-media .pillar-head > .pillar-film { display: none; }
+  html.phone-media .pillar-icon-phone { display: grid; }
 }
 
-/* 1 · Stories: a card with photos (.has-story) trades its icon for a story ring — the
-   brand's orange running into its blue, the photos changing inside; a tap opens the photo
-   stories (#story). The ring is a sibling of the heading (a button can't hold a button),
-   so the head keeps the icon's room free at its start. */
-@media (max-width: 1023px) {
-  html[data-phone~="stories"] .has-story .pillar-head {
-    min-height: calc(56px + 2 * var(--pad-card));
-    padding-inline-start: calc(var(--pad-card) + 56px + 0.9rem);
-  }
-  html[data-phone~="stories"] .has-story .pillar-head > .pillar-icon { display: none; }
-  html[data-phone~="stories"] .pillar-story {
-    position: absolute;
-    z-index: 1;
-    top: 50%;
-    inset-inline-start: var(--pad-card);
-    display: block;
-    width: 56px;
-    height: 56px;
-    padding: 3px;
-    border: 0;
-    border-radius: 50%;
-    background: conic-gradient(from 210deg, var(--orange), var(--blue), var(--orange));
-    translate: 0 -50%;
-    touch-action: manipulation;
-    -webkit-tap-highlight-color: transparent;
-    transition: scale 0.15s var(--ease);
-  }
-  .pillar-story:active { scale: 0.92; }
-  .pillar-story-photos {
-    position: relative;
-    display: block;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    border: 2px solid var(--cream);
-    border-radius: 50%;
-    background: var(--white);
-  }
-}
-@media (max-width: 359px) {
-  html[data-phone~="stories"] .has-story .pillar-head {
-    min-height: calc(48px + 2rem);
-    padding-inline-start: calc(0.9rem + 48px + 0.75rem);
-  }
-  html[data-phone~="stories"] .pillar-story { width: 48px; height: 48px; inset-inline-start: 0.9rem; }
-}
-
-/* Shared by the ring (1) and the living rows (2): the photos cross-fade, each drifting a
-   little closer; the drift is the clock. The second card keeps its own time, so the two
-   never change together. */
+/* The row's photos cross-fade, each drifting a little closer; the drift is the clock */
 .peek {
   position: absolute;
   inset: 0;
@@ -907,18 +854,17 @@ html[lang="ar"] .hero h1 { font-size: min(var(--fs-h1), 8.9vw); }
 .peek.is-current,
 .peek.is-leaving { opacity: 1; }
 .peek.is-current { z-index: 1; animation: peek-drift 3.2s linear both; }
-.has-story ~ .has-story .peek.is-current { animation-duration: 3.9s; }
-.is-paused .peek,
-.story-open .peek { animation-play-state: paused; }
+.is-paused .peek { animation-play-state: paused; }
 @keyframes peek-drift { from { scale: 1.12; } to { scale: 1; } }
 
-/* 2 · Living rows: the rows keep their height; on the far side, behind the chevron, the
-   card's photos breathe and melt into the cream before they reach the text */
+/* Living rows: the rows keep their height; on the far side, behind the chevron, the card's
+   photos (or the Space title film) breathe and melt into the cream before they reach the
+   text. The second card keeps its own time, so the two never change together. */
 @media (max-width: 1023px) {
-  html[data-phone~="rows"] .has-story .pillar-head,
-  html[data-phone~="rows"] .has-film .pillar-head { position: relative; isolation: isolate; }
-  html[data-phone~="rows"] .row-photos,
-  html[data-phone~="rows"] .row-video {
+  html.phone-media .has-photos .pillar-head,
+  html.phone-media .has-film .pillar-head { position: relative; isolation: isolate; }
+  html.phone-media .row-photos,
+  html.phone-media .row-video {
     position: absolute;
     z-index: -1;
     inset-block: 0;
@@ -929,65 +875,29 @@ html[lang="ar"] .hero h1 { font-size: min(var(--fs-h1), 8.9vw); }
   }
   /* The photos fade out themselves (a mask, not a cream layer on top), so no edge of a
      photo can show where the window ends: clear at the outer edge, gone before the text */
-  html[data-phone~="rows"] .row-photos,
-  html[data-phone~="rows"] .row-video {
+  html.phone-media .row-photos,
+  html.phone-media .row-video {
     -webkit-mask-image: linear-gradient(to right, #000 30%, rgba(0, 0, 0, 0.3) 70%, transparent 94%);
     mask-image: linear-gradient(to right, #000 30%, rgba(0, 0, 0, 0.3) 70%, transparent 94%);
     transition: opacity 0.4s var(--ease);
   }
-  html[data-phone~="rows"] .row-photos .peek { transition-duration: 1.4s; }
-  html[data-phone~="rows"] .row-photos .peek.is-current { animation-duration: 4.2s; }
-  html[data-phone~="rows"] .has-story ~ .has-story .row-photos .peek.is-current { animation-duration: 5.1s; }
+  html.phone-media .row-photos .peek { transition-duration: 1.4s; }
+  html.phone-media .row-photos .peek.is-current { animation-duration: 4.2s; }
+  html.phone-media .has-photos ~ .has-photos .row-photos .peek.is-current { animation-duration: 5.1s; }
   /* The title film fills the window, framed on the pergola and the sea */
   .row-video video { width: 100%; height: 100%; object-position: 50% 40%; }
   /* An open row hands its photos to the deck below: the row goes quiet */
-  html[data-phone~="rows"] .pillar.is-open .row-photos,
-  html[data-phone~="rows"] .pillar.is-open .row-video { opacity: 0; }
+  html.phone-media .pillar.is-open .row-photos,
+  html.phone-media .pillar.is-open .row-video { opacity: 0; }
   .pillar.is-open .row-photos .peek { animation-play-state: paused; }
 }
 
-/* 3 · Gallery on opening: closed rows are exactly as before; an open row starts with its
-   photos in a swipeable strip — the next one peeking at the edge, brand dots below — that
-   glides on by itself until a finger touches it */
-@media (max-width: 1023px) {
-  html[data-phone~="reel"] .pillar-reel { display: block; margin-inline: calc(-1 * var(--pad-card)); }
-  .reel-track {
-    display: flex;
-    gap: 0.6rem;
-    padding-inline: var(--pad-card);
-    overflow-x: auto;
-    overscroll-behavior-x: contain;
-    scroll-snap-type: x mandatory;
-    scroll-padding-inline: var(--pad-card);
-    scrollbar-width: none;
-  }
-  .reel-track::-webkit-scrollbar { display: none; }
-  .reel-item {
-    flex: 0 0 72%;
-    max-width: 320px;
-    aspect-ratio: 4 / 5;
-    object-fit: cover;
-    border-radius: var(--radius-md);
-    background: var(--blue-soft);
-    scroll-snap-align: start;
-  }
-  .reel-dots { display: flex; justify-content: center; gap: 6px; margin-top: 0.75rem; }
-  .reel-dots span {
-    width: 6px;
-    height: 6px;
-    border-radius: 3px;
-    background: var(--line);
-    transition: width 0.3s var(--ease), background-color 0.3s var(--ease);
-  }
-  .reel-dots span.is-active { width: 20px; background: var(--orange); }
-}
-
-/* 4 · Flick deck: an open row ends with a little pile of polaroids, after the white box
+/* Flick deck: an open row ends with a little pile of polaroids, after the white box
    that closes its text, the brand's wave drawn on each white strip. Flick the top one (or
    tap it) and it flies off and slips to the back; once it is on screen and until a finger
    touches it, the pile deals itself every few seconds. */
 @media (max-width: 1023px) {
-  html[data-phone~="stack"] .pillar-stack {
+  html.phone-media .pillar-stack {
     position: relative;
     display: grid;
     place-items: center;
@@ -1035,30 +945,6 @@ html[lang="ar"] .hero h1 { font-size: min(var(--fs-h1), 8.9vw); }
   .stack-card.is-dragging,
   .pillar-stack.is-settling .stack-card { transition: none; }
   .stack-card.is-flying { opacity: 0; transition: transform 0.45s cubic-bezier(0.4, 0, 1, 1), opacity 0.45s ease-in; }
-}
-
-/* 5 · Ribbon: one band between the title and the list — little arches of every photo,
-   rising and falling like the brand's zig-zag, drifting along and running faster as the
-   page scrolls (JS moves it) */
-@media (max-width: 1023px) {
-  html[data-phone~="ribbon"] .photo-ribbon {
-    display: block;
-    margin: var(--space-title) calc(-1 * var(--gutter)) 0;
-    overflow: hidden;
-  }
-  .ribbon-track { display: flex; gap: 0.75rem; width: max-content; padding-block: 0.25rem 1.25rem; will-change: transform; }
-  .ribbon-tile {
-    flex: none;
-    width: 84px;
-    aspect-ratio: 4 / 5;
-    overflow: hidden;
-    border: 3px solid var(--white);
-    border-radius: 50% 50% 8px 8px / 40% 40% 8px 8px;
-    background: var(--blue-soft);
-    box-shadow: 0 6px 16px rgba(44, 146, 191, 0.16);
-  }
-  .ribbon-tile:nth-child(even) { translate: 0 16px; }
-  .ribbon-tile img { width: 100%; height: 100%; object-fit: cover; }
 }
 
 .pillar-titles { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 0.3rem; }
@@ -1946,190 +1832,6 @@ html[lang="ar"] .chat-text .sel {
 @media (min-width: 900px) {
   .wa-float { display: none; }
 }
-
-/* ── Photo stories (phones and tablets) ──────── */
-/* Full screen, growing out of the ring that opened it (a circle reveal from --ox/--oy to
-   --or, the distance to the farthest corner, so the circle grows at an even pace).
-   Each photo shows whole (contain) over a blurred copy of itself, drifting slowly closer.
-   Story bars and the card's icon and title on top; its tagline and the main CTA below. */
-html.story-open,
-html.story-open body { overflow: hidden; }
-.story {
-  position: fixed;
-  z-index: 2000;
-  inset: 0;
-  overflow: hidden;
-  background: var(--ink);
-  color: var(--white);
-  animation: story-in 0.55s cubic-bezier(0.6, 0, 0.2, 1) both;
-}
-.story.is-closing { animation: story-out 0.35s cubic-bezier(0.5, 0, 0.75, 0) both; }
-@keyframes story-in {
-  from { clip-path: circle(28px at var(--ox, 50%) var(--oy, 50%)); }
-  to { clip-path: circle(var(--or, 150vmax) at var(--ox, 50%) var(--oy, 50%)); }
-}
-@keyframes story-out {
-  from { clip-path: circle(var(--or, 150vmax) at var(--ox, 50%) var(--oy, 50%)); }
-  to { clip-path: circle(28px at var(--ox, 50%) var(--oy, 50%)); }
-}
-/* Swiping down drags the whole story with the finger (JS sets --drag) */
-.story-stage {
-  position: absolute;
-  inset: 0;
-  touch-action: none;
-  transform: translateY(var(--drag, 0px)) scale(calc(1 - var(--drag-scale, 0)));
-  transition: transform 0.25s var(--ease);
-}
-.story.is-dragging .story-stage { transition: none; }
-
-.story-slides { position: absolute; inset: 0; }
-.story-slide {
-  position: absolute;
-  inset: 0;
-  visibility: hidden;
-  opacity: 0;
-  transition: opacity 0.25s var(--ease), visibility 0s linear 0.25s;
-}
-.story-slide.is-current { visibility: visible; opacity: 1; transition: opacity 0.25s var(--ease); }
-.story-fill,
-.story-photo { position: absolute; inset: 0; width: 100%; height: 100%; }
-.story-fill { object-fit: cover; filter: blur(28px) brightness(0.55); transform: scale(1.2); }
-.story-photo { object-fit: contain; }
-.story-slide.is-current .story-photo { animation: story-drift 5s linear both; }
-@keyframes story-drift { from { scale: 1; } to { scale: 1.05; } }
-
-/* Tap zones: the start side (right, in RTL) goes back, the larger end side goes forward */
-.story-zone {
-  position: absolute;
-  z-index: 1;
-  top: 0;
-  bottom: 0;
-  border: 0;
-  background: transparent;
-  -webkit-tap-highlight-color: transparent;
-}
-.story-zone-prev { inset-inline-start: 0; width: 35%; }
-.story-zone-next { inset-inline-end: 0; width: 65%; }
-.story-zone:focus-visible { outline: 3px solid var(--white); outline-offset: -6px; }
-
-.story-top,
-.story-bottom { position: absolute; z-index: 2; inset-inline: 0; pointer-events: none; }
-.story-top {
-  top: 0;
-  padding: max(0.75rem, env(safe-area-inset-top)) 0.75rem 2.5rem;
-  background: linear-gradient(rgba(0, 0, 0, 0.5), transparent);
-}
-/* The story bars look like the cover's (one per photo of this card, filling right to left) */
-.story-bars { display: flex; gap: 4px; }
-.story-bars span.is-active::after { animation: story-bar 4.5s linear both; }
-/* Held, waiting for the photo, or with the page hidden: the clock stops */
-.story.is-held .story-bars span::after,
-.story.is-waiting .story-bars span::after,
-.story.is-held .story-photo,
-.story.is-waiting .story-photo { animation-play-state: paused; }
-@keyframes story-bar { to { transform: none; } }
-
-.story-head { display: flex; align-items: center; gap: 0.6rem; margin-top: 0.6rem; }
-.story-icon {
-  flex: none;
-  display: grid;
-  place-items: center;
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  background: var(--white);
-}
-.story-icon img { width: auto; height: auto; max-width: 22px; max-height: 22px; }
-.story-title {
-  flex: 1;
-  margin: 0;
-  font-size: var(--fs-md);
-  font-weight: 700;
-  line-height: var(--lh-ui);
-  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.35);
-}
-.story-close {
-  flex: none;
-  display: grid;
-  place-items: center;
-  width: 44px;
-  height: 44px;
-  margin-inline-end: -0.4rem;
-  border: 0;
-  border-radius: 50%;
-  background: transparent;
-  color: var(--white);
-  pointer-events: auto;
-  -webkit-tap-highlight-color: transparent;
-}
-.story-close svg { width: 26px; height: 26px; filter: drop-shadow(0 1px 4px rgba(0, 0, 0, 0.4)); }
-.story-close:active { background: rgba(255, 255, 255, 0.16); }
-.story-close:focus-visible { outline-color: var(--white); }
-
-.story-bottom {
-  bottom: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1rem;
-  padding: 3.5rem var(--gutter) max(1.5rem, calc(env(safe-area-inset-bottom) + 1rem));
-  background: linear-gradient(transparent, rgba(0, 0, 0, 0.6));
-  text-align: center;
-}
-.story-tagline {
-  margin: 0;
-  max-width: 24em;
-  font-size: var(--fs-lead);
-  font-weight: 700;
-  line-height: var(--lh-heading);
-  text-wrap: balance;
-  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.4);
-}
-.story-cta { pointer-events: auto; }
-.story-cta:focus-visible { outline-color: var(--white); }
-
-/* ── Phone photo options: test switcher (localhost or ?phone only) ── */
-/* A dark glass pill under the header while the components are on screen: the option's
-   name and its number buttons. Phones and tablets only — desktop has its own two cards. */
-.phone-switch {
-  position: fixed;
-  z-index: 260;
-  top: calc(var(--header-h) + env(safe-area-inset-top, 0px) + 0.5rem);
-  left: 50%;
-  display: flex;
-  align-items: center;
-  gap: 0.15rem;
-  padding: 0.3rem;
-  border-radius: var(--radius-pill);
-  background: rgba(34, 34, 34, 0.84);
-  -webkit-backdrop-filter: blur(10px);
-  backdrop-filter: blur(10px);
-  color: var(--white);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
-  translate: -50% 0;
-  transition: opacity 0.25s var(--ease), translate 0.25s var(--ease);
-}
-.phone-switch.is-away { opacity: 0; translate: -50% -8px; pointer-events: none; }
-.phone-switch-name {
-  padding-inline: 0.7rem 0.35rem;
-  font-size: var(--fs-sm);
-  font-weight: 700;
-  white-space: nowrap;
-}
-.phone-switch button {
-  width: 34px;
-  height: 36px;
-  border: 0;
-  border-radius: 50%;
-  background: transparent;
-  color: inherit;
-  font-size: var(--fs-sm);
-  font-weight: 700;
-  -webkit-tap-highlight-color: transparent;
-}
-.phone-switch button[aria-pressed="true"] { background: var(--orange); color: var(--ink); }
-.phone-switch button:focus-visible { outline-color: var(--white); outline-offset: 1px; }
-@media (min-width: 1024px) { .phone-switch { display: none; } }
 
 /* ── High-contrast modes: states that colour alone carried get a line ── */
 @media (forced-colors: active) {

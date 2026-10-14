@@ -96,15 +96,15 @@ logos, footer contact details. Switch on by removing `hidden` once real content 
    **Photos and videos (2026-10-14).** Food and content: six photos each; Space: Or's two videos (the
    short one is the title film, ping-pong looped; the long one cut into three chapters — by the sea,
    inside, sunset). The desktop markup holds the one list of media; phones build from it.
-   *Phones and tablets* — Or's pick, option 6 "rows + deck" (`html[data-phone="rows stack"]`): the rows
+   *Phones and tablets* — Or's pick, "living rows + flick deck" (JS sets `html.phone-media`): the rows
    stay as they were and, behind the chevron, the card's photos (or the title film) breathe and melt into
    the cream (a mask, not an overlay — no edge line); an open item ends, after its white box, with a flick
    deck of polaroids (the brand wave on each strip) that deals itself until touched; it opens on the photo
-   the row was showing; Space's deck plays a chapter per card and deals the next when one ends.
-   Options 1–5 (stories, rows, gallery, deck, ribbon) and a switcher remain for comparison, shown only on
-   localhost or with `?phone` — remove them once Or confirms.
-   *Desktop* — still a test: content = cover (photos sweep in behind a zig-zag edge, story bars), food =
-   a fan of arches, Space = its videos inside its own icon (the house, doors cut out). Or to choose.
+   the row was showing; Space's deck plays a chapter per card and deals the next when one ends. (Stories,
+   a gallery strip and a photo ribbon were tried and dropped, 2026-10-14.)
+   *Desktop* — each card its own frame, on purpose (Or loves that they differ): content = cover (photos
+   sweep in behind a zig-zag edge, story bars, the icon on its edge), food = a fan of arches, Space = its
+   videos inside its own icon (the house, doors cut out).
    **Never remove copy to fix layout** — Or wants all text kept; solve it with structure and spacing.
 4b. Testimonials + logos `#testimonials` — hidden until content
 5. Fit `#fit` — "יום אחד. בדיוק בשבילכם." + text + "מתאים במיוחד ל:" (the six types as rows: brand icon

@@ -133,15 +133,15 @@
      Desktop: three cards in a row; "מידע נוסף" opens all three together (as the old packages did),
      and JS lines up the matching blocks across the cards (data-row).
      Mobile: one grouped list; tapping a row opens it and closes the others.
-     Photo test (Or, 2026-10-14): two rotating treatments side by side, the winner goes to all three cards.
-     התוכן = cover: edge-to-edge, each photo sweeps in behind a zig-zag edge, story bars count them,
-     the icon sits on its lower edge. האוכל = deck: a fan of arches in the icon's place; the next dish
-     swings to the front. המרחב keeps its icon until its photos arrive. The photos sit in the head, so a
-     tap opens the card. Without JS: the first photo / a still fan.
-     Phones and tablets (list): the rows stay as they were; JS turns the icon of a card with photos into
-     a story ring (its photos change inside it) that opens the photo stories (#story). data-story-icon
-     is the icon the stories show beside the card's title. data-focus on each photo is its subject
-     (x y, as fractions of the photo): the phone crops are framed around it. -->
+     Photos and videos (Or, 2026-10-14) — on desktop each card has its own frame (Or loves that they
+     differ): התוכן = cover, edge to edge, each photo sweeping in behind a zig-zag edge, story bars
+     counting them, the icon on its lower edge; האוכל = a fan of arches in the icon's place, the next
+     dish swinging to the front; המרחב = its films inside its own icon, the house. The media sit in the
+     head, so a tap opens the card. Without JS: the first photo / a still fan / the title film's poster.
+     Phones and tablets (list): JS builds from this markup — the rows stay as they were, with the card's
+     photos (or title film) breathing behind the chevron, and an open item ends with a flick deck.
+     data-focus on each photo is its subject (x y, as fractions of the photo): the phone crops are
+     framed around it. -->
 <section class="section pillars" id="pillars">
   <div class="container">
     <h2 class="center h2-accent" data-i18n="pillars-h2">שלושה מרכיבים. אינספור אפשרויות.</h2>
@@ -201,7 +201,7 @@
       </article>
 
       <!-- האוכל -->
-      <article class="pillar" id="food" data-story-icon="content/brand/icons-1.png">
+      <article class="pillar" id="food">
         <h3 class="pillar-heading">
           <button type="button" class="pillar-head" id="pillar-head-food" aria-expanded="false" aria-controls="pillar-panel-food">
             <span class="pillar-deck" aria-hidden="true" data-rotator="deck">
@@ -250,7 +250,7 @@
       </article>
 
       <!-- התוכן -->
-      <article class="pillar" id="content" data-story-icon="content/brand/icons-22.png">
+      <article class="pillar" id="content">
         <h3 class="pillar-heading">
           <button type="button" class="pillar-head" id="pillar-head-content" aria-expanded="false" aria-controls="pillar-panel-content">
             <span class="pillar-cover" aria-hidden="true" data-rotator="cover">
@@ -548,31 +548,6 @@
   <svg class="wa-icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-wa"/></svg>
   <span class="wa-float-label" data-i18n="nav-wa">דברו איתנו</span>
 </a>
-
-<!-- ── Photo stories (phones and tablets) ───── -->
-<!-- Opened from a story ring in the components list; JS fills the slides, the bars, the title and the
-     tagline from the card. One tour: after a card's last photo, the next card's photos follow. -->
-<div class="story" id="story" role="dialog" aria-modal="true" aria-labelledby="story-title" hidden>
-  <div class="story-stage">
-    <div class="story-slides"></div>
-    <button type="button" class="story-zone story-zone-prev" aria-label="התמונה הקודמת" data-i18n-aria="story-prev"></button>
-    <button type="button" class="story-zone story-zone-next" aria-label="התמונה הבאה" data-i18n-aria="story-next"></button>
-    <div class="story-top">
-      <div class="story-bars"></div>
-      <div class="story-head">
-        <span class="story-icon" aria-hidden="true"><img src="content/brand/icons-1.png" alt="" width="40" height="40"></span>
-        <p class="story-title" id="story-title"></p>
-        <button type="button" class="story-close" aria-label="סגור" data-i18n-aria="pillar-less">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>
-        </button>
-      </div>
-    </div>
-    <div class="story-bottom">
-      <p class="story-tagline"></p>
-      <a href="#plan" class="btn btn-primary story-cta" data-track="story-plan" data-i18n="cta-plan">בואו נתכנן את היום שלכם!</a>
-    </div>
-  </div>
-</div>
 
 <!-- ── SVG sprite ───────────────────────────── -->
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
