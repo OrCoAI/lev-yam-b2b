@@ -30,8 +30,11 @@ building or changing any section. Deviations from the doc are marked `[הערה 
 habit: flag, don't silently rewrite. `content/packages.md` is legacy and is **not displayed**.
 
 **Never invent images.** All photos live in `content/images/`. Use only what's there, by filename.
-No photos are in use yet: the old co-working photos were removed on 2026-10-12 at Or's request, and
-every visual slot is a brand placeholder (`div.ph` inside a `figure[data-pending]`). Ask Or for assets.
+Or's raw uploads sit in `content/images/Content|Food|Space/` (not committed — duplicates, unused shots and
+video sources); the page uses clean-named copies (`content-*.jpeg`, `food-*.jpeg`) and their builds, and
+the Space clips (`space-*.mp4`). Photos in use are the reduced Photos exports (≤1024px) — Or will send
+full-size originals. Each photo carries `data-focus="x y"` (its subject, as fractions): every phone crop
+is framed around it by JS. Ask Or for assets.
 
 **Language:** Hebrew (RTL) is the source; an Arabic version is switched in via `data-i18n` keys and the
 `TRANSLATIONS` dictionary in `js/main.js`. The Arabic is a draft pending native review. Venue name in
@@ -89,8 +92,19 @@ logos, footer contact details. Switch on by removing `hidden` once real content 
    (`data-row`, `--row-*`) and CSS equalises the taglines, the entry paragraphs and the note boxes: the
    three lists start on one line, the three white boxes are one height (text top-aligned) and sit on one
    line above the foot bars, and a card's slack hides between its last bullet and its note. Closing from
-   the "סגור" bar brings the section back to the top of the screen. Header links open the item. Real
-   photos go at the top of each `.pillar-body`.
+   the "סגור" bar brings the section back to the top of the screen. Header links open the item.
+   **Photos and videos (2026-10-14).** Food and content: six photos each; Space: Or's two videos (the
+   short one is the title film, ping-pong looped; the long one cut into three chapters — by the sea,
+   inside, sunset). The desktop markup holds the one list of media; phones build from it.
+   *Phones and tablets* — Or's pick, "living rows + flick deck" (JS sets `html.phone-media`): the rows
+   stay as they were and, behind the chevron, the card's photos (or the title film) breathe and melt into
+   the cream (a mask, not an overlay — no edge line); an open item ends, after its white box, with a flick
+   deck of polaroids (the brand wave on each strip) that deals itself until touched; it opens on the photo
+   the row was showing; Space's deck plays a chapter per card and deals the next when one ends. (Stories,
+   a gallery strip and a photo ribbon were tried and dropped, 2026-10-14.)
+   *Desktop* — each card its own frame, on purpose (Or loves that they differ): content = cover (photos
+   sweep in behind a zig-zag edge, story bars, the icon on its edge), food = a fan of arches, Space = its
+   videos inside its own icon (the house, doors cut out).
    **Never remove copy to fix layout** — Or wants all text kept; solve it with structure and spacing.
 4b. Testimonials + logos `#testimonials` — hidden until content
 5. Fit `#fit` — "יום אחד. בדיוק בשבילכם." + text + "מתאים במיוחד ל:" (the six types as rows: brand icon
@@ -102,7 +116,8 @@ logos, footer contact details. Switch on by removing `hidden` once real content 
    the other, the text's first line on the list title's baseline, and the button on the last row's centre
    line (Or, 2026-10-14): its box is one row tall (`--fit-icon` + 2 × `--fit-row-pad`) at the bottom of
    its column. CTA "בואו ליצור את היום שלכם!" (the "!" by Or, 2026-10-14).
-6. Impact `#impact` — full-bleed photo, short text
+6. Impact `#impact` — icon, title, text on white. A living photo background was tried and removed by Or
+   (2026-10-14); no background for now.
 7. Plan `#plan` — the finale: blue full-bleed section, one white card in two parts (side by side from
    900px, stacked below): the questions and the cream message panel. Four questions, one at a time,
    one tap each, and the flow moves on by itself: what (6 types, #fit icons; equal tiles, icons on one
@@ -171,8 +186,10 @@ One WhatsApp entry point per viewport: header button on desktop, floating button
 
 New photos: put the original in `content/images/` and run
 `python3 scripts/build_media.py content/images/<file>` to get `-1600.jpg`, `-1600.webp`, `-800.webp`,
-then use a `<picture>` with `srcset`/`sizes` as in `index.html`. Hero video: `--video`, OG image: `--og`.
-Requires `ffmpeg` and Pillow.
+`-400.webp` (and a webp at the photo's own width when it is narrower than 1600), then use `srcset`/`sizes`
+as in `index.html` and give it a `data-focus`. Hero video: `--video`, OG image: `--og`. Card clips:
+`--clip SRC START END NAME` (repeatable; `--pingpong` for a seamless loop) → `NAME.mp4` (540 wide, muted)
++ `NAME-poster.webp`. Requires `ffmpeg` and Pillow.
 
 ---
 
@@ -198,7 +215,7 @@ lev-yam-b2b/
 ├── content/
 │   ├── copy.md              ← all page text (he) — read this first
 │   ├── packages.md          ← legacy, not displayed
-│   ├── images/              ← hero.mp4 + hero-poster.jpg, og-image.jpg (brand). No photos yet
+│   ├── images/              ← hero video, og-image, card photos (content-*, food-*) + space clips
 │   └── brand/               ← logos, icons, brand-guide.md, colors.md, fonts.md
 ├── worker/                  ← legacy Cloudflare Worker (webhook → Supabase)
 ├── docs/grow-plan.md        ← legacy payments plan
