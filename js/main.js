@@ -177,7 +177,7 @@ const TRANSLATIONS = {
 
     'hero-h1a': 'نخرج من الروتين.',
     'hero-h1b': 'نلتقي بشكل مختلف.',
-    'hero-sub': 'أيام فريق، لقاءات إدارة وفعاليات شركات في مكان مختلف قليلاً.',
+    'hero-sub': 'أيام فريق، لقاءات إدارة وفعاليات\u00A0شركات في مكان مختلف قليلاً.',
     'hero-lead-a': 'في قرية الصيادين جسر الزرقاء، بين البحر والطبيعة، ينتظركم',
     'hero-lead-b': '– مساحة ضيافة فريدة تجمع بين إطلالة خلابة، طعام محلي، محتوى غني ولقاء إنساني حقيقي.',
     'cta-plan': 'لنخطّط يومكم معاً!',
@@ -226,7 +226,7 @@ const TRANSLATIONS = {
     'p3-li6': 'إمكانية محتوى مستقل أو برنامج مصمّم خصيصاً',
     'p3-close': 'يمكنكم الاختيار من بين أنشطتنا المتنوعة، إحضار محتوى خاص بكم أو الدمج بين الخيارات، وأن نبني معاً برنامجاً يناسب طابع المجموعة وأهداف اللقاء.',
 
-    'fit-h2': 'يوم واحد. مصمّم لكم بالضبط.',
+    'fit-h2': 'يوم واحد. مصمّم\u00A0لكم\u00A0بالضبط.',
     'fit-p1': 'لا يوجد فريقان متشابهان، ولذلك لا يوجد يومان متشابهان في لب يام.',
     'fit-p2': 'هناك فرق تأتي ليوم عمل وتفكير، وأخرى تبحث عن تعزيز الفريق وتجربة مشتركة، وهناك من يريد ببساطة الخروج من المكتب وقضاء الوقت معاً في مكان جميل ومميز.',
     'fit-p3': 'نحن هنا لنصغي، نقترح ونبني معاً المزيج الصحيح من المكان، الطعام والمحتوى.',
@@ -457,9 +457,19 @@ function escapeHtml(s) {
   return s.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 }
 
-// A number range ("15-30") is wrapped so it never breaks at the hyphen inside RTL text
+// Preview only (never the WhatsApp text): a number range ("15-30") is isolated so it never
+// breaks at the hyphen inside RTL text, and the venue name and the closing sentence are
+// kept on one line — mixed-direction text defeats the browser's own even wrapping
+const KEEP_TOGETHER = {
+  he: ['לב ים', 'נשמח לתכנן יחד!', 'נשמח לשמוע פרטים.'],
+  ar: ['لب يام', 'يسعدنا أن نخطط معاً!', 'يسعدنا الحصول على التفاصيل.'],
+};
 function keepRanges(html) {
-  return html.replace(/(\d+)-(\d+)/g, '<span class="range">$1-$2</span>');
+  let out = html.replace(/(\d+)-(\d+)/g, '<span class="range">$1-$2</span>');
+  (KEEP_TOGETHER[currentLang] || KEEP_TOGETHER.he).forEach((phrase) => {
+    out = out.split(phrase).join(`<span class="nobr">${phrase}</span>`);
+  });
+  return out;
 }
 
 function composePreviewHtml(changed) {
@@ -594,11 +604,11 @@ function revealSendButton() {
   if (!cta) return;
   const hidden = cta.getBoundingClientRect().bottom - window.innerHeight + 20;
   if (hidden <= 0) return;
-  // ...but never drag the ready step (the stamp) under the fixed header
-  const step = document.querySelector('.step-ready');
+  // ...but never drag the card's top row (back, restart, progress) under the fixed header
+  const top = document.querySelector('.flow-top');
   const header = document.getElementById('site-header');
   const headerH = header ? header.getBoundingClientRect().height : 0;
-  const room = step ? step.getBoundingClientRect().top - (headerH + 8) : hidden;
+  const room = top ? top.getBoundingClientRect().top - (headerH + 8) : hidden;
   const by = Math.min(hidden, Math.max(0, room));
   if (by > 0) window.scrollBy({ top: by, behavior: prefersReducedMotion() ? 'auto' : 'smooth' });
 }
@@ -758,14 +768,13 @@ function initHeader() {
 }
 
 // ── Floating WhatsApp button ──────────────────────────────────
-// Hidden while the hero's own buttons or the planner's send button are on screen, so
-// there is never a second WhatsApp button competing with the one the user is about
-// to tap (it sends the same composed message, so it never competes elsewhere).
+// Hidden while the hero's own buttons or the planner card are on screen, so the
+// bubble never sits on the buttons or on the answer tiles a thumb is aiming at.
 function initFloatingButton() {
   const float = document.getElementById('wa-float');
   if (!float || !('IntersectionObserver' in window)) return;
   const visible = new Set();
-  const targets = [document.getElementById('plan-cta'), document.querySelector('.hero-ctas')].filter(Boolean);
+  const targets = [document.getElementById('planner'), document.querySelector('.hero-ctas')].filter(Boolean);
   const io = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
       if (entry.isIntersecting) visible.add(entry.target); else visible.delete(entry.target);

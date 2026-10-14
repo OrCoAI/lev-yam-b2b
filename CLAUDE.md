@@ -80,10 +80,12 @@ logos, footer contact details. Switch on by removing `hidden` once real content 
    list (max 880px), one item open at a time (an item above closes instantly with scroll compensation);
    tablets 900–1023 show the bullets in two columns. Every item has Or's structure (text by Or,
    2026-10-13), with the same spacing: title + tagline → small wave → entry paragraph → list label + six
-   bullets → end paragraph (white box). No 01/02/03 numbers. On desktop, JS equalises the taglines and
-   the entry paragraphs across the cards (`data-row`, `--row-subtitle/intro`) so the three lists start
-   on one line; lists and note boxes keep their natural heights and the slack sits above the foot bar.
-   Header links open the item. Real photos go at the top of each `.pillar-body`.
+   bullets → end paragraph (white box). No 01/02/03 numbers. On desktop, JS measures the four blocks
+   (`data-row`, `--row-*`) and CSS equalises the taglines, the entry paragraphs and the note boxes: the
+   three lists start on one line, the three white boxes are one height (text top-aligned) and sit on one
+   line above the foot bars, and a card's slack hides between its last bullet and its note. Closing from
+   the "סגור" bar brings the section back to the top of the screen. Header links open the item. Real
+   photos go at the top of each `.pillar-body`.
    **Never remove copy to fix layout** — Or wants all text kept; solve it with structure and spacing.
 4b. Testimonials + logos `#testimonials` — hidden until content
 5. Fit `#fit` — "יום אחד. בדיוק בשבילכם." + text + "מתאים במיוחד ל:" (the six types as rows: brand icon
@@ -96,9 +98,11 @@ logos, footer contact details. Switch on by removing `hidden` once real content 
 7. Plan `#plan` — the finale: blue full-bleed section, one white card in two parts (side by side from
    900px, stacked below): the questions and the cream message panel. Four questions, one at a time,
    one tap each, and the flow moves on by itself: what (6 types, #fit icons; equal tiles, icons on one
-   line) → how many (4 sizes) → when (next 6 months, built by JS: two to a row on phones so the check
-   badge never covers a name, three to a row — a quarter — from 600px; "later" / "not decided" take a
-   full row on phones and share the last row from 600px) → what to include (several; "המשך"). Side by
+   line) → how many (4 sizes) → when (next 6 months, built by JS, three to a row — a quarter — with
+   "later" / "not decided" sharing the last row, so all eight answers fit one phone screen; on phones the
+   check badge sits in the tile's bottom corner so it never covers a month's name; the narrowest phones
+   get two months a row) → what to include (several; "המשך"). The message is `text-wrap: balance`, and
+   the venue name and the closing sentence are kept on one line in the preview (never a lone word). Side by
    side from 1024px (stacked below: the tiles need the width; the box glides between step heights —
    `.flow-steps` keeps `flex: 1 1 auto`, a `0%` basis would silently disable the animation).
    Then a ready step: the brand stamp lands and the answers show as pills that can be changed.

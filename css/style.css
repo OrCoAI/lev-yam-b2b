@@ -37,6 +37,8 @@
   --fs-h3: clamp(1.4rem, 0.8vw + 1.1rem, 1.75rem);   /* card titles, planner questions, list titles */
   --fs-h2: clamp(1.75rem, 1.5vw + 1.2rem, 2.5rem);
   --fs-h1: clamp(2.25rem, 2.5vw + 1.6rem, 3.75rem);
+  --fs-btn-lg: 1.125rem;                             /* the large pills (hero, fit) */
+  --fs-ready: clamp(1.6rem, 1.2vw + 1.25rem, 2.1rem); /* "ההודעה מוכנה!" — the one celebratory title */
   /* Line heights — four textures: headings, UI, leads, running text */
   --lh-heading: 1.2;
   --lh-ui: 1.35;
@@ -213,7 +215,7 @@ html[lang="ar"] .h2-accent { padding-bottom: 1.5rem; }
 .btn-primary:active,
 .btn-wa:active { filter: brightness(0.92); }
 
-.btn-lg { padding: 1rem 2.1rem; font-size: 1.125rem; }
+.btn-lg { padding: 1rem 2.1rem; font-size: var(--fs-btn-lg); }
 /* Cairo's heavy descenders pull its labels down; two pixels of padding lift them back to centre */
 html[lang="ar"] .btn-lg { padding-block: calc(1rem - 2px) calc(1rem + 2px); }
 .btn-xl { padding: 1.1rem 2.4rem; font-size: var(--fs-lead); }
@@ -282,7 +284,7 @@ html[lang="ar"] .btn-lg { padding-block: calc(1rem - 2px) calc(1rem + 2px); }
 
 /* At the very top the hero's stamp is the logo; the header mark fades in once the stamp has
    scrolled under the header (js/main.js sets .has-brand), so the two are never on screen together */
-.brand { display: block; justify-self: start; transition: opacity 0.3s var(--ease), visibility 0.3s; }
+.brand { display: block; grid-column: 1; justify-self: start; transition: opacity 0.3s var(--ease), visibility 0.3s; }
 .site-header:not(.has-brand) .brand { opacity: 0; visibility: hidden; }
 .brand-logo {
   width: 48px;
@@ -309,7 +311,7 @@ html[lang="ar"] .btn-lg { padding-block: calc(1rem - 2px) calc(1rem + 2px); }
 @media (hover: hover) { .nav a:hover { border-color: var(--orange); } }
 .is-scrolled .nav a { color: var(--ink); text-shadow: none; }
 
-.header-actions { display: flex; align-items: center; justify-self: end; gap: 0.5rem; }
+.header-actions { display: flex; align-items: center; grid-column: 3; justify-self: end; gap: 0.5rem; }
 
 /* Language switch (header + footer share the component); active = orange */
 .lang-switch {
@@ -324,7 +326,7 @@ html[lang="ar"] .btn-lg { padding-block: calc(1rem - 2px) calc(1rem + 2px); }
 }
 /* Each half is a full 44px tap target; each label in its own typeface, whatever the page language */
 .lang-btn[lang="he"] { font-family: 'Heebo', system-ui, sans-serif; }
-.lang-btn[lang="ar"] { font-family: 'Cairo', system-ui, sans-serif; padding-block: 0.4rem 0.6rem; }   /* Cairo sits low in a line box; lift it */
+.lang-btn[lang="ar"] { font-family: 'Cairo', system-ui, sans-serif; padding-block: 0.25rem 0.75rem; }   /* Cairo sits low in a line box; lift it */
 .lang-btn {
   min-width: 44px;
   min-height: 38px;
@@ -413,7 +415,8 @@ html[lang="ar"] .btn-lg { padding-block: calc(1rem - 2px) calc(1rem + 2px); }
 .hero-sub {
   font-size: var(--fs-lead);
   font-weight: 700;
-  line-height: var(--lh-ui);
+  line-height: var(--lh-lead);
+  text-wrap: balance;
   text-shadow: 0 1px 12px rgba(0, 0, 0, 0.35);
 }
 .hero-lead {
@@ -453,7 +456,7 @@ html[lang="ar"] .btn-lg { padding-block: calc(1rem - 2px) calc(1rem + 2px); }
   .hero-ctas { margin-top: 1rem; }
 }
 /* Tall tablets: the hero stops at 56rem so the cream intro shows on the first screen */
-@media (min-width: 768px) and (min-height: 1000px) { .hero { min-height: min(100svh, 56rem); } }
+@media (min-width: 768px) and (max-width: 1279px) and (min-height: 1000px) { .hero { min-height: min(100svh, 56rem); } }
 /* Cairo runs wider than Heebo: on phones the headline scales with the width so each sentence keeps one line */
 html[lang="ar"] .hero h1 { font-size: min(var(--fs-h1), 8.9vw); }
 
@@ -519,6 +522,7 @@ html[lang="ar"] .hero h1 { font-size: min(var(--fs-h1), 8.9vw); }
   font-weight: 700;
   line-height: var(--lh-lead);
 }
+.lede p:first-child { text-wrap: balance; }
 .lede p + p { font-weight: 400; color: var(--ink-soft); }
 
 /* ── Testimonials (hidden until content) ─────── */
@@ -726,7 +730,11 @@ html[lang="ar"] .hero h1 { font-size: min(var(--fs-h1), 8.9vw); }
   .pillar-titles { align-items: center; gap: 0.5rem; }
   .pillar-head .pillar-chevron { display: none; }
 
-  .pillar-body { padding: 0 1.75rem 1.75rem; }
+  /* The panel fills the card, so the note can sit at the bottom of the body (the body
+     lives inside the panel's grid, not in the card's flex column) */
+  .pillar-panel { flex: 1; }
+  .pillar-panel-inner { display: flex; flex-direction: column; }
+  .pillar-body { flex: 1; padding: 0 1.75rem 1.75rem; }
   .pillar-intro p,
   .pillar-note-text { max-width: none; }
   /* A small wave between the centred head and the body — the same motif as under the titles */
@@ -738,11 +746,14 @@ html[lang="ar"] .hero h1 { font-size: min(var(--fs-h1), 8.9vw); }
     background: var(--wave) repeat-x left center / 32px 12px;
   }
 
-  /* The taglines and the opening paragraphs line up across the three cards, so
-     the lists start on one line; below that each card keeps its natural
-     heights and the slack sits above the foot bar */
+  /* Matching blocks line up across the three cards: the taglines and the opening
+     paragraphs are equalised so the lists start on one line, and the note boxes
+     are equalised (text top-aligned) and sit on one line just above the foot
+     bars; a card's slack falls between its last bullet and its note — cream on
+     cream, invisible */
   .pillar-subtitle { min-height: var(--row-subtitle, auto); }
   .pillar-intro { min-height: var(--row-intro, auto); }
+  .pillar-note { margin-top: auto; min-height: var(--row-note, auto); }
 
   .pillar-more {
     display: flex;
@@ -827,7 +838,7 @@ html[lang="ar"] .hero h1 { font-size: min(var(--fs-h1), 8.9vw); }
   .fit-text { grid-area: text; }
   .fit-cta { grid-area: cta; }
   .fit-types { display: contents; }   /* the title and the list take their own grid areas */
-  .fit-types-title { grid-area: thead; align-self: baseline; margin-bottom: 0; }
+  .fit-types-title { grid-area: thead; align-self: baseline; align-self: last baseline; margin-bottom: 0; }   /* the H2 may run two lines (Arabic) */
   .fit-list { grid-area: types; grid-template-columns: minmax(0, 1fr); }
 }
 
@@ -1012,7 +1023,7 @@ html[lang="ar"] .hero h1 { font-size: min(var(--fs-h1), 8.9vw); }
   touch-action: manipulation;
 }
 html[lang="ar"] .flow-skip,
-html[lang="ar"] .flow-restart { text-underline-offset: 0.6em; }   /* under Cairo's tails, not through them */
+html[lang="ar"] .flow-restart { padding-block: calc(0.5rem - 2px) calc(0.5rem + 2px); text-underline-offset: 0.6em; }   /* lifted 2px; the line under Cairo's tails, not through them */
 .flow-skip:active,
 .flow-restart:active { color: var(--ink); text-decoration-color: var(--orange); }
 @media (hover: hover) {
@@ -1073,6 +1084,7 @@ html[lang="ar"] .flow-restart { text-underline-offset: 0.6em; }   /* under Cairo
   color: var(--ink);
 }
 .step-q:focus { outline: none; }  /* focused by script when the step changes, never by hand */
+html[lang="ar"] .step-q { padding-bottom: 0.25rem; }   /* Cairo's descenders reach below the box; keep the gap to the tiles */
 .step-hint { margin: 0; font-size: var(--fs-sm); line-height: var(--lh-ui); color: var(--ink-soft); }
 
 /* ── Answer tiles ── */
@@ -1082,15 +1094,22 @@ html[lang="ar"] .flow-restart { text-underline-offset: 0.6em; }   /* under Cairo
 .choices-comp { grid-auto-rows: 1fr; }
 .choices-event,
 .choices-size { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-/* Months: two to a row on phones (room for the check badge beside the name), three to a
-   row — a quarter — from 600px; the two fixed answers take a full row on phones and share
-   the last row from 600px */
-.choices-when { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-.choices-when .choice-wide { grid-column: 1 / -1; }
-@media (min-width: 600px) {
-  .choices-when { grid-template-columns: repeat(6, minmax(0, 1fr)); }
-  .choices-when .choice { grid-column: span 2; }
-  .choices-when .choice-wide { grid-column: span 3; }
+/* Months three to a row — a quarter — with the two fixed answers sharing the last
+   row, so all eight answers fit one phone screen; the narrowest phones get two
+   months to a row and full-width fixed answers */
+.choices-when { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+.choices-when .choice { grid-column: span 2; }
+.choices-when .choice-wide { grid-column: span 3; }
+@media (max-width: 359px) {
+  .choices-when { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .choices-when .choice { grid-column: auto; }
+  .choices-when .choice-wide { grid-column: 1 / -1; }
+}
+/* On phones the tiles are narrow: the check badge sits in the bottom corner beside the
+   short year, never over a month's name, and the fixed answers keep their label above it */
+@media (max-width: 599px) {
+  .choices-when .choice-check { top: auto; bottom: 6px; }
+  .choices-when .choice-wide { padding-block: 0.5rem 1.4rem; }
 }
 .choices-comp { grid-template-columns: minmax(0, 1fr); }
 @media (min-width: 600px) {
@@ -1220,7 +1239,7 @@ html[lang="ar"] .flow-restart { text-underline-offset: 0.6em; }   /* under Cairo
 .step-ready { align-items: center; justify-content: center; gap: 0.6rem; text-align: center; }
 .ready-stamp { width: 64px; height: auto; transform: rotate(-8deg); }
 .planner.is-ready .ready-stamp { animation: stamp-in 0.65s cubic-bezier(0.2, 1.4, 0.4, 1) 0.05s backwards; }  /* the hero's landing, same curve and length */
-.step-ready .step-q { font-size: clamp(1.6rem, 1.2vw + 1.25rem, 2.1rem); }
+.step-ready .step-q { font-size: var(--fs-ready); }
 .ready-p { margin: 0; line-height: var(--lh-lead); color: var(--ink-soft); text-wrap: balance; }
 .answers {
   display: flex;
@@ -1234,7 +1253,7 @@ html[lang="ar"] .flow-restart { text-underline-offset: 0.6em; }   /* under Cairo
   align-items: center;
   gap: 0.45rem;
   min-height: 44px;
-  padding: 0.5rem 0.9rem;
+  padding: 0.5rem 0.75rem;
   border: 1.5px solid var(--line);
   border-radius: var(--radius-pill);
   background: var(--white);
@@ -1298,7 +1317,10 @@ html[lang="ar"] .answer { padding-inline: 0.7rem; }   /* the wider Arabic answer
   font-weight: 400;
   line-height: var(--lh-lead);
   overflow-wrap: anywhere;
+  text-wrap: balance;   /* never more than a few lines, so they can be even */
 }
+/* The venue name and the closing sentence never break across lines (js/main.js wraps them) */
+.chat-text .nobr { white-space: nowrap; }
 /* Chosen fragments: an orange marker stroke under the words. A fresh one
    draws itself from the start of the line. */
 .chat-text .sel {
