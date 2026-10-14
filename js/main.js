@@ -36,12 +36,13 @@ const TRANSLATIONS = {
     'nav-wa': 'דברו איתנו',
     'wa-aria': 'דברו איתנו בוואטסאפ',
 
-    'hero-eyebrow': 'לב ים · כפר הדייגים, ג׳יסר א-זרקא',
     'hero-h1a': 'יוצאים מהשגרה.',
     'hero-h1b': 'נפגשים אחרת.',
     'hero-sub': 'ימי צוות, מפגשי הנהלה ואירועי חברה במקום קצת אחר.',
-    'hero-lead': 'בכפר הדייגים ג׳יסר א-זרקא, בין הים לטבע, מחכה לכם לב ים - מרחב אירוח ייחודי המשלב נוף עוצר נשימה, אוכל מקומי, תוכן מעשיר ומפגש אנושי בגובה העיניים.',
-    'cta-plan': 'בואו נתכנן את היום שלכם',
+    // The lead is split around the venue name, which is bold (brand-name)
+    'hero-lead-a': 'בכפר הדייגים ג׳יסר א-זרקא, בין הים לטבע, מחכה לכם',
+    'hero-lead-b': '- מרחב אירוח ייחודי המשלב נוף עוצר נשימה, אוכל מקומי, תוכן מעשיר ומפגש אנושי בגובה העיניים.',
+    'cta-plan': 'בואו נתכנן את היום שלכם!',
     'hero-cta-discover': 'גלו את לב ים',
 
     'fact-distance': 'מרחק מתל אביב',
@@ -51,11 +52,6 @@ const TRANSLATIONS = {
 
     'intro-p1': 'מקום לצאת מהשגרה, לפתוח את הראש, להתחבר מחדש ולחזור עם אנרגיה ורעיונות חדשים.',
     'intro-p2': 'בין אם אתם מתכננים יום גיבוש, מפגש חשיבה, סדנה או אירוע חברה - ניצור יחד חוויה המותאמת לאנשים ולמטרות שלכם.',
-    'why-h2': "למה זה כל כך חשוב להגיע ל'לב ים', כפר הדייגים, ג'יסר א זרקא?",
-    'why-p1': 'האמת? כי זה מה שכל מי שמגיע לפה אומר.',
-    'why-p2': 'במרחב הקסום מול הים, בכפר דייגים העתיק בלב הטבע הפראי של מישור החוף, זורמת אנרגיה של אותנטיות פשוטה לצד פונקציונליות בריאה – שמייצרים תחושה של קרבה ותום, שפיות וביטחון.',
-    'why-p3': 'אנחנו מקדשים את הפשוט, מעריכים את הטבעי, מכירים בסדוק ומוקירים על הבלתי שלם, וכל מי שמעז להגיע לפה – גם אם לצד הפחד והספק – זוכה לנווט דרך האתגרים העסקיים, המורכבות הרגשית ומשבר האמון – אל עבר מחוזות ההשראה, הריפוי וההעצמה.',
-    'why-quote': 'אנחנו מזמינים אתכם להיות חלק מהנבחרת שבוחרת בשפיות הזו.',
     'testi-h2': 'מה אומרים מי שכבר היו כאן',
 
     'pillars-h2': 'שלושה מרכיבים. אינספור אפשרויות.',
@@ -63,37 +59,35 @@ const TRANSLATIONS = {
     'pillar-more': 'מידע נוסף',
     'pillar-less': 'סגור',
     'p1-h3': 'משנים אווירה. פותחים את הראש.',
-    'p1-p1': 'המרחב משלב פינות ישיבה נעימות, אזורי התכנסות ואווירה אינטימית ובלתי פורמלית, שמאפשרת להאט, להתרכז ולהיפגש באמת.',
-    'p1-p2': 'בין אם מדובר בישיבת הנהלה, סיעור מוחות, יום צוות או מפגש מקצועי, כאן תמצאו סביבה שמעודדת יצירתיות, שיח פתוח וחיבור אנושי.',
+    'p1-p1': 'יש מקומות שמספיק להגיע אליהם כדי להרגיש אחרת. לב ים שוכן בכפר דייגים על חוף הים התיכון, מוקף טבע ונוף פתוח. המרחב משלב אזורי התכנסות, פינות ישיבה נעימות ואווירה אינטימית ובלתי פורמלית, שמזמינה יצירתיות, שיחה פתוחה וחיבור אנושי.',
     'p1-list-title': 'מה מחכה לכם?',
     'p1-li1': 'מרחבי התכנסות ועבודה לצוותים ולקבוצות',
-    'p1-li2': 'פינות ישיבה באווירה נינוחה',
-    'p1-li3': 'טבע, ים ונוף פתוח',
-    'p1-li4': 'אפשרות לשילוב מפגשים מקצועיים וזמן חופשי',
-    'p1-rent-title': 'איך אפשר לשכור?',
-    'p1-rent1': 'חלק מהמרחב',
-    'p1-rent2': 'החלל הפנימי בלבד',
-    'p1-rent3': 'המרפסת הצופה לים בלבד',
-    'p1-rent4': 'המתחם כולו',
+    'p1-li2': 'אפשרות לאירוח אינטימי או לשימוש במתחם כולו',
+    'p1-li3': 'פינות ישיבה נעימות בפנים ובחוץ',
+    'p1-li4': 'טבע, ים ונוף פתוח במרחק צעדים ספורים',
+    'p1-li5': 'שילוב של מפגשים מקצועיים וזמן חופשי',
+    'p1-li6': 'התאמת המרחב לאופי האירוע ולגודל הקבוצה',
+    'p1-close': 'בין אם אתם מתכננים מפגש הנהלה, יום גיבוש או סדנה, נבחר יחד את המרחבים המתאימים וניצור את האווירה הנכונה עבורכם.',
     'p2-h3': 'טעמים מקומיים. אירוח מכל הלב.',
-    'p2-p1': 'האוכל הוא חלק מהחוויה והבחירה היא שלכם.',
+    'p2-p1': 'אוכל טוב הוא חלק בלתי נפרד ממפגש מוצלח. בלב ים מחכה לכם חוויה קולינרית בהשראת המטבח המקומי המוגש באהבה ובפשטות. ממסיבת תה מסורתית ומאפי בוקר מהכפר ועד לארוחות עשירות ומפנקות.',
     'p2-list-title': 'מה אפשר לשלב?',
-    'p2-li1': 'קבלת פנים עם תה מסורתי',
-    'p2-li2': 'מאפי בוקר מהכפר ופירות העונה',
-    'p2-li3': 'ארוחות צהריים מקומיות, עשירות ומגוונות',
-    'p2-li4': 'אירוח שף לחוויה קולינרית ייחודית',
-    'p2-li5': 'אפשרות להביא קייטרינג חיצוני מטעמכם',
-    'p2-close': 'התפריט והאירוח מותאמים לאופי המפגש ולצורכי הקבוצה.',
+    'p2-li1': 'קבלת פנים עם מסיבת תה מסורתית',
+    'p2-li2': 'מאפי בוקר מקומיים ופירות העונה',
+    'p2-li3': 'ארוחות צהריים עשירות בהשראת המטבח המקומי',
+    'p2-li4': 'משקאות טבעיים, כיבוד ומתוקים לאורך היום',
+    'p2-li5': 'אירוח שף אורח לחוויה קולינרית מיוחדת',
+    'p2-li6': 'אפשרות להביא קייטרינג חיצוני מטעמכם',
+    'p2-close': 'תוכלו לבחור בין האירוח המקומי שלנו, שף אורח או קייטרינג משלכם, ולבנות חוויה קולינרית שמתאימה לטעם, לאופי ולרצונות הקבוצה.',
     'p3-h3': 'חוויות שמחברות בין אנשים.',
-    'p3-p1': 'בלב ים תוכלו לשלב תוכן שמוסיף עומק, עניין והנאה ליום שלכם - מפעילויות תנועה ורוגע ועד חוויות מקומיות ומפגשים מעוררי השראה.',
+    'p3-p1': 'לפעמים כדי לחשוב אחרת, צריך פשוט לעשות משהו אחר. בלב ים תוכלו לשלב תוכן מעשיר ומעורר השראה, מתנועה ורוגע ועד חוויות בטבע ומפגשים עם התרבות המקומית. הפעילויות מזמינות סקרנות, התנסות משותפת וחיבור בין אנשים.',
     'p3-list-title': 'מה אפשר לשלב?',
-    'p3-li1': 'יוגה, תנועה ומדיטציה',
-    'p3-li2': 'פעילויות בטבע ובים',
+    'p3-li1': 'סדנאות יוגה, תנועה ומדיטציה',
+    'p3-li2': 'פעילויות חווייתיות בטבע ובים',
     'p3-li3': 'סיורים והיכרות עם כפר הדייגים',
     'p3-li4': 'מפגשים עם אנשים וסיפורים מקומיים',
-    'p3-li5': 'סדנאות חווייתיות ותוכן מותאם לקבוצה',
-    'p3-li6': 'זמן לעבודה משותפת, חשיבה ויצירה',
-    'p3-close': 'אפשר להגיע עם תוכן משלכם, לבחור מתוך מגוון הפעילויות שלנו או ליצור יחד תוכנית המשלבת עבודה, השראה והנאה.',
+    'p3-li5': 'סדנאות יצירה, העשרה וגיבוש צוותי',
+    'p3-li6': 'אפשרות לתוכן עצמאי או לתוכנית מותאמת אישית',
+    'p3-close': 'תוכלו לבחור מתוך מגוון הפעילויות שלנו, להביא תוכן משלכם או לשלב בין האפשרויות, וליצור יחד תוכנית שמתאימה לאופי הקבוצה ולמטרות המפגש.',
 
     'fit-h2': 'יום אחד. בדיוק בשבילכם.',
     'fit-p1': 'אין שני צוותים זהים, ולכן גם אין שני ימים זהים בלב ים.',
@@ -106,7 +100,7 @@ const TRANSLATIONS = {
     'fit-li4': 'ימי חשיבה ויצירה',
     'fit-li5': 'אירועי חברה ומפגשים מקצועיים',
     'fit-li6': 'מפגשי קהילה וארגונים',
-    'fit-cta': 'בואו ליצור את היום שלכם',
+    'fit-cta': 'בואו ליצור את היום שלכם!',
 
     'impact-h2': 'חוויה טובה. השפעה טובה.',
     'impact-p1': 'לב ים הוא הרבה יותר ממקום לאירוע.',
@@ -181,12 +175,12 @@ const TRANSLATIONS = {
     'nav-wa': 'تحدثوا معنا',
     'wa-aria': 'تحدثوا معنا عبر واتساب',
 
-    'hero-eyebrow': 'لب يام · قرية الصيادين، جسر الزرقاء',
     'hero-h1a': 'نخرج من الروتين.',
     'hero-h1b': 'نلتقي بشكل مختلف.',
-    'hero-sub': 'أيام فريق، لقاءات إدارة وفعاليات شركات في مكان مختلف قليلاً.',
-    'hero-lead': 'في قرية الصيادين جسر الزرقاء، بين البحر والطبيعة، ينتظركم لب يام – مساحة ضيافة فريدة تجمع بين إطلالة خلابة، طعام محلي، محتوى غني ولقاء إنساني حقيقي.',
-    'cta-plan': 'لنخطّط يومكم معاً',
+    'hero-sub': 'أيام فريق، لقاءات إدارة وفعاليات\u00A0شركات في مكان مختلف قليلاً.',
+    'hero-lead-a': 'في قرية الصيادين جسر الزرقاء، بين البحر والطبيعة، ينتظركم',
+    'hero-lead-b': '– مساحة ضيافة فريدة تجمع بين إطلالة خلابة، طعام محلي، محتوى غني ولقاء إنساني حقيقي.',
+    'cta-plan': 'لنخطّط يومكم معاً!',
     'hero-cta-discover': 'اكتشفوا لب يام',
 
     'fact-distance': 'المسافة من تل أبيب',
@@ -196,50 +190,43 @@ const TRANSLATIONS = {
 
     'intro-p1': 'مكان للخروج من الروتين، لفتح الذهن، لإعادة التواصل والعودة بطاقة وأفكار جديدة.',
     'intro-p2': 'سواء كنتم تخططون ليوم تعزيز فريق، لقاء عصف ذهني، ورشة أو فعالية شركة – سنصنع معاً تجربة مصممة لأشخاصكم وأهدافكم.',
-    'why-h2': 'لماذا من المهم جداً الوصول إلى "لب يام"، قرية الصيادين، جسر الزرقاء؟',
-    'why-p1': 'الحقيقة؟ لأن هذا ما يقوله كل من يصل إلى هنا.',
-    'why-p2': 'في هذه المساحة الساحرة أمام البحر، في قرية صيادين عريقة في قلب الطبيعة البرية للسهل الساحلي، تتدفق طاقة من الأصالة البسيطة إلى جانب عملية صحية – تولّد شعوراً بالقرب والبراءة، بالصفاء والأمان.',
-    'why-p3': 'نحن نقدّس البسيط، نقدّر الطبيعي، نعترف بالمتصدّع ونحتفي بغير المكتمل، وكل من يجرؤ على الوصول إلى هنا – حتى مع الخوف والشك – يحظى بأن يبحر عبر التحديات التجارية، التعقيد العاطفي وأزمة الثقة – نحو آفاق الإلهام، الشفاء والتمكين.',
-    'why-quote': 'ندعوكم لتكونوا جزءاً من المنتخب الذي يختار هذا الصفاء.',
     'testi-h2': 'ماذا يقول من كانوا هنا',
 
     'pillars-h2': 'ثلاثة مكوّنات. إمكانيات لا تُحصى.',
     'pillar-more': 'مزيد من المعلومات',
     'pillar-less': 'إغلاق',
     'p1-h3': 'نغيّر الأجواء. نفتح الذهن.',
-    'p1-p1': 'يجمع المكان بين زوايا جلوس مريحة، مناطق تجمّع وأجواء حميمة وغير رسمية، تتيح التمهّل، التركيز واللقاء الحقيقي.',
-    'p1-p2': 'سواء كان الأمر اجتماع إدارة، عصف ذهني، يوم فريق أو لقاء مهني، ستجدون هنا بيئة تشجع الإبداع، الحوار المفتوح والتواصل الإنساني.',
+    'p1-p1': 'هناك أماكن يكفي أن تصلوا إليها لتشعروا بشكل مختلف. يقع لب يام في قرية صيادين على شاطئ البحر الأبيض المتوسط، تحيط به الطبيعة والإطلالة المفتوحة. يجمع المكان بين مناطق تجمّع، زوايا جلوس مريحة وأجواء حميمة وغير رسمية، تدعو إلى الإبداع، الحوار المفتوح والتواصل الإنساني.',
     'p1-list-title': 'ما الذي ينتظركم؟',
     'p1-li1': 'مساحات تجمّع وعمل للفرق والمجموعات',
-    'p1-li2': 'زوايا جلوس بأجواء هادئة',
-    'p1-li3': 'طبيعة، بحر وإطلالة مفتوحة',
-    'p1-li4': 'إمكانية الجمع بين لقاءات مهنية ووقت حر',
-    'p1-rent-title': 'كيف يمكن الاستئجار؟',
-    'p1-rent1': 'جزء من المكان',
-    'p1-rent2': 'القاعة الداخلية فقط',
-    'p1-rent3': 'الشرفة المطلة على البحر فقط',
-    'p1-rent4': 'المجمّع بأكمله',
+    'p1-li2': 'إمكانية استضافة حميمة أو استخدام المجمّع بأكمله',
+    'p1-li3': 'زوايا جلوس مريحة في الداخل والخارج',
+    'p1-li4': 'طبيعة، بحر وإطلالة مفتوحة على بُعد خطوات قليلة',
+    'p1-li5': 'الجمع بين لقاءات مهنية ووقت حر',
+    'p1-li6': 'ملاءمة المكان لطابع الفعالية وحجم المجموعة',
+    'p1-close': 'سواء كنتم تخططون للقاء إدارة، يوم تعزيز فريق أو ورشة، سنختار معاً المساحات المناسبة ونصنع الأجواء الصحيحة لكم.',
     'p2-h3': 'نكهات محلية. ضيافة من القلب.',
-    'p2-p1': 'الطعام جزء من التجربة والخيار لكم.',
+    'p2-p1': 'الطعام الجيد جزء لا يتجزأ من أي لقاء ناجح. في لب يام تنتظركم تجربة طهي مستوحاة من المطبخ المحلي، تُقدَّم بحب وببساطة. من حفلة شاي تقليدية ومعجنات صباحية من القرية وحتى وجبات غنية وفاخرة.',
     'p2-list-title': 'ما الذي يمكن دمجه؟',
-    'p2-li1': 'استقبال بشاي تقليدي',
-    'p2-li2': 'معجنات صباحية من القرية وفواكه الموسم',
-    'p2-li3': 'وجبات غداء محلية، غنية ومتنوعة',
-    'p2-li4': 'استضافة شيف لتجربة طهي فريدة',
-    'p2-li5': 'إمكانية إحضار تموين خارجي من طرفكم',
-    'p2-close': 'تُصمَّم قائمة الطعام والضيافة وفق طابع اللقاء واحتياجات المجموعة.',
+    'p2-li1': 'استقبال مع حفلة شاي تقليدية',
+    'p2-li2': 'معجنات صباحية محلية وفواكه الموسم',
+    'p2-li3': 'وجبات غداء غنية مستوحاة من المطبخ المحلي',
+    'p2-li4': 'مشروبات طبيعية، ضيافة وحلويات على مدار اليوم',
+    'p2-li5': 'استضافة شيف ضيف لتجربة طهي مميزة',
+    'p2-li6': 'إمكانية إحضار تموين خارجي من طرفكم',
+    'p2-close': 'يمكنكم الاختيار بين ضيافتنا المحلية، شيف ضيف أو تموين خاص بكم، وبناء تجربة طهي تناسب ذوق المجموعة وطابعها ورغباتها.',
     'p3-h3': 'تجارب تربط بين الناس.',
-    'p3-p1': 'في لب يام يمكنكم دمج محتوى يضيف عمقاً، اهتماماً ومتعة ليومكم – من أنشطة الحركة والاسترخاء إلى تجارب محلية ولقاءات ملهمة.',
+    'p3-p1': 'أحياناً، لكي نفكّر بشكل مختلف، علينا ببساطة أن نفعل شيئاً مختلفاً. في لب يام يمكنكم دمج محتوى غني وملهم، من الحركة والاسترخاء إلى تجارب في الطبيعة ولقاءات مع الثقافة المحلية. تدعو الأنشطة إلى الفضول، التجربة المشتركة والتواصل بين الناس.',
     'p3-list-title': 'ما الذي يمكن دمجه؟',
-    'p3-li1': 'يوغا، حركة وتأمل',
-    'p3-li2': 'أنشطة في الطبيعة والبحر',
+    'p3-li1': 'ورشات يوغا، حركة وتأمل',
+    'p3-li2': 'أنشطة تجريبية في الطبيعة والبحر',
     'p3-li3': 'جولات وتعرّف على قرية الصيادين',
     'p3-li4': 'لقاءات مع أشخاص وقصص محلية',
-    'p3-li5': 'ورشات تجريبية ومحتوى مصمم للمجموعة',
-    'p3-li6': 'وقت للعمل المشترك، التفكير والإبداع',
-    'p3-close': 'يمكنكم القدوم بمحتوى خاص بكم، الاختيار من بين أنشطتنا المتنوعة أو أن نبني معاً برنامجاً يجمع بين العمل، الإلهام والمتعة.',
+    'p3-li5': 'ورشات إبداع، إثراء وتعزيز روح الفريق',
+    'p3-li6': 'إمكانية محتوى مستقل أو برنامج مصمّم خصيصاً',
+    'p3-close': 'يمكنكم الاختيار من بين أنشطتنا المتنوعة، إحضار محتوى خاص بكم أو الدمج بين الخيارات، وأن نبني معاً برنامجاً يناسب طابع المجموعة وأهداف اللقاء.',
 
-    'fit-h2': 'يوم واحد. مصمّم لكم بالضبط.',
+    'fit-h2': 'يوم واحد. مصمّم\u00A0لكم\u00A0بالضبط.',
     'fit-p1': 'لا يوجد فريقان متشابهان، ولذلك لا يوجد يومان متشابهان في لب يام.',
     'fit-p2': 'هناك فرق تأتي ليوم عمل وتفكير، وأخرى تبحث عن تعزيز الفريق وتجربة مشتركة، وهناك من يريد ببساطة الخروج من المكتب وقضاء الوقت معاً في مكان جميل ومميز.',
     'fit-p3': 'نحن هنا لنصغي، نقترح ونبني معاً المزيج الصحيح من المكان، الطعام والمحتوى.',
@@ -250,7 +237,7 @@ const TRANSLATIONS = {
     'fit-li4': 'أيام التفكير والإبداع',
     'fit-li5': 'فعاليات الشركات واللقاءات المهنية',
     'fit-li6': 'لقاءات المجتمعات والمنظمات',
-    'fit-cta': 'لنصنع يومكم معاً',
+    'fit-cta': 'لنصنع يومكم معاً!',
 
     'impact-h2': 'تجربة جيدة. أثر جيد.',
     'impact-p1': 'لب يام أكثر بكثير من مكان لفعالية.',
@@ -291,8 +278,9 @@ const TRANSLATIONS = {
     'plan-ev5-msg': 'فعالية شركة / لقاء مهني',
     'plan-ev6-msg': 'لقاء مجتمعي / منظمة',
     'size-lt15': 'حتى 15 شخصاً',
-    'size-15-30': '15-30 شخصاً',
-    'size-30-50': '30-50 شخصاً',
+    // \u200E (left-to-right mark) keeps "15-30" in order after an Arabic word — in the message, the pills and the WhatsApp text
+    'size-15-30': '\u200E15-30 شخصاً',
+    'size-30-50': '\u200E30-50 شخصاً',
     'size-50plus': 'أكثر من 50 شخصاً',
     'when-month-msg': 'في شهر {month}',
     'when-later-msg': 'بعد نصف سنة أو أكثر',
@@ -469,11 +457,26 @@ function escapeHtml(s) {
   return s.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 }
 
+// Preview only (never the WhatsApp text): a number range ("15-30") is isolated so it never
+// breaks at the hyphen inside RTL text, and the venue name and the closing sentence are
+// kept on one line — mixed-direction text defeats the browser's own even wrapping
+const KEEP_TOGETHER = {
+  he: ['לב ים', 'נשמח לתכנן יחד!', 'נשמח לשמוע פרטים.'],
+  ar: ['لب يام', 'يسعدنا أن نخطط معاً!', 'يسعدنا الحصول على التفاصيل.'],
+};
+function keepRanges(html) {
+  let out = html.replace(/(\d+)-(\d+)/g, '<span class="range">$1-$2</span>');
+  (KEEP_TOGETHER[currentLang] || KEEP_TOGETHER.he).forEach((phrase) => {
+    out = out.split(phrase).join(`<span class="nobr">${phrase}</span>`);
+  });
+  return out;
+}
+
 function composePreviewHtml(changed) {
   return composeParts()
     .map((p) => {
-      if (!p.mark) return escapeHtml(p.text);
-      return `<mark class="sel${p.mark === changed ? ' is-new' : ''}">${escapeHtml(p.text)}</mark>`;
+      if (!p.mark) return keepRanges(escapeHtml(p.text));
+      return `<mark class="sel${p.mark === changed ? ' is-new' : ''}">${keepRanges(escapeHtml(p.text))}</mark>`;
     })
     .join('');
 }
@@ -558,6 +561,8 @@ function renderStep({ animate = false, back = false } = {}) {
   });
 
   root.querySelectorAll('.flow-progress span').forEach((seg, i) => seg.classList.toggle('is-done', i <= index));
+  const backBtn = root.querySelector('.flow-back');
+  if (backBtn) backBtn.disabled = currentStep === 'event';  // stays in place, faded (see .flow-back in the CSS)
   const count = document.getElementById('flow-count');
   if (count && QUESTION_KEYS[currentStep]) {
     const total = Object.keys(QUESTION_KEYS).length;
@@ -598,7 +603,23 @@ function revealSendButton() {
   const cta = document.getElementById('plan-cta');
   if (!cta) return;
   const hidden = cta.getBoundingClientRect().bottom - window.innerHeight + 20;
-  if (hidden > 0) window.scrollBy({ top: hidden, behavior: prefersReducedMotion() ? 'auto' : 'smooth' });
+  if (hidden <= 0) return;
+  // ...but never drag the card's top row (back, restart, progress) under the fixed header
+  const top = document.querySelector('.flow-top');
+  const header = document.getElementById('site-header');
+  const headerH = header ? header.getBoundingClientRect().height : 0;
+  const room = top ? top.getBoundingClientRect().top - (headerH + 8) : hidden;
+  const by = Math.min(hidden, Math.max(0, room));
+  if (by > 0) window.scrollBy({ top: by, behavior: prefersReducedMotion() ? 'auto' : 'smooth' });
+}
+
+// A question's top row (back, progress, skip) must not sit under the fixed header
+function keepTopRowVisible() {
+  const top = document.querySelector('.flow-top');
+  const header = document.getElementById('site-header');
+  if (!top) return;
+  const above = top.getBoundingClientRect().top - ((header ? header.getBoundingClientRect().height : 0) + 8);
+  if (above < 0) window.scrollBy({ top: above, behavior: prefersReducedMotion() ? 'auto' : 'smooth' });
 }
 
 function goToStep(step, { via = 'next' } = {}) {
@@ -612,11 +633,13 @@ function goToStep(step, { via = 'next' } = {}) {
   currentStep = step;
   if (step === 'ready') returnToReady = false;
   renderStep({ animate, back });
-  const settled = box && animate ? glideStepsHeight(box, fromHeight) : Promise.resolve();
+  // The scroll is measured on the final layout, before the glide starts, so the stamp
+  // lands and the page moves in the same beat and nothing shifts afterwards
+  if (step === 'ready') revealSendButton(); else keepTopRowVisible();
+  if (box && animate) glideStepsHeight(box, fromHeight);
   // Screen readers hear the new question; keyboard users continue from it
   const heading = document.querySelector(`.step[data-step="${step}"] .step-q`);
   if (heading) heading.focus({ preventScroll: true });
-  if (step === 'ready') settled.then(revealSendButton);
   sendBizEvent('levyam.planner.step', { from, to: step, via });
 }
 
@@ -687,6 +710,21 @@ function initPlanner() {
   renderStep();
 }
 
+// ── "מתאים במיוחד ל:" ────────────────────────────────────────
+// The six types rise in one after another the first time they come into view.
+// A plain list: nothing here touches the planner (Or, 2026-10-13).
+function initFitRise() {
+  const list = document.querySelector('.fit-list');
+  if (!list || prefersReducedMotion() || !('IntersectionObserver' in window)) return;
+  list.classList.add('will-rise');
+  const io = new IntersectionObserver((entries) => {
+    if (!entries.some((entry) => entry.isIntersecting)) return;
+    list.classList.add('is-risen');
+    io.disconnect();
+  }, { rootMargin: '0px 0px -10% 0px' });
+  io.observe(list);
+}
+
 // ── Click tracking ────────────────────────────────────────────
 function initTracking() {
   document.addEventListener('click', (e) => {
@@ -714,9 +752,13 @@ function initTracking() {
 function initHeader() {
   const header = document.getElementById('site-header');
   if (!header) return;
+  const stamp = document.querySelector('.hero-stamp');
   let ticking = false;
   const update = () => {
     header.classList.toggle('is-scrolled', window.scrollY > 24);
+    // the header mark takes over only once the hero's stamp has slid under the header
+    const headerH = header.getBoundingClientRect().height;
+    header.classList.toggle('has-brand', !stamp || stamp.getBoundingClientRect().bottom < headerH);
     ticking = false;
   };
   window.addEventListener('scroll', () => {
@@ -726,32 +768,30 @@ function initHeader() {
 }
 
 // ── Floating WhatsApp button ──────────────────────────────────
-// Hidden while the planner (questions, message, send button) is on screen, so there
-// is never a second WhatsApp button competing with the one the user is about to tap.
+// Hidden while the hero's own buttons or the planner card are on screen, so the
+// bubble never sits on the buttons or on the answer tiles a thumb is aiming at.
 function initFloatingButton() {
   const float = document.getElementById('wa-float');
   if (!float || !('IntersectionObserver' in window)) return;
   const visible = new Set();
-  const targets = [document.getElementById('planner')].filter(Boolean);
+  const targets = [document.getElementById('planner'), document.querySelector('.hero-ctas')].filter(Boolean);
   const io = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
       if (entry.isIntersecting) visible.add(entry.target); else visible.delete(entry.target);
     });
     float.classList.toggle('is-hidden', visible.size > 0);
-  }, { threshold: 0.05 });
+  }, { threshold: 0 });
   targets.forEach((el) => io.observe(el));
 }
 
 // ── Three components accordion ────────────────────────────────
-// Desktop (≥900px): the three cards open and close together, as the old packages did.
-// Mobile: one at a time; opening an item closes the others.
-const desktopMQ = window.matchMedia('(min-width: 900px)');
+// Desktop (≥1024px): the three cards open and close together, as the old packages did.
+// Mobile and tablets: one at a time; opening an item closes the others.
+const desktopMQ = window.matchMedia('(min-width: 1024px)');
 
 function setPillarOpen(pillar, open) {
   pillar.classList.toggle('is-open', open);
   pillar.querySelectorAll('[aria-controls]').forEach((btn) => btn.setAttribute('aria-expanded', String(open)));
-  const label = pillar.querySelector('.pillar-more-label');
-  if (label) label.textContent = t(open ? 'pillar-less' : 'pillar-more');
 }
 
 function syncPillarLabels() {
@@ -802,6 +842,11 @@ function togglePillar(pillar, { forceOpen = false, source = 'click' } = {}) {
 
   if (desktopMQ.matches) {
     pillars.forEach((p) => setPillarOpen(p, willOpen));
+    // Closing from the bar at the foot of a tall card: the cards collapse upward, so the
+    // section is brought back to the top of the screen instead of scrolling out of sight
+    if (!willOpen && source === 'more') {
+      document.getElementById('pillars').scrollIntoView({ block: 'start', behavior: prefersReducedMotion() ? 'auto' : 'smooth' });
+    }
   } else {
     if (willOpen) closeOthersInPlace(pillar, pillars);
     setPillarOpen(pillar, willOpen);
@@ -821,7 +866,7 @@ function initPillars() {
 
   pillars.forEach((pillar) => {
     pillar.querySelectorAll('.pillar-head, .pillar-more').forEach((btn) => {
-      btn.addEventListener('click', () => togglePillar(pillar));
+      btn.addEventListener('click', () => togglePillar(pillar, { source: btn.classList.contains('pillar-more') ? 'more' : 'head' }));
     });
   });
 
@@ -887,6 +932,7 @@ function initHeroVideo() {
 document.addEventListener('DOMContentLoaded', () => {
   initLangSwitch();
   initPlanner();
+  initFitRise();
   initTracking();
   initHeader();
   initFloatingButton();
