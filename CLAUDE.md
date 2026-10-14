@@ -96,9 +96,11 @@ logos, footer contact details. Switch on by removing `hidden` once real content 
 7. Plan `#plan` — the finale: blue full-bleed section, one white card in two parts (side by side from
    900px, stacked below): the questions and the cream message panel. Four questions, one at a time,
    one tap each, and the flow moves on by itself: what (6 types, #fit icons; equal tiles, icons on one
-   line) → how many (4 sizes) → when (next 6 months, built by JS, three to a row like quarters, + "later" /
-   "not decided" sharing the last row) → what to include (several; "המשך"). Side by side from 1024px
-   (stacked below: the tiles need the width).
+   line) → how many (4 sizes) → when (next 6 months, built by JS: two to a row on phones so the check
+   badge never covers a name, three to a row — a quarter — from 600px; "later" / "not decided" take a
+   full row on phones and share the last row from 600px) → what to include (several; "המשך"). Side by
+   side from 1024px (stacked below: the tiles need the width; the box glides between step heights —
+   `.flow-steps` keeps `flex: 1 1 auto`, a `0%` basis would silently disable the animation).
    Then a ready step: the brand stamp lands and the answers show as pills that can be changed.
    The message rewrites itself with every answer (new fragment drawn in orange marker; the message is
    regular weight, the chosen fragments bold; "15-30" is wrapped so it never breaks at the hyphen). The
@@ -109,7 +111,15 @@ logos, footer contact details. Switch on by removing `hidden` once real content 
    clean. No direct number (removed). Group-size ranges in the message use a plain hyphen
    (an en dash shows reversed in RTL/WhatsApp).
 8. Footer — removed for now (Or, 2026-10-12). Copy kept in `content/copy.md` for when it returns.
-— Floating WhatsApp button, mobile only; hides while `#plan-cta` or the footer is on screen.
+— Floating WhatsApp button, mobile only; hides while the hero's buttons or `#plan-cta` are on screen
+   (it sends the same composed message, so it never competes elsewhere).
+— Motion and states: hover effects only under `(hover: hover)`; every control has a press state in brand
+   tints and no browser tap flash; the focus ring is white over the hero; closing the desktop cards from
+   the "סגור" bar brings the section back to the top of the screen; the header mark appears only once the
+   hero stamp has scrolled under the header; both bar labels ("מידע נוסף"/"סגור") are rendered and stacked
+   so the chevron never slides. Arabic (Cairo) gets more leading through the `--lh-*` tokens, a width-scaled
+   H1 on phones, a shorter marker band and two-pixel lifts in the large pills; the two Arabic range strings
+   start with U+200E so "15-30" keeps its order in the sent text.
 
 One WhatsApp entry point per viewport: header button on desktop, floating button on mobile.
 

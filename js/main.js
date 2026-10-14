@@ -278,8 +278,9 @@ const TRANSLATIONS = {
     'plan-ev5-msg': 'فعالية شركة / لقاء مهني',
     'plan-ev6-msg': 'لقاء مجتمعي / منظمة',
     'size-lt15': 'حتى 15 شخصاً',
-    'size-15-30': '15-30 شخصاً',
-    'size-30-50': '30-50 شخصاً',
+    // \u200E (left-to-right mark) keeps "15-30" in order after an Arabic word — in the message, the pills and the WhatsApp text
+    'size-15-30': '\u200E15-30 شخصاً',
+    'size-30-50': '\u200E30-50 شخصاً',
     'size-50plus': 'أكثر من 50 شخصاً',
     'when-month-msg': 'في شهر {month}',
     'when-later-msg': 'بعد نصف سنة أو أكثر',
@@ -602,6 +603,15 @@ function revealSendButton() {
   if (by > 0) window.scrollBy({ top: by, behavior: prefersReducedMotion() ? 'auto' : 'smooth' });
 }
 
+// A question's top row (back, progress, skip) must not sit under the fixed header
+function keepTopRowVisible() {
+  const top = document.querySelector('.flow-top');
+  const header = document.getElementById('site-header');
+  if (!top) return;
+  const above = top.getBoundingClientRect().top - ((header ? header.getBoundingClientRect().height : 0) + 8);
+  if (above < 0) window.scrollBy({ top: above, behavior: prefersReducedMotion() ? 'auto' : 'smooth' });
+}
+
 function goToStep(step, { via = 'next' } = {}) {
   clearTimeout(advanceTimer);
   if (step === currentStep) return;
@@ -613,11 +623,13 @@ function goToStep(step, { via = 'next' } = {}) {
   currentStep = step;
   if (step === 'ready') returnToReady = false;
   renderStep({ animate, back });
-  const settled = box && animate ? glideStepsHeight(box, fromHeight) : Promise.resolve();
+  // The scroll is measured on the final layout, before the glide starts, so the stamp
+  // lands and the page moves in the same beat and nothing shifts afterwards
+  if (step === 'ready') revealSendButton(); else keepTopRowVisible();
+  if (box && animate) glideStepsHeight(box, fromHeight);
   // Screen readers hear the new question; keyboard users continue from it
   const heading = document.querySelector(`.step[data-step="${step}"] .step-q`);
   if (heading) heading.focus({ preventScroll: true });
-  if (step === 'ready') settled.then(revealSendButton);
   sendBizEvent('levyam.planner.step', { from, to: step, via });
 }
 
@@ -730,9 +742,13 @@ function initTracking() {
 function initHeader() {
   const header = document.getElementById('site-header');
   if (!header) return;
+  const stamp = document.querySelector('.hero-stamp');
   let ticking = false;
   const update = () => {
     header.classList.toggle('is-scrolled', window.scrollY > 24);
+    // the header mark takes over only once the hero's stamp has slid under the header
+    const headerH = header.getBoundingClientRect().height;
+    header.classList.toggle('has-brand', !stamp || stamp.getBoundingClientRect().bottom < headerH);
     ticking = false;
   };
   window.addEventListener('scroll', () => {
@@ -742,14 +758,14 @@ function initHeader() {
 }
 
 // ── Floating WhatsApp button ──────────────────────────────────
-// Hidden while the hero's own buttons or the planner (questions, message, send
-// button) are on screen, so there is never a second WhatsApp button competing
-// with the one the user is about to tap.
+// Hidden while the hero's own buttons or the planner's send button are on screen, so
+// there is never a second WhatsApp button competing with the one the user is about
+// to tap (it sends the same composed message, so it never competes elsewhere).
 function initFloatingButton() {
   const float = document.getElementById('wa-float');
   if (!float || !('IntersectionObserver' in window)) return;
   const visible = new Set();
-  const targets = [document.getElementById('planner'), document.querySelector('.hero-ctas')].filter(Boolean);
+  const targets = [document.getElementById('plan-cta'), document.querySelector('.hero-ctas')].filter(Boolean);
   const io = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
       if (entry.isIntersecting) visible.add(entry.target); else visible.delete(entry.target);
@@ -767,8 +783,6 @@ const desktopMQ = window.matchMedia('(min-width: 1024px)');
 function setPillarOpen(pillar, open) {
   pillar.classList.toggle('is-open', open);
   pillar.querySelectorAll('[aria-controls]').forEach((btn) => btn.setAttribute('aria-expanded', String(open)));
-  const label = pillar.querySelector('.pillar-more-label');
-  if (label) label.textContent = t(open ? 'pillar-less' : 'pillar-more');
 }
 
 function syncPillarLabels() {
@@ -819,6 +833,11 @@ function togglePillar(pillar, { forceOpen = false, source = 'click' } = {}) {
 
   if (desktopMQ.matches) {
     pillars.forEach((p) => setPillarOpen(p, willOpen));
+    // Closing from the bar at the foot of a tall card: the cards collapse upward, so the
+    // section is brought back to the top of the screen instead of scrolling out of sight
+    if (!willOpen && source === 'more') {
+      document.getElementById('pillars').scrollIntoView({ block: 'start', behavior: prefersReducedMotion() ? 'auto' : 'smooth' });
+    }
   } else {
     if (willOpen) closeOthersInPlace(pillar, pillars);
     setPillarOpen(pillar, willOpen);
@@ -838,7 +857,7 @@ function initPillars() {
 
   pillars.forEach((pillar) => {
     pillar.querySelectorAll('.pillar-head, .pillar-more').forEach((btn) => {
-      btn.addEventListener('click', () => togglePillar(pillar));
+      btn.addEventListener('click', () => togglePillar(pillar, { source: btn.classList.contains('pillar-more') ? 'more' : 'head' }));
     });
   });
 

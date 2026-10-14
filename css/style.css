@@ -71,12 +71,20 @@ body {
   overflow-x: hidden;
 }
 
-/* Arabic: Cairo. Only fetched by the browser once this rule matches. */
+/* Arabic: Cairo (fetched once these rules match; the language pill's "عر" always uses
+   it, so that one small face loads for Hebrew visitors too). Cairo carries taller
+   ascenders, diacritics and deep descenders, so Arabic gets more leading throughout. */
 html[lang="ar"] body,
 html[lang="ar"] .btn,
 html[lang="ar"] .choice,
 html[lang="ar"] .lang-btn {
   font-family: 'Cairo', 'Heebo', system-ui, sans-serif;
+}
+html[lang="ar"] {
+  --lh-heading: 1.3;
+  --lh-ui: 1.45;
+  --lh-lead: 1.7;
+  --lh-body: 1.85;
 }
 
 img, video, svg { display: block; max-width: 100%; }
@@ -91,6 +99,12 @@ button { font: inherit; color: inherit; cursor: pointer; }
   outline-offset: 3px;
   border-radius: 4px;
 }
+/* Over the hero video the blue ring would vanish — there it is white */
+.hero :focus-visible,
+.skip-link:focus-visible,
+.site-header:not(.is-scrolled) :focus-visible { outline-color: var(--white); }
+/* No browser tap flash; every control has its own press state below */
+.btn, .lang-btn, .answer, .flow-back, .flow-skip, .flow-restart, .wa-float, .pillar-more { -webkit-tap-highlight-color: transparent; }
 
 .skip-link {
   position: absolute;
@@ -184,7 +198,7 @@ html[lang="ar"] .h2-accent { padding-bottom: 1.5rem; }
   line-height: var(--lh-heading);
   text-align: center;
   white-space: nowrap;
-  transition: filter 0.2s var(--ease), background-color 0.2s var(--ease),
+  transition: filter 0.2s var(--ease), background-color 0.2s var(--ease), border-color 0.2s var(--ease),
               transform 0.2s var(--ease), box-shadow 0.2s var(--ease);
   touch-action: manipulation;
 }
@@ -195,9 +209,13 @@ html[lang="ar"] .h2-accent { padding-bottom: 1.5rem; }
   .btn-wa:hover { filter: brightness(0.95); }
   .btn-ghost:hover { background: rgba(255, 255, 255, 0.18); }
 }
-.btn:active { transform: translateY(0); }
+.btn:active { transform: translateY(0) scale(0.98); }
+.btn-primary:active,
+.btn-wa:active { filter: brightness(0.92); }
 
 .btn-lg { padding: 1rem 2.1rem; font-size: 1.125rem; }
+/* Cairo's heavy descenders pull its labels down; two pixels of padding lift them back to centre */
+html[lang="ar"] .btn-lg { padding-block: calc(1rem - 2px) calc(1rem + 2px); }
 .btn-xl { padding: 1.1rem 2.4rem; font-size: var(--fs-lead); }
 
 /* Orange is the brand's CTA colour; dark text keeps it readable (6.4:1) */
@@ -220,7 +238,7 @@ html[lang="ar"] .h2-accent { padding-bottom: 1.5rem; }
 
 /* compact variant used in the header — desktop only; below 900px the
    floating button is the single WhatsApp entry point */
-.btn-wa-sm { display: none; padding: 0.55rem 1.1rem; font-size: var(--fs-sm); box-shadow: none; }
+.btn-wa-sm { display: none; height: 44px; padding: 0 1.1rem; font-size: var(--fs-sm); box-shadow: none; }  /* the language pill's height */
 @media (min-width: 900px) { .btn-wa-sm { display: inline-flex; } }
 /* Over the hero, the hero's own button is the one orange thing on screen; the
    header's turns orange once the page scrolls (same recipe as .btn-ghost) */
@@ -242,7 +260,10 @@ html[lang="ar"] .h2-accent { padding-bottom: 1.5rem; }
   padding-top: env(safe-area-inset-top, 0px);
   display: flex;
   align-items: center;
-  transition: background-color 0.3s var(--ease), box-shadow 0.3s var(--ease);
+  backdrop-filter: blur(0);
+  -webkit-backdrop-filter: blur(0);
+  transition: background-color 0.3s var(--ease), box-shadow 0.3s var(--ease),
+              backdrop-filter 0.3s var(--ease), -webkit-backdrop-filter 0.3s var(--ease);
 }
 .site-header.is-scrolled {
   background: rgba(255, 247, 234, 0.95);
@@ -259,9 +280,10 @@ html[lang="ar"] .h2-accent { padding-bottom: 1.5rem; }
   gap: 1rem;
 }
 
-/* At the very top the hero's stamp is the logo; the header mark fades in once the page scrolls */
+/* At the very top the hero's stamp is the logo; the header mark fades in once the stamp has
+   scrolled under the header (js/main.js sets .has-brand), so the two are never on screen together */
 .brand { display: block; justify-self: start; transition: opacity 0.3s var(--ease), visibility 0.3s; }
-.site-header:not(.is-scrolled) .brand { opacity: 0; visibility: hidden; }
+.site-header:not(.has-brand) .brand { opacity: 0; visibility: hidden; }
 .brand-logo {
   width: 48px;
   height: 48px;
@@ -282,7 +304,7 @@ html[lang="ar"] .h2-accent { padding-bottom: 1.5rem; }
   text-shadow: 0 1px 8px rgba(0, 0, 0, 0.35);
   padding: 0.25rem 0;
   border-bottom: 2px solid transparent;
-  transition: color 0.3s var(--ease), border-color 0.2s var(--ease);
+  transition: color 0.3s var(--ease), text-shadow 0.3s var(--ease), border-color 0.2s var(--ease);
 }
 @media (hover: hover) { .nav a:hover { border-color: var(--orange); } }
 .is-scrolled .nav a { color: var(--ink); text-shadow: none; }
@@ -300,7 +322,9 @@ html[lang="ar"] .h2-accent { padding-bottom: 1.5rem; }
   -webkit-backdrop-filter: blur(6px);
   transition: background-color 0.3s var(--ease);
 }
-/* Each half is a full 44px tap target */
+/* Each half is a full 44px tap target; each label in its own typeface, whatever the page language */
+.lang-btn[lang="he"] { font-family: 'Heebo', system-ui, sans-serif; }
+.lang-btn[lang="ar"] { font-family: 'Cairo', system-ui, sans-serif; padding-block: 0.4rem 0.6rem; }   /* Cairo sits low in a line box; lift it */
 .lang-btn {
   min-width: 44px;
   min-height: 38px;
@@ -315,8 +339,12 @@ html[lang="ar"] .h2-accent { padding-bottom: 1.5rem; }
   transition: background-color 0.2s var(--ease), color 0.2s var(--ease);
 }
 .lang-btn[aria-pressed="true"] { background: var(--orange); color: var(--ink); }
+.lang-btn:not([aria-pressed="true"]):active { background: rgba(255, 255, 255, 0.3); }
+@media (hover: hover) { .lang-btn:not([aria-pressed="true"]):hover { background: rgba(255, 255, 255, 0.3); } }
 .is-scrolled .lang-switch { background: var(--blue-soft); }
 .is-scrolled .lang-btn { color: var(--ink); }
+.is-scrolled .lang-btn:not([aria-pressed="true"]):active { background: rgba(44, 146, 191, 0.2); }
+@media (hover: hover) { .is-scrolled .lang-btn:not([aria-pressed="true"]):hover { background: rgba(44, 146, 191, 0.2); } }
 
 /* ── Hero ────────────────────────────────────── */
 .hero {
@@ -426,8 +454,8 @@ html[lang="ar"] .h2-accent { padding-bottom: 1.5rem; }
 }
 /* Tall tablets: the hero stops at 56rem so the cream intro shows on the first screen */
 @media (min-width: 768px) and (min-height: 1000px) { .hero { min-height: min(100svh, 56rem); } }
-/* Cairo runs wider than Heebo: a touch smaller so each sentence stays on one line at phone width */
-html[lang="ar"] .hero h1 { font-size: clamp(1.9rem, 2.5vw + 1.4rem, 3.5rem); }
+/* Cairo runs wider than Heebo: on phones the headline scales with the width so each sentence keeps one line */
+html[lang="ar"] .hero h1 { font-size: min(var(--fs-h1), 8.9vw); }
 
 /* Soft curve into the cream section below (the intro) */
 .hero-curve {
@@ -534,6 +562,8 @@ html[lang="ar"] .hero h1 { font-size: clamp(1.9rem, 2.5vw + 1.4rem, 3.5rem); }
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
 }
+.pillar-head:active .pillar-chevron,
+.pillar-more:active .pillar-chevron { background-color: var(--blue-soft); }
 .pillar-head:focus-visible,
 .pillar-more:focus-visible { outline-offset: -3px; }
 
@@ -587,14 +617,14 @@ html[lang="ar"] .hero h1 { font-size: clamp(1.9rem, 2.5vw + 1.4rem, 3.5rem); }
 .pillar-panel {
   display: grid;
   grid-template-rows: 0fr;
-  transition: grid-template-rows 0.35s var(--ease);
+  transition: grid-template-rows 0.3s var(--ease);
 }
 .pillar.is-open .pillar-panel { grid-template-rows: 1fr; }
 .pillar-panel-inner {
   min-height: 0;
   overflow: hidden;
   visibility: hidden;
-  transition: visibility 0s linear 0.35s;
+  transition: visibility 0s linear 0.3s;
 }
 .pillar.is-open .pillar-panel-inner { visibility: visible; transition-delay: 0s; }
 /* Set by JS for one frame when an item above the tapped one closes instantly */
@@ -647,8 +677,14 @@ html[lang="ar"] .hero h1 { font-size: clamp(1.9rem, 2.5vw + 1.4rem, 3.5rem); }
   background: var(--blue) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M5.5 10.5 L8.5 13.5 L14.5 7' fill='none' stroke='%23fff' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / 100% no-repeat;
 }
 
-/* Desktop-only "מידע נוסף / סגור" bar */
+/* Desktop-only "מידע נוסף / סגור" bar. Both labels are rendered, stacked, so the
+   chevron never slides when the words swap */
 .pillar-more { display: none; }
+.pillar-more-labels { display: grid; justify-items: center; }
+.pillar-more-labels > span { grid-area: 1 / 1; }
+.pillar-less-label,
+.pillar.is-open .pillar-more-label { visibility: hidden; }
+.pillar.is-open .pillar-less-label { visibility: visible; }
 
 /* Tablets in list form: two columns, where every bullet still fits one line */
 @media (min-width: 900px) and (max-width: 1023px) {
@@ -676,7 +712,8 @@ html[lang="ar"] .hero h1 { font-size: clamp(1.9rem, 2.5vw + 1.4rem, 3.5rem); }
     overflow: hidden;
     transition: transform 0.2s var(--ease), box-shadow 0.2s var(--ease);
   }
-  @media (hover: hover) { .pillar:hover { transform: translateY(-3px); box-shadow: var(--shadow); } }
+  /* A closed card lifts under the pointer; an open one is for reading and stays put */
+  @media (hover: hover) { .pillar:not(.is-open):hover { transform: translateY(-3px); box-shadow: var(--shadow); } }
 
   .pillar-head {
     flex-direction: column;
@@ -726,6 +763,7 @@ html[lang="ar"] .hero h1 { font-size: clamp(1.9rem, 2.5vw + 1.4rem, 3.5rem); }
     transition: background-color 0.15s var(--ease);
   }
   @media (hover: hover) { .pillar-more:hover { background: var(--blue-soft); } }
+  html[lang="ar"] .pillar-more { padding-block: calc(0.75rem - 2px) calc(0.75rem + 2px); }
   .pillar-more .pillar-chevron { width: 26px; height: 26px; background-size: 13px; }
 }
 
@@ -735,6 +773,7 @@ html[lang="ar"] .hero h1 { font-size: clamp(1.9rem, 2.5vw + 1.4rem, 3.5rem); }
    the other, the two titles on one line. */
 .fit-layout {
   display: grid;
+  max-width: 1040px;   /* the column the cards above and the planner below share */
   justify-items: center;
   text-align: center;
 }
@@ -770,25 +809,26 @@ html[lang="ar"] .hero h1 { font-size: clamp(1.9rem, 2.5vw + 1.4rem, 3.5rem); }
 }
 
 @media (min-width: 900px) {
+  /* The two titles share one row, on one baseline; the text and the list start on one line */
   .fit-layout {
     grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
     grid-template-rows: auto auto 1fr;
     grid-template-areas:
-      "head types"
-      "text types"
-      "cta  types";
+      "head  thead"
+      "text  types"
+      "cta   types";
     column-gap: clamp(3rem, 7vw, 6.5rem);
     justify-items: stretch;
     align-items: start;
     text-align: start;
   }
-  .fit-h2 { grid-area: head; }
+  .fit-h2 { grid-area: head; align-self: baseline; }
   .fit-h2.h2-accent::after { margin-inline: 0 auto; }  /* the wave starts under the title */
   .fit-text { grid-area: text; }
   .fit-cta { grid-area: cta; }
-  .fit-types { grid-area: types; max-width: none; margin-top: 0; }
-  .fit-types-title { padding-top: 0.8rem; }   /* its baseline sits on the H2's baseline */
-  .fit-list { grid-template-columns: minmax(0, 1fr); }
+  .fit-types { display: contents; }   /* the title and the list take their own grid areas */
+  .fit-types-title { grid-area: thead; align-self: baseline; margin-bottom: 0; }
+  .fit-list { grid-area: types; grid-template-columns: minmax(0, 1fr); }
 }
 
 /* One type: the brand icon in a white circle and the name, on a hairline — a
@@ -918,6 +958,7 @@ html[lang="ar"] .hero h1 { font-size: clamp(1.9rem, 2.5vw + 1.4rem, 3.5rem); }
   transition: background-color 0.15s var(--ease), border-color 0.15s var(--ease);
 }
 .flow-back svg { width: 18px; height: 18px; }
+.flow-back:active { border-color: var(--blue); background: var(--blue-soft); }
 @media (hover: hover) { .flow-back:hover { border-color: var(--blue); background: var(--blue-soft); } }
 /* On the first question the back button keeps its place, faded (the row never jumps) */
 .planner[data-step="event"] .flow-back { opacity: 0.3; pointer-events: none; }
@@ -938,7 +979,7 @@ html[lang="ar"] .hero h1 { font-size: clamp(1.9rem, 2.5vw + 1.4rem, 3.5rem); }
   background: var(--orange);
   transform: scaleX(0);
   transform-origin: right center;   /* fills from the start of the line (RTL) */
-  transition: transform 0.45s var(--ease);
+  transition: transform 0.4s var(--ease);
 }
 .flow-progress span.is-done::after { transform: scaleX(1); }
 
@@ -967,9 +1008,13 @@ html[lang="ar"] .hero h1 { font-size: clamp(1.9rem, 2.5vw + 1.4rem, 3.5rem); }
   text-decoration: underline;
   text-decoration-color: var(--line);
   text-decoration-thickness: 2px;
-  text-underline-offset: 5px;
+  text-underline-offset: 0.33em;
   touch-action: manipulation;
 }
+html[lang="ar"] .flow-skip,
+html[lang="ar"] .flow-restart { text-underline-offset: 0.6em; }   /* under Cairo's tails, not through them */
+.flow-skip:active,
+.flow-restart:active { color: var(--ink); text-decoration-color: var(--orange); }
 @media (hover: hover) {
   .flow-skip:hover,
   .flow-restart:hover { color: var(--ink); text-decoration-color: var(--orange); }
@@ -984,7 +1029,7 @@ html[lang="ar"] .hero h1 { font-size: clamp(1.9rem, 2.5vw + 1.4rem, 3.5rem); }
    under the answers (js/main.js glides the height between steps). From 1024px
    all steps share one grid cell: the card keeps the height of the tallest
    one and the message beside it never moves. */
-.flow-steps { flex: 1; display: grid; }
+.flow-steps { flex: 1 1 auto; display: grid; }   /* basis auto: js/main.js animates this box's height between steps */
 .step {
   grid-area: 1 / 1;
   display: flex;
@@ -1037,17 +1082,17 @@ html[lang="ar"] .hero h1 { font-size: clamp(1.9rem, 2.5vw + 1.4rem, 3.5rem); }
 .choices-comp { grid-auto-rows: 1fr; }
 .choices-event,
 .choices-size { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-/* Months three to a row (a quarter per row) at every width; the two fixed answers share the last row */
-.choices-when { grid-template-columns: repeat(6, minmax(0, 1fr)); }
-.choices-when .choice { grid-column: span 2; }
-.choices-when .choice-wide { grid-column: span 3; }
-.choices-comp { grid-template-columns: minmax(0, 1fr); }
-/* Narrow phones: two months to a row (a month name is never cut); the fixed answers take a full row */
-@media (max-width: 359px) {
-  .choices-when { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .choices-when .choice { grid-column: auto; }
-  .choices-when .choice-wide { grid-column: 1 / -1; min-height: 3.5rem; }
+/* Months: two to a row on phones (room for the check badge beside the name), three to a
+   row — a quarter — from 600px; the two fixed answers take a full row on phones and share
+   the last row from 600px */
+.choices-when { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.choices-when .choice-wide { grid-column: 1 / -1; }
+@media (min-width: 600px) {
+  .choices-when { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+  .choices-when .choice { grid-column: span 2; }
+  .choices-when .choice-wide { grid-column: span 3; }
 }
+.choices-comp { grid-template-columns: minmax(0, 1fr); }
 @media (min-width: 600px) {
   .choices-event,
   .choices-comp { grid-template-columns: repeat(3, minmax(0, 1fr)); }
@@ -1107,6 +1152,7 @@ html[lang="ar"] .hero h1 { font-size: clamp(1.9rem, 2.5vw + 1.4rem, 3.5rem); }
 
 /* Brand icon in a cream circle; it turns white and grows a little when chosen */
 .choice-icon {
+  flex: none;
   display: grid;
   place-items: center;
   width: 42px;
@@ -1136,6 +1182,7 @@ html[lang="ar"] .hero h1 { font-size: clamp(1.9rem, 2.5vw + 1.4rem, 3.5rem); }
 .choice[aria-pressed="true"] .choice-dots i { background: var(--white); }
 
 /* Months — and the two fixed answers speak with the same voice, at the same height */
+.choices-when { grid-auto-rows: 1fr; }
 .choices-when .choice { min-height: 4.25rem; }
 .choice-month { gap: 0.1rem; padding-block: 0.7rem; }
 .choice-month .choice-label,
@@ -1172,7 +1219,7 @@ html[lang="ar"] .hero h1 { font-size: clamp(1.9rem, 2.5vw + 1.4rem, 3.5rem); }
 /* ── Ready ── */
 .step-ready { align-items: center; justify-content: center; gap: 0.6rem; text-align: center; }
 .ready-stamp { width: 64px; height: auto; transform: rotate(-8deg); }
-.planner.is-ready .ready-stamp { animation: stamp-in 0.55s cubic-bezier(0.2, 1.4, 0.4, 1) 0.05s backwards; }  /* keyframes: see .hero-stamp */
+.planner.is-ready .ready-stamp { animation: stamp-in 0.65s cubic-bezier(0.2, 1.4, 0.4, 1) 0.05s backwards; }  /* the hero's landing, same curve and length */
 .step-ready .step-q { font-size: clamp(1.6rem, 1.2vw + 1.25rem, 2.1rem); }
 .ready-p { margin: 0; line-height: var(--lh-lead); color: var(--ink-soft); text-wrap: balance; }
 .answers {
@@ -1197,6 +1244,7 @@ html[lang="ar"] .hero h1 { font-size: clamp(1.9rem, 2.5vw + 1.4rem, 3.5rem); }
   touch-action: manipulation;
   transition: border-color 0.15s var(--ease), background-color 0.15s var(--ease);
 }
+html[lang="ar"] .answer { padding-inline: 0.7rem; }   /* the wider Arabic answers still pair up on a 375px row */
 /* Pencil: tap an answer to change it */
 .answer::after {
   content: '';
@@ -1209,6 +1257,7 @@ html[lang="ar"] .hero h1 { font-size: clamp(1.9rem, 2.5vw + 1.4rem, 3.5rem); }
 .answer.is-empty::after {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M8 3 V13 M3 8 H13' fill='none' stroke='%232c92bf' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");
 }
+.answer:active { border-color: var(--blue); background: var(--blue-soft); }
 @media (hover: hover) { .answer:hover { border-color: var(--blue); background: var(--blue-soft); } }
 .step.is-in .answers li { animation: choice-in 0.4s var(--ease) backwards; }
 .step.is-in .answers li:nth-child(2) { animation-delay: 0.05s; }
@@ -1261,6 +1310,10 @@ html[lang="ar"] .hero h1 { font-size: clamp(1.9rem, 2.5vw + 1.4rem, 3.5rem); }
   -webkit-box-decoration-break: clone;
   box-decoration-break: clone;
 }
+/* Cairo's content area is taller than its line, so the band is shortened to stay on the line */
+html[lang="ar"] .chat-text .sel {
+  background-image: linear-gradient(transparent 55%, rgba(244, 152, 52, 0.55) 55%, rgba(244, 152, 52, 0.55) 91%, transparent 91%);
+}
 .chat-text .sel.is-new { animation: marker-draw 0.6s var(--ease) backwards; }
 @keyframes marker-draw {
   from { background-size: 0% 100%; }
@@ -1279,6 +1332,9 @@ html[lang="ar"] .hero h1 { font-size: clamp(1.9rem, 2.5vw + 1.4rem, 3.5rem); }
   background: var(--white);
   box-shadow: none;
 }
+/* While it waits, a press or hover warms it with the orange tint instead of greying it */
+.planner.is-enhanced:not(.is-ready) .planner-cta:active { filter: none; background: var(--orange-soft); }
+@media (hover: hover) { .planner.is-enhanced:not(.is-ready) .planner-cta:hover { filter: none; background: var(--orange-soft); } }
 .planner.is-ready .planner-cta { animation: cta-glow 1.3s var(--ease) 0.45s 2; }
 @keyframes cta-glow {
   from { box-shadow: 0 6px 18px rgba(244, 152, 52, 0.35), 0 0 0 0 rgba(244, 152, 52, 0.6); }
@@ -1303,12 +1359,12 @@ html[lang="ar"] .hero h1 { font-size: clamp(1.9rem, 2.5vw + 1.4rem, 3.5rem); }
   color: var(--ink);
   font-weight: 700;
   box-shadow: 0 8px 24px rgba(244, 152, 52, 0.45);
-  transition: transform 0.25s var(--ease), opacity 0.25s var(--ease), filter 0.2s var(--ease);
+  transition: transform 0.3s var(--ease), opacity 0.3s var(--ease), filter 0.2s var(--ease);
 }
 .wa-float .wa-icon { width: 28px; height: 28px; }
 .wa-float-label { display: none; }
 @media (min-width: 768px) {
-  .wa-float { width: auto; padding: 0 1.1rem 0 1.4rem; }
+  .wa-float { width: auto; padding-inline: 1.1rem 1.4rem; }   /* the icon side a little tighter */
   .wa-float-label { display: inline; }
 }
 @media (hover: hover) { .wa-float:hover { filter: brightness(0.95); transform: translateY(-2px); } }
