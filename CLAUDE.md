@@ -97,8 +97,9 @@ logos, footer contact details. Switch on by removing `hidden` once real content 
    in a white circle, the name, a hairline between rows; they rise in on first view) + CTA. A list to read,
    not buttons: Or asked (2026-10-13) that nothing here touches the planner, and the rows deliberately
    don't look like the planner's tiles. Phones: one column, full-width button; 600px: two columns in the
-   text's 680px measure; from 900px the text and the button sit on one side and the list on the other,
-   "מתאים במיוחד ל:" at h3 size with its baseline on the H2's, and the button on the last row's centre
+   text's 680px measure; from 900px the title is centred over both columns like every section title (Or,
+   2026-10-14), the text and the button sit on one side and "מתאים במיוחד ל:" (h3 size) with the list on
+   the other, the text's first line on the list title's baseline, and the button on the last row's centre
    line (Or, 2026-10-14): its box is one row tall (`--fit-icon` + 2 × `--fit-row-pad`) at the bottom of
    its column. CTA "בואו ליצור את היום שלכם!" (the "!" by Or, 2026-10-14).
 6. Impact `#impact` — full-bleed photo, short text

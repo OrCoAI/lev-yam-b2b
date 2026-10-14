@@ -880,12 +880,14 @@ html[lang="ar"] .hero h1 { font-size: min(var(--fs-h1), 8.9vw); }
 }
 
 @media (min-width: 900px) {
-  /* The two titles share one row, on one baseline; the text and the list start on one line */
+  /* The title is centred over both columns, like every section title (Or, 2026-10-14). Under it,
+     the text and the button on one side, "מתאים במיוחד ל:" and the list on the other; the text's
+     first line and the list's title share one baseline */
   .fit-layout {
     grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
     grid-template-rows: auto auto 1fr;
     grid-template-areas:
-      "head  thead"
+      "head  head"
       "text  types"
       "cta   types";
     column-gap: clamp(3rem, 7vw, 6.5rem);
@@ -893,13 +895,11 @@ html[lang="ar"] .hero h1 { font-size: min(var(--fs-h1), 8.9vw); }
     align-items: start;
     text-align: start;
   }
-  .fit-h2 { grid-area: head; align-self: baseline; }
-  .fit-h2.h2-accent::after { margin-inline: 0 auto; }  /* the wave starts under the title */
-  .fit-text { grid-area: text; }
+  .fit-h2 { grid-area: head; text-align: center; }
+  .fit-text { grid-area: text; align-self: baseline; }
   .fit-cta { grid-area: cta; }
-  .fit-types { display: contents; }   /* the title and the list take their own grid areas */
-  .fit-types-title { grid-area: thead; align-self: baseline; align-self: last baseline; margin-bottom: 0; }   /* the H2 may run two lines (Arabic) */
-  .fit-list { grid-area: types; grid-template-columns: minmax(0, 1fr); }
+  .fit-types { grid-area: types; align-self: baseline; max-width: none; margin-top: 0; }
+  .fit-list { grid-template-columns: minmax(0, 1fr); }
   /* The button sits on the last row's centre line (Or, 2026-10-14): its box is one row tall
      and ends where the list ends; the text above keeps at least a title's gap from it */
   .fit-cta {
