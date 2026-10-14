@@ -45,7 +45,7 @@
   --lh-lead: 1.5;
   --lh-body: 1.65;
   /* Spacing — the same gap for the same relationship in every section */
-  --space-section: clamp(3rem, 6vw, 5rem);   /* a section's edge → its content, top and bottom (48px on phones → 80px wide) */
+  --space-section: clamp(2.5rem, 5vw, 4rem);   /* a section's edge → its content, top and bottom (40px on phones → 64px wide) */
   --space-title: 1.5rem;   /* section title (and its wave) → the text under it */
   --space-object: 2.5rem;   /* section text → the thing it introduces: a CTA, the cards, the list, the planner */
   --pad-card: 1.15rem;      /* inner gutter of cards and panels on phones */
@@ -385,17 +385,76 @@ html[lang="ar"] .btn-lg { padding-block: calc(1rem - 2px) calc(1rem + 2px); }
     rgba(0, 0, 0, 0.62) 100%);
 }
 .hero-content { max-width: 780px; }
-/* The brand stamp opens the page: it lands like a stamp on a letter.
-   The same stamp lands again when the planner's message is ready. */
-.hero-stamp {
+/* The brand stamp opens the page. Lev Yam is the heart of the sea, and the
+   stamp is a sun over an island: it surfaces out of a soft blur, a warm light
+   blooms behind its sun and keeps a slow heartbeat (lub-dub, rest), and now
+   and then a glint of sun runs across the paper in reading direction (clipped
+   to the stamp's zig-zag edge). Without motion it rests in the glow, unmoving.
+   The planner's ready step still lands the stamp like a stamp on a letter.
+   The wrapper stays untransformed on purpose: that keeps the light in the
+   hero's own layer, where it adds to the video like light (screen) instead of
+   mixing with it like paint; the tilt and the entrance live on the stamp. */
+.hero-mark {
+  position: relative;
   width: 84px;
-  height: auto;
   margin: 0 auto 0.6rem;
-  transform: rotate(-8deg);
-  filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.3));
-  animation: stamp-in 0.65s cubic-bezier(0.2, 1.4, 0.4, 1) 0.3s backwards;
 }
-@media (min-width: 900px) { .hero-stamp { width: 104px; } }
+@media (min-width: 900px) { .hero-mark { width: 104px; } }
+.hero-stamp {
+  display: block;
+  width: 100%;
+  height: auto;
+  rotate: -8deg;
+  filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.3));
+  animation: mark-in 1s cubic-bezier(0.22, 1, 0.36, 1) 0.2s backwards;
+}
+/* The light: a circle 2.4 stamps wide, centred on the sun (31% down the stamp) */
+.hero-mark::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  inset-inline: -70%;
+  top: -54%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(255, 247, 234, 0.5), rgba(244, 152, 52, 0.6) 30%, rgba(244, 152, 52, 0.22) 62%, rgba(244, 152, 52, 0) 100%);
+  opacity: 0.8;
+  mix-blend-mode: screen;
+  pointer-events: none;
+  animation: glow-bloom 1.6s var(--ease) 0.55s backwards, heartbeat 5.2s ease-in-out 2.15s infinite;
+}
+/* The glint: a slanted band of light that crosses the stamp, right to left */
+.hero-mark::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  rotate: -8deg;   /* the stamp's tilt */
+  background: linear-gradient(110deg, rgba(255, 255, 255, 0) 40%, rgba(255, 255, 255, 0.75) 50%, rgba(255, 255, 255, 0) 60%) 100% 0 / 300% 100% no-repeat;
+  -webkit-mask: url('../content/brand/logo-stamp-320.png') center / 100% 100% no-repeat;
+  mask: url('../content/brand/logo-stamp-320.png') center / 100% 100% no-repeat;
+  pointer-events: none;
+  animation: glint 7.5s ease-in-out 1.25s infinite;
+}
+@keyframes mark-in {
+  from { opacity: 0; translate: 0 14px; scale: 0.88; rotate: -16deg; filter: blur(8px); }
+  to { opacity: 1; translate: 0 0; scale: 1; rotate: -8deg; filter: blur(0); }
+}
+@keyframes glow-bloom {
+  0% { opacity: 0; scale: 0.35; }
+  60% { opacity: 1; scale: 1.08; }
+  100% { opacity: 0.8; scale: 1; }
+}
+/* Lub-dub, then rest: the second beat a little softer than the first */
+@keyframes heartbeat {
+  0%, 38%, 100% { opacity: 0.8; scale: 1; }
+  8% { opacity: 1; scale: 1.08; }
+  16% { opacity: 0.84; scale: 1.01; }
+  25% { opacity: 0.96; scale: 1.05; }
+}
+@keyframes glint {
+  0% { background-position: 0% 0; }
+  17%, 100% { background-position: 100% 0; }
+}
 @keyframes stamp-in {
   0% { opacity: 0; transform: rotate(-26deg) scale(1.9); }
   60% { opacity: 1; }
@@ -444,7 +503,7 @@ html[lang="ar"] .btn-lg { padding-block: calc(1rem - 2px) calc(1rem + 2px); }
 /* Short phones (667px and under): a tighter stack keeps both buttons above the fold */
 @media (max-width: 599px) and (max-height: 740px) {
   .hero { padding-top: calc(var(--header-h) + env(safe-area-inset-top, 0px) + 1.25rem); padding-bottom: 4.5rem; }
-  .hero-stamp { width: 68px; margin-bottom: 0.35rem; }
+  .hero-mark { width: 68px; margin-bottom: 0.35rem; }
   .hero h1 { margin: 0.35rem 0 0.75rem; }
   .hero-lead { margin-top: 0.85rem; }
   .hero-ctas { margin-top: 1.5rem; }
@@ -452,7 +511,7 @@ html[lang="ar"] .btn-lg { padding-block: calc(1rem - 2px) calc(1rem + 2px); }
 /* Landscape phones */
 @media (max-height: 480px) and (orientation: landscape) {
   .hero { padding-top: calc(var(--header-h) + 0.75rem); padding-bottom: 4rem; }
-  .hero-stamp { width: 56px; margin-bottom: 0.25rem; }
+  .hero-mark { width: 56px; margin-bottom: 0.25rem; }
   .hero h1 { margin: 0.25rem 0 0.5rem; }
   .hero-ctas { margin-top: 1rem; }
 }
@@ -514,7 +573,7 @@ html[lang="ar"] .hero h1 { font-size: min(var(--fs-h1), 8.9vw); }
 
 /* ── Intro — the two opening sentences, right under the hero ── */
 /* The hero's curve already hands some cream (≈ 26px on average) to the top of the section */
-.intro { padding-block: clamp(2rem, 4vw, 3.25rem) var(--space-section); }
+.intro { padding-block: clamp(1.75rem, 3.5vw, 2.75rem) var(--space-section); }
 .lede {
   max-width: 700px;   /* ≈ 72 characters of the lead size */
   margin: 0 auto;
@@ -841,16 +900,26 @@ html[lang="ar"] .hero h1 { font-size: min(var(--fs-h1), 8.9vw); }
   .fit-types { display: contents; }   /* the title and the list take their own grid areas */
   .fit-types-title { grid-area: thead; align-self: baseline; align-self: last baseline; margin-bottom: 0; }   /* the H2 may run two lines (Arabic) */
   .fit-list { grid-area: types; grid-template-columns: minmax(0, 1fr); }
-  .fit-item:last-child { padding-bottom: 0; }   /* no hairline under the last row, so no space for one: the section ends on the same gap as the others */
+  /* The button sits on the last row's centre line (Or, 2026-10-14): its box is one row tall
+     and ends where the list ends; the text above keeps at least a title's gap from it */
+  .fit-cta {
+    align-self: end;
+    display: flex;
+    align-items: center;
+    min-height: calc(var(--fit-icon) + 2 * var(--fit-row-pad));
+    margin-top: var(--space-title);
+  }
 }
 
 /* One type: the brand icon in a white circle and the name, on a hairline — a
    list to read, not buttons to press (Or, 2026-10-13) */
+/* One row of the list: the icon circle and the padding around it (the button's box on desktop is one row tall) */
+.fit-layout { --fit-icon: 44px; --fit-row-pad: 0.55rem; }
 .fit-item {
   display: flex;
   align-items: center;
   gap: 0.85rem;
-  padding: 0.55rem 0;
+  padding: var(--fit-row-pad) 0;
   border-bottom: 1px solid var(--line);
   font-size: var(--fs-md);
   font-weight: 700;
@@ -861,8 +930,8 @@ html[lang="ar"] .hero h1 { font-size: min(var(--fs-h1), 8.9vw); }
   flex: none;
   display: grid;
   place-items: center;
-  width: 44px;
-  height: 44px;
+  width: var(--fit-icon);
+  height: var(--fit-icon);
   border-radius: 50%;
   background: var(--white);
 }
@@ -938,8 +1007,8 @@ html[lang="ar"] .hero h1 { font-size: min(var(--fs-h1), 8.9vw); }
   overflow: hidden;
 }
 .planner.is-enhanced { display: grid; }
-/* Side by side from the width where the answer tiles keep one-line labels */
-@media (min-width: 1024px) {
+/* The message beside the questions from 900px (Or, 2026-10-14: the message on the side, not under) */
+@media (min-width: 900px) {
   .planner.is-enhanced { grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); }
 }
 
@@ -1038,8 +1107,8 @@ html[lang="ar"] .flow-restart { padding-block: calc(0.5rem - 2px) calc(0.5rem + 
 .planner[data-step="ready"] .flow-skip { display: none; }
 .planner[data-step="ready"] .flow-restart { display: inline-flex; align-items: center; }
 
-/* Below 1024px only the current step takes room, so the message sits right
-   under the answers (js/main.js glides the height between steps). From 1024px
+/* Below 900px only the current step takes room, so the message sits right
+   under the answers (js/main.js glides the height between steps). From 900px
    all steps share one grid cell: the card keeps the height of the tallest
    one and the message beside it never moves. */
 .flow-steps { flex: 1 1 auto; display: grid; }   /* basis auto: js/main.js animates this box's height between steps */
@@ -1051,7 +1120,7 @@ html[lang="ar"] .flow-restart { padding-block: calc(0.5rem - 2px) calc(0.5rem + 
   min-width: 0;
 }
 .planner.is-enhanced .step:not(.is-active) { display: none; }
-@media (min-width: 1024px) {
+@media (min-width: 900px) {
   .planner.is-enhanced .step:not(.is-active) { display: flex; visibility: hidden; }
 }
 .step.is-in { animation: step-in 0.4s var(--ease) backwards; }
@@ -1240,7 +1309,7 @@ html[lang="ar"] .step-q { padding-bottom: 0.25rem; }   /* Cairo's descenders rea
 /* ── Ready ── */
 .step-ready { align-items: center; justify-content: center; gap: 0.6rem; text-align: center; }
 .ready-stamp { width: 64px; height: auto; transform: rotate(-8deg); }
-.planner.is-ready .ready-stamp { animation: stamp-in 0.65s cubic-bezier(0.2, 1.4, 0.4, 1) 0.05s backwards; }  /* the hero's landing, same curve and length */
+.planner.is-ready .ready-stamp { animation: stamp-in 0.65s cubic-bezier(0.2, 1.4, 0.4, 1) 0.05s backwards; }  /* lands like a stamp on a letter: the message is sealed */
 .step-ready .step-q { font-size: var(--fs-ready); }
 .ready-p { margin: 0; line-height: var(--lh-lead); color: var(--ink-soft); text-wrap: balance; }
 .answers {
@@ -1295,10 +1364,8 @@ html[lang="ar"] .answer { padding-inline: 0.7rem; }   /* the wider Arabic answer
   background: var(--cream);
 }
 @media (min-width: 600px) { .msg { padding: 1.75rem 2rem 2rem; gap: 1.25rem; } }
-@media (min-width: 1024px) {
-  .msg { padding: 2.25rem 2.5rem 2.5rem; }
-  .msg-label { min-height: 44px; }   /* its centre line is the top row's centre line */
-}
+@media (min-width: 900px) { .msg-label { min-height: 44px; } }   /* its centre line is the top row's centre line */
+@media (min-width: 1024px) { .msg { padding: 2.25rem 2.5rem 2.5rem; } }
 
 .msg-label {
   display: flex;

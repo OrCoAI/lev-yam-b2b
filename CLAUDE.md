@@ -63,13 +63,18 @@ logos, footer contact details. Switch on by removing `hidden` once real content 
    The nav sits on the page's centre line (grid 1fr auto 1fr). Over the hero the WhatsApp button is a white
    outline (the hero's own button is the one orange thing on the first screen); it turns orange once scrolled.
    The language pill is dark glass so its white label reads on any video frame; each half is a 44px target.
-1. Hero `#hero` — the brand stamp (lands on load; the place-name eyebrow was removed by Or), H1
+1. Hero `#hero` — the brand stamp (the place-name eyebrow was removed by Or), H1
    "יוצאים מהשגרה. נפגשים אחרת.", subtitle, lead with "לב ים" bold (as in the doc), CTAs
    "בואו נתכנן את היום שלכם!" → `#plan` / "גלו את לב ים" → `#intro`; vertical video on all screens.
    The two H1 sentences are flex items: one line when both fit, otherwise stacked and centred. On short
    phones (≤740px tall) the stack tightens so both buttons stay above the fold; the floating WhatsApp
    button hides while the hero buttons are on screen. A soft dark band at the top of the video keeps the
-   white header legible.
+   white header legible. The stamp (my design, Or asked for a fade/glow, 2026-10-14): it surfaces out of a
+   soft blur, a warm light blooms behind its sun and keeps a slow heartbeat (לב — lub-dub, rest, every
+   5.2s), and a glint of sun crosses it right to left every 7.5s, clipped to the zig-zag edge by a mask of
+   the same PNG. The light is `.hero-mark::before` with `mix-blend-mode: screen`; `.hero-mark` must stay
+   untransformed (tilt and entrance live on the `img`), or the light mixes with the video like paint
+   instead of adding to it like light. With reduced motion it rests in a still glow.
 2. Facts strip `#facts` — hidden until data
 3. Intro `#intro` — the two opening sentences ("מקום לצאת מהשגרה…", "בין אם אתם מתכננים…") on cream,
    right under the hero. The "why" section that followed them (H2, story, quote, photo) was removed by Or
@@ -93,7 +98,9 @@ logos, footer contact details. Switch on by removing `hidden` once real content 
    not buttons: Or asked (2026-10-13) that nothing here touches the planner, and the rows deliberately
    don't look like the planner's tiles. Phones: one column, full-width button; 600px: two columns in the
    text's 680px measure; from 900px the text and the button sit on one side and the list on the other,
-   "מתאים במיוחד ל:" at h3 size with its baseline on the H2's.
+   "מתאים במיוחד ל:" at h3 size with its baseline on the H2's, and the button on the last row's centre
+   line (Or, 2026-10-14): its box is one row tall (`--fit-icon` + 2 × `--fit-row-pad`) at the bottom of
+   its column. CTA "בואו ליצור את היום שלכם!" (the "!" by Or, 2026-10-14).
 6. Impact `#impact` — full-bleed photo, short text
 7. Plan `#plan` — the finale: blue full-bleed section, one white card in two parts (side by side from
    900px, stacked below): the questions and the cream message panel. Four questions, one at a time,
@@ -103,9 +110,11 @@ logos, footer contact details. Switch on by removing `hidden` once real content 
    check badge sits in the tile's bottom corner so it never covers a month's name; the narrowest phones
    get two months a row) → what to include (several; "המשך"). The message is `text-wrap: balance`, and
    the venue name and the closing sentence are kept on one line in the preview (never a lone word). Side by
-   side from 1024px (stacked below: the tiles need the width; the box glides between step heights —
+   side from 900px — Or prefers the message beside the questions (2026-10-14; the polish had moved it to
+   1024px, and Or saw it drop under). Stacked below 900, where the box glides between step heights —
    `.flow-steps` keeps `flex: 1 1 auto`, a `0%` basis would silently disable the animation).
-   Then a ready step: the brand stamp lands and the answers show as pills that can be changed.
+   Then a ready step: the brand stamp lands like a stamp on a letter (the message is sealed) and the
+   answers show as pills that can be changed.
    The message rewrites itself with every answer (new fragment drawn in orange marker; the message is
    regular weight, the chosen fragments bold; "15-30" is wrapped so it never breaks at the hyphen). The
    send button follows the message and stays white until the ready step, then turns orange; it works at
@@ -137,9 +146,9 @@ One WhatsApp entry point per viewport: header button on desktop, floating button
 - **No CSS framework.** We own the layout.
 - **One type scale, one spacing scale** (2026-10-14 polish). Tokens on `:root` in `css/style.css`:
   `--fs-xs/sm/md/lead/h3/h2/h1` (one size per role; leads and headings are fluid), `--lh-heading/ui/lead/body`
-  (1.2 / 1.35 / 1.5 / 1.65), `--space-section` (a section's edge → its content, top and bottom, 48px on phones →
-  80px wide — every section uses it; only the intro's top is smaller, because the hero's wave already adds ≈ 26px of
-  cream; tightened ~20% by Or, 2026-10-14), `--space-title` (title → text, 1.5rem) and `--space-object` (text → the thing it
+  (1.2 / 1.35 / 1.5 / 1.65), `--space-section` (a section's edge → its content, top and bottom, 40px on phones →
+  64px wide — every section uses it; only the intro's top is smaller, because the hero's wave already adds ≈ 26px of
+  cream; tightened twice by Or, 2026-10-14: 56–104 → 48–80 → 40–64), `--space-title` (title → text, 1.5rem) and `--space-object` (text → the thing it
   introduces, 2.5rem), `--pad-card`, `--radius-sm/md/lg`, `--wave`. Use them instead of ad-hoc values: the
   same relationship gets the same gap in every section. `p + p` is half a line (`0.5lh`). Headings use
   `text-wrap: balance`, paragraphs and list items `text-wrap: pretty` — no lonely last words; never fix a

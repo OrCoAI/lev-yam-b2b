@@ -47,7 +47,7 @@ Merging to `main` deploys.
 | 4b | Testimonials + logos *(hidden until content)* | `#testimonials` |
 | 5 | One day, exactly for you — the six types as an icon list + CTA | `#fit` |
 | 6 | Good experience, good impact | `#impact` |
-| 7 | Let's meet — closing + WhatsApp planner: four one-tap questions beside the message they write (blue finale, one white card; side by side from 1024px) | `#plan` |
+| 7 | Let's meet — closing + WhatsApp planner: four one-tap questions beside the message they write (blue finale, one white card; side by side from 900px) | `#plan` |
 | 8 | Footer — removed for now (Or, 2026-10-12); its copy is kept in `content/copy.md` | — |
 | — | Floating WhatsApp button (mobile only) | `#wa-float` |
 
