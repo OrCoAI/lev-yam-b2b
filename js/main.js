@@ -58,6 +58,10 @@ const TRANSLATIONS = {
     // Labels of the desktop accordion bar, reused from the old packages ("מידע נוסף ↓" / "סגור ↑")
     'pillar-more': 'מידע נוסף',
     'pillar-less': 'סגור',
+    // Photo stories (phones): the ring's label (followed by the card's title) and the tap zones
+    'story-open': 'צפייה בתמונות',
+    'story-prev': 'התמונה הקודמת',
+    'story-next': 'התמונה הבאה',
     'p1-h3': 'משנים אווירה. פותחים את הראש.',
     'p1-p1': 'יש מקומות שמספיק להגיע אליהם כדי להרגיש אחרת. לב ים שוכן בכפר דייגים על חוף הים התיכון, מוקף טבע ונוף פתוח. המרחב משלב אזורי התכנסות, פינות ישיבה נעימות ואווירה אינטימית ובלתי פורמלית, שמזמינה יצירתיות, שיחה פתוחה וחיבור אנושי.',
     'p1-list-title': 'מה מחכה לכם?',
@@ -195,6 +199,9 @@ const TRANSLATIONS = {
     'pillars-h2': 'ثلاثة مكوّنات. إمكانيات لا تُحصى.',
     'pillar-more': 'مزيد من المعلومات',
     'pillar-less': 'إغلاق',
+    'story-open': 'مشاهدة الصور',
+    'story-prev': 'الصورة السابقة',
+    'story-next': 'الصورة التالية',
     'p1-h3': 'نغيّر الأجواء. نفتح الذهن.',
     'p1-p1': 'هناك أماكن يكفي أن تصلوا إليها لتشعروا بشكل مختلف. يقع لب يام في قرية صيادين على شاطئ البحر الأبيض المتوسط، تحيط به الطبيعة والإطلالة المفتوحة. يجمع المكان بين مناطق تجمّع، زوايا جلوس مريحة وأجواء حميمة وغير رسمية، تدعو إلى الإبداع، الحوار المفتوح والتواصل الإنساني.',
     'p1-list-title': 'ما الذي ينتظركم؟',
@@ -334,6 +341,7 @@ function applyLanguage(lang) {
   renderStep();
   syncPillarLabels();
   alignPillarRows();
+  labelStoryRings();
   try { localStorage.setItem('lang', lang); } catch (_) { /* ignore */ }
 }
 
@@ -790,8 +798,10 @@ function initFloatingButton() {
 const desktopMQ = window.matchMedia('(min-width: 1024px)');
 
 function setPillarOpen(pillar, open) {
+  const changed = pillar.classList.contains('is-open') !== open;
   pillar.classList.toggle('is-open', open);
   pillar.querySelectorAll('[aria-controls]').forEach((btn) => btn.setAttribute('aria-expanded', String(open)));
+  if (changed) pillar.dispatchEvent(new CustomEvent('pillar-toggle', { detail: { open } }));
 }
 
 function syncPillarLabels() {
@@ -903,6 +913,868 @@ function initPillars() {
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(alignPillarRows);
 }
 
+// ── Photo rotators (photo test, 2026-10-14) ───────────────────
+// Desktop cards — התוכן (cover): the photos sweep in one after another, story bars count
+// them; האוכל (deck): a fan of arches, the next dish swings to the front.
+// Phones — the story rings (peek) and the living rows (rows): the photos cross-fade.
+// The clock is a CSS animation (the active story bar, the front card's hold, the ring's
+// drift): when it ends, the next photo comes in. CSS pauses it under the pointer and while
+// the card is open; here it pauses off screen. Reduced motion: the first photo / a still fan.
+const ROTATOR_CLOCKS = ['cover-bar', 'deck-hold', 'peek-drift'];
+const ROTATOR_ITEMS = { cover: '.slide', deck: '.deck-card', peek: '.peek', rows: '.peek' };
+
+const imgOf = (el) => (el.tagName === 'IMG' ? el : el.querySelector('img'));
+
+// A photo waiting in data-src loads one step before it is shown
+function loadDeferred(img) {
+  if (!img.dataset.src) return;
+  img.src = img.dataset.src;
+  delete img.dataset.src;
+}
+
+function startRotator(rotator) {
+  const type = rotator.dataset.rotator;
+  const items = [...rotator.querySelectorAll(ROTATOR_ITEMS[type])];
+  let current = 0;
+  let bars = [];
+
+  if (type === 'cover') {
+    const track = document.createElement('span');
+    track.className = 'cover-bars';
+    bars = items.map(() => track.appendChild(document.createElement('span')));
+    rotator.appendChild(track);
+  }
+
+  const show = (next) => {
+    if (type === 'deck') {
+      items.forEach((card, i) => { card.dataset.pos = String((i - next + items.length) % items.length); });
+    } else {
+      items.forEach((item) => item.classList.remove('is-leaving'));
+      if (next !== current) items[current].classList.replace('is-current', 'is-leaving');
+      items[next].classList.add('is-current');
+      bars.forEach((bar, i) => {
+        bar.classList.toggle('is-done', i < next);
+        bar.classList.toggle('is-active', i === next);
+      });
+    }
+    loadDeferred(imgOf(items[(next + 1) % items.length]));
+    current = next;
+  };
+
+  // Moves on only once the next photo has loaded, so a slow image never comes in blank
+  const advance = () => {
+    const next = (current + 1) % items.length;
+    const img = imgOf(items[next]);
+    loadDeferred(img);
+    if (img.complete) { show(next); return; }
+    const go = () => show(next);
+    img.addEventListener('load', go, { once: true });
+    img.addEventListener('error', go, { once: true });
+  };
+
+  rotator.addEventListener('animationend', (e) => {
+    if (ROTATOR_CLOCKS.includes(e.animationName)) advance();
+  });
+  rotator.classList.add('is-rotating');
+  show(0);
+}
+
+function initRotators() {
+  const rotators = document.querySelectorAll('[data-rotator]');
+  if (!rotators.length || prefersReducedMotion() || !('IntersectionObserver' in window)) return;
+
+  // Each rotator starts the first time it is well on screen (the cover's first photo sweeps
+  // in, the fan opens) and pauses whenever it scrolls away. A hidden one (the desktop cards
+  // on a phone, the rings on desktop) never intersects, so it never runs.
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(({ target, isIntersecting }) => {
+      target.classList.toggle('is-paused', !isIntersecting);
+      if (isIntersecting && !target.classList.contains('is-rotating')) startRotator(target);
+    });
+  }, { threshold: 0.4 });
+
+  rotators.forEach((rotator) => {
+    rotator.classList.add('is-armed');
+    io.observe(rotator);
+  });
+}
+
+// ── Photo stories (phones and tablets) ────────────────────────
+// The list keeps its rows; a card with photos gets a story ring in its icon's place, and
+// the ring opens the photos full screen, growing out of it: story bars, the card's icon
+// and title, its tagline and the main CTA. Tap the end side (left, in RTL) to go on and
+// the start side to go back, hold to pause; swipe down, Escape or the phone's back button
+// closes. After a card's last photo the next card's photos follow — one tour of the place.
+const story = { open: false, tour: [], slides: [], bars: [], index: -1, ring: null, pushed: false, after: null };
+
+// The photos of a card, read from its desktop markup (the one list of photos): sources,
+// size, and the subject (data-focus) that every phone crop is framed around
+function storyPhotos(pillar) {
+  return [...pillar.querySelectorAll('.pillar-cover .slide, .deck-card img')].map((img) => {
+    const srcset = img.getAttribute('srcset') || '';
+    const src = img.getAttribute('src');
+    return {
+      src,
+      srcset,
+      small: srcset.split(',')[0].trim().split(' ')[0] || src,
+      focus: img.dataset.focus || '',
+      w: img.getAttribute('width'),
+      h: img.getAttribute('height'),
+    };
+  });
+}
+
+// Frames a cropped photo on its subject: data-focus (x y, fractions of the photo) lands on
+// data-target (x y, fractions of the frame; the centre unless set), as far as the photo's
+// edges allow. Re-framed whenever a frame changes size — fonts, language, rotation, an
+// option switched on.
+function framePhoto(img) {
+  const cw = img.clientWidth;
+  const ch = img.clientHeight;
+  const iw = Number(img.dataset.w || img.getAttribute('width'));
+  const ih = Number(img.dataset.h || img.getAttribute('height'));
+  if (!cw || !ch || !iw || !ih) return;
+  const [fx, fy] = img.dataset.focus.split(' ').map(Number);
+  const [tx, ty] = (img.dataset.target || '0.5 0.5').split(' ').map(Number);
+  const scale = Math.max(cw / iw, ch / ih);
+  const x = Math.min(0, Math.max(cw - iw * scale, tx * cw - fx * iw * scale));
+  const y = Math.min(0, Math.max(ch - ih * scale, ty * ch - fy * ih * scale));
+  img.style.objectPosition = `${x.toFixed(1)}px ${y.toFixed(1)}px`;
+}
+const photoFrames = 'ResizeObserver' in window
+  ? new ResizeObserver((entries) => entries.forEach(({ target }) => target.querySelectorAll('img[data-focus]').forEach(framePhoto)))
+  : null;
+
+function focusPhoto(img, photo, target) {
+  if (!photo.focus) return;
+  img.dataset.focus = photo.focus;
+  img.dataset.w = photo.w;
+  img.dataset.h = photo.h;
+  if (target) img.dataset.target = target;
+}
+function observeFrames(el) {
+  if (photoFrames) photoFrames.observe(el);
+}
+
+function labelStoryRings() {
+  document.querySelectorAll('.pillar-story').forEach((ring) => {
+    const title = ring.closest('.pillar').querySelector('.pillar-title').textContent.trim();
+    ring.setAttribute('aria-label', `${t('story-open')}: ${title}`);
+  });
+}
+
+function buildStoryRing(pillar, photos) {
+  const heading = pillar.querySelector('.pillar-heading');
+  const top = document.createElement('div');
+  top.className = 'pillar-top';
+  heading.before(top);
+  top.append(heading);
+
+  const ring = document.createElement('button');
+  ring.type = 'button';
+  ring.className = 'pillar-story';
+  ring.dataset.rotator = 'peek';
+  const frame = document.createElement('span');
+  frame.className = 'pillar-story-photos';
+  photos.forEach((photo, i) => {
+    const img = document.createElement('img');
+    img.className = 'peek';
+    img.alt = '';
+    img.decoding = 'async';
+    if (i === 0) {
+      img.loading = 'lazy';
+      img.src = photo.small;
+    } else {
+      img.dataset.src = photo.small;
+    }
+    focusPhoto(img, photo);
+    frame.append(img);
+  });
+  ring.append(frame);
+  observeFrames(frame);
+  top.append(ring);
+  pillar.classList.add('has-story');
+  return ring;
+}
+
+function loadStorySlide(index) {
+  const slide = story.slides[index];
+  if (!slide || slide.dataset.loaded) return;
+  const { photo } = story.tour[index];
+  const [fill, img] = slide.children;
+  fill.src = photo.small;   // the ring's small photo, already cached: the blur needs no more
+  img.sizes = '100vw';
+  img.srcset = photo.srcset;
+  img.src = photo.src;
+  slide.dataset.loaded = '1';
+}
+
+function showStory(index) {
+  if (index >= story.tour.length) { closeStory(); return; }
+  const viewer = document.getElementById('story');
+  const next = Math.max(0, index);
+  const prev = story.tour[story.index];
+  const step = story.tour[next];
+  story.index = next;
+  story.slides.forEach((slide, i) => slide.classList.toggle('is-current', i === next));
+  loadStorySlide(next);
+  loadStorySlide(next + 1);
+
+  // A new card: its icon, title and tagline, and one bar per photo
+  if (!prev || prev.pillar !== step.pillar) {
+    viewer.querySelector('.story-icon img').src = step.pillar.dataset.storyIcon;
+    viewer.querySelector('.story-title').textContent = step.pillar.querySelector('.pillar-title').textContent.trim();
+    viewer.querySelector('.story-tagline').textContent = step.pillar.querySelector('.pillar-subtitle').textContent.trim();
+    const track = viewer.querySelector('.story-bars');
+    track.replaceChildren(...Array.from({ length: step.count }, () => document.createElement('span')));
+    story.bars = [...track.children];
+  }
+  story.bars.forEach((bar, i) => {
+    bar.classList.toggle('is-done', i < step.i);
+    bar.classList.remove('is-active');
+  });
+  const active = story.bars[step.i];
+  void active.offsetWidth;   // restarts the bar when the same photo is shown again
+  active.classList.add('is-active');
+
+  // The clock waits for the photo
+  const img = story.slides[next].children[1];
+  viewer.classList.toggle('is-waiting', !img.complete);
+  if (!img.complete) {
+    const ready = () => { if (story.index === next) viewer.classList.remove('is-waiting'); };
+    img.addEventListener('load', ready, { once: true });
+    img.addEventListener('error', ready, { once: true });
+  }
+}
+
+function openStory(pillar, ring) {
+  if (story.open) return;
+  const viewer = document.getElementById('story');
+  story.tour = [];
+  document.querySelectorAll('.pillar.has-story').forEach((p) => {
+    const photos = storyPhotos(p);
+    photos.forEach((photo, i) => story.tour.push({ pillar: p, photo, i, count: photos.length }));
+  });
+  story.slides = story.tour.map(() => {
+    const slide = document.createElement('div');
+    slide.className = 'story-slide';
+    const fill = document.createElement('img');
+    fill.className = 'story-fill';
+    fill.alt = '';
+    const img = document.createElement('img');
+    img.className = 'story-photo';
+    img.alt = '';
+    img.decoding = 'async';
+    slide.append(fill, img);
+    return slide;
+  });
+  viewer.querySelector('.story-slides').replaceChildren(...story.slides);
+
+  // The reveal grows out of the ring
+  const box = ring.getBoundingClientRect();
+  const cx = box.left + box.width / 2;
+  const cy = box.top + box.height / 2;
+  viewer.style.setProperty('--ox', `${cx}px`);
+  viewer.style.setProperty('--oy', `${cy}px`);
+  viewer.style.setProperty('--or', `${Math.ceil(Math.hypot(Math.max(cx, innerWidth - cx), Math.max(cy, innerHeight - cy)))}px`);
+
+  Object.assign(story, { open: true, ring, index: -1, after: null });
+  viewer.hidden = false;
+  document.documentElement.classList.add('story-open');
+  // The phone's back button closes the stories instead of leaving the page
+  try {
+    history.pushState({ story: true }, '');
+    story.pushed = true;
+  } catch (_) {
+    story.pushed = false;
+  }
+  showStory(story.tour.findIndex((step) => step.pillar === pillar));
+  viewer.querySelector('.story-close').focus({ preventScroll: true });
+  sendBizEvent('levyam.story.open', { pillar: pillar.id });
+}
+
+// Closing goes through history when the stories added an entry; popstate finishes it
+function closeStory(after) {
+  if (!story.open) return;
+  story.after = after || null;
+  if (story.pushed) {
+    story.pushed = false;
+    history.back();
+    return;
+  }
+  finishStory();
+}
+
+function finishStory() {
+  if (!story.open) return;
+  const viewer = document.getElementById('story');
+  story.open = false;
+  const step = story.tour[story.index];
+  sendBizEvent('levyam.story.close', {
+    pillar: step ? step.pillar.id : '',
+    photo: story.index + 1,
+    photos: story.tour.length,
+  });
+  const done = () => {
+    viewer.hidden = true;
+    viewer.classList.remove('is-closing', 'is-held', 'is-waiting', 'is-dragging');
+    viewer.querySelector('.story-slides').replaceChildren();
+    document.documentElement.classList.remove('story-open');
+    if (story.after) story.after();
+    else story.ring.focus({ preventScroll: true });
+  };
+  if (prefersReducedMotion()) { done(); return; }
+  viewer.classList.add('is-closing');
+  const end = (e) => {
+    if (e.target !== viewer) return;
+    viewer.removeEventListener('animationend', end);
+    done();
+  };
+  viewer.addEventListener('animationend', end);
+}
+
+function initStories() {
+  const viewer = document.getElementById('story');
+  if (!viewer) return;
+  document.querySelectorAll('.pillar').forEach((pillar) => {
+    const photos = storyPhotos(pillar);
+    if (!photos.length) return;
+    const ring = buildStoryRing(pillar, photos);
+    ring.addEventListener('click', () => openStory(pillar, ring));
+  });
+
+  // The active bar is the clock; after the last photo of the tour the stories close
+  viewer.addEventListener('animationend', (e) => {
+    if (story.open && e.animationName === 'story-bar') showStory(story.index + 1);
+  });
+  viewer.querySelector('.story-close').addEventListener('click', () => closeStory());
+  viewer.querySelector('.story-cta').addEventListener('click', (e) => {
+    e.preventDefault();
+    closeStory(() => document.getElementById('plan').scrollIntoView({ block: 'start' }));
+  });
+
+  // Tap to move, hold to pause, drag down to close
+  const stage = viewer.querySelector('.story-stage');
+  let press = null;
+  let holdTimer = 0;
+  let swallowClick = false;
+  viewer.querySelector('.story-zone-prev').addEventListener('click', () => {
+    if (swallowClick) { swallowClick = false; return; }
+    showStory(story.index - 1);
+  });
+  viewer.querySelector('.story-zone-next').addEventListener('click', () => {
+    if (swallowClick) { swallowClick = false; return; }
+    showStory(story.index + 1);
+  });
+  stage.addEventListener('pointerdown', (e) => {
+    swallowClick = false;
+    if (e.target.closest('.story-close, .story-cta')) return;
+    press = { x: e.clientX, y: e.clientY, held: false, dragged: false };
+    holdTimer = setTimeout(() => {
+      if (!press) return;
+      press.held = true;
+      viewer.classList.add('is-held');
+    }, 220);
+  });
+  stage.addEventListener('pointermove', (e) => {
+    if (!press) return;
+    const dy = e.clientY - press.y;
+    if (!press.dragged && dy > 12 && dy > Math.abs(e.clientX - press.x)) {
+      press.dragged = true;
+      clearTimeout(holdTimer);
+      viewer.classList.add('is-dragging', 'is-held');
+    }
+    if (!press.dragged) return;
+    const drag = Math.max(0, dy);
+    stage.style.setProperty('--drag', `${drag}px`);
+    stage.style.setProperty('--drag-scale', String(Math.min(drag / 1500, 0.12)));
+  });
+  const release = (e) => {
+    if (!press) return;
+    clearTimeout(holdTimer);
+    const { held, dragged } = press;
+    const dy = e.clientY - press.y;
+    press = null;
+    swallowClick = held || dragged;
+    viewer.classList.remove('is-held', 'is-dragging');
+    stage.style.removeProperty('--drag');
+    stage.style.removeProperty('--drag-scale');
+    if (dragged && dy > 100) closeStory();
+  };
+  stage.addEventListener('pointerup', release);
+  stage.addEventListener('pointercancel', release);
+
+  // Keyboard: Escape closes, the arrows move (RTL: left is forward), Tab stays inside
+  document.addEventListener('keydown', (e) => {
+    if (!story.open) return;
+    if (e.key === 'Escape') {
+      e.preventDefault();
+      closeStory();
+    } else if (e.key === 'ArrowLeft') {
+      showStory(story.index + 1);
+    } else if (e.key === 'ArrowRight') {
+      showStory(story.index - 1);
+    } else if (e.key === 'Tab') {
+      const stops = [...viewer.querySelectorAll('button, a[href]')];
+      const first = stops[0];
+      const last = stops[stops.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    }
+  });
+
+  window.addEventListener('popstate', () => {
+    if (!story.open) return;
+    story.pushed = false;
+    finishStory();
+  });
+  // Rotating a tablet into the desktop layout: the cards take over
+  desktopMQ.addEventListener('change', (e) => { if (e.matches) closeStory(); });
+}
+
+// ── Phone photo options (photo test, 2026-10-14) ──────────────
+// Five ways to show a card's photos on phones and tablets, all keeping the list's rows as
+// they were: 1 stories (above), 2 living rows, 3 a gallery when a row opens, 4 a flick
+// deck at the end of an open row, 5 a ribbon between the title and the list — and 6, rows and deck
+// together. html[data-phone] lists the ones on; the test switcher (localhost or ?phone,
+// ?phone=1…6) changes it live.
+const PHONE_MODES = [
+  ['stories', 'סטוריז'],
+  ['rows', 'שורות חיות'],
+  ['reel', 'גלריה בפתיחה'],
+  ['stack', 'חפיסה'],
+  ['ribbon', 'סרט'],
+  ['rows stack', 'שורות + חפיסה'],   // Or's pick (2026-10-14): living rows closed, the deck at the end of an open row
+];
+const PHONE_DEFAULT = 'rows stack';
+
+function photoImg(photo, className, sizes) {
+  const img = document.createElement('img');
+  img.className = className;
+  img.alt = '';
+  img.loading = 'lazy';
+  img.decoding = 'async';
+  img.sizes = sizes;
+  img.srcset = photo.srcset;
+  img.src = photo.src;
+  return img;
+}
+
+// 2 · Living rows: the photos behind the chevron (cross-faded by the rows rotator)
+function buildRowPhotos(pillar, photos) {
+  const layer = document.createElement('span');
+  layer.className = 'row-photos';
+  layer.setAttribute('aria-hidden', 'true');
+  layer.dataset.rotator = 'rows';
+  photos.forEach((photo, i) => {
+    const img = document.createElement('img');
+    img.className = 'peek';
+    img.alt = '';
+    img.decoding = 'async';
+    if (i === 0) {
+      img.loading = 'lazy';
+      img.src = photo.small;
+    } else {
+      img.dataset.src = photo.small;
+    }
+    // The window fades toward the text, so the subject sits in its clear outer part
+    focusPhoto(img, photo, '0.36 0.5');
+    layer.append(img);
+  });
+  pillar.querySelector('.pillar-head').prepend(layer);
+  observeFrames(layer);
+}
+
+// 3 · Gallery on opening: a swipeable strip at the top of the open row
+function buildReel(pillar, photos) {
+  const reel = document.createElement('div');
+  reel.className = 'pillar-reel';
+  reel.setAttribute('aria-hidden', 'true');
+  const track = document.createElement('div');
+  track.className = 'reel-track';
+  photos.forEach((photo) => {
+    const img = photoImg(photo, 'reel-item', '(min-width: 600px) 320px, 72vw');
+    focusPhoto(img, photo);
+    track.append(img);
+  });
+  const dots = document.createElement('div');
+  dots.className = 'reel-dots';
+  photos.forEach((_, i) => {
+    const dot = document.createElement('span');
+    if (i === 0) dot.className = 'is-active';
+    dots.append(dot);
+  });
+  reel.append(track, dots);
+  pillar.querySelector('.pillar-body').prepend(reel);
+  observeFrames(track);
+
+  const items = [...track.children];
+  let index = 0;
+  let timer = 0;
+  let touched = false;
+  const step = () => (items[1] ? Math.abs(items[1].offsetLeft - items[0].offsetLeft) : track.clientWidth);
+  track.addEventListener('scroll', () => {
+    index = Math.min(items.length - 1, Math.round(Math.abs(track.scrollLeft) / step()));
+    [...dots.children].forEach((dot, i) => dot.classList.toggle('is-active', i === index));
+  }, { passive: true });
+  // Glides on by itself until a finger touches it (RTL scrolls toward negative scrollLeft)
+  const stop = () => { touched = true; clearInterval(timer); };
+  ['pointerdown', 'touchstart', 'wheel'].forEach((type) => track.addEventListener(type, stop, { passive: true }));
+  if (prefersReducedMotion() || !('IntersectionObserver' in window)) return;
+  const dir = () => (getComputedStyle(track).direction === 'rtl' ? -1 : 1);
+  new IntersectionObserver(([entry]) => {
+    clearInterval(timer);
+    if (!entry.isIntersecting || touched) return;
+    timer = setInterval(() => {
+      track.scrollTo({ left: dir() * ((index + 1) % items.length) * step(), behavior: 'smooth' });
+    }, 3200);
+  }, { threshold: 0.6 }).observe(reel);
+}
+
+// Videos wait in data-src (only the poster loads) until they are about to play
+function loadVideo(video) {
+  if (!video.dataset.src) return;
+  video.src = video.dataset.src;
+  delete video.dataset.src;
+}
+function playVideo(video) {
+  loadVideo(video);
+  const playing = video.play();
+  if (playing && typeof playing.catch === 'function') playing.catch(() => { /* autoplay refused — the poster stays */ });
+}
+
+// A muted video element for the phone options, from one in the Space film
+function cloneFilm(source, loop) {
+  const video = document.createElement('video');
+  video.muted = true;
+  video.loop = loop;
+  video.playsInline = true;
+  video.preload = 'none';
+  video.poster = source.getAttribute('poster');
+  video.dataset.src = source.dataset.src || source.getAttribute('src');
+  return video;
+}
+
+// 4 · Flick deck: a pile of polaroids at the end of the open row's text. A card holds a photo
+// or, for the Space film, a chapter video: the top card plays its chapter, and when it ends
+// the next card is dealt.
+function buildStack(pillar, media) {
+  const stack = document.createElement('div');
+  stack.className = 'pillar-stack';
+  stack.setAttribute('aria-hidden', 'true');
+  const isFilm = media[0].tagName === 'VIDEO';
+  let cards = media.map((item, i) => {
+    const card = document.createElement('div');
+    card.className = 'stack-card';
+    card.dataset.depth = String(i);
+    card.append(item);
+    return card;
+  });
+  const inPhotoOrder = [...cards];
+  stack.append(...cards);
+  pillar.querySelector('.pillar-body').append(stack);
+  observeFrames(stack);
+
+  let busy = false;
+  let timer = 0;
+  let drag = null;
+  let onScreen = false;
+  let touched = false;
+  const reduced = prefersReducedMotion();
+  // A film deck: only the top card plays (and the next one loads); the rest show posters
+  const syncFilm = () => {
+    if (!isFilm) return;
+    cards.forEach((card, depth) => {
+      const video = card.firstChild;
+      if (depth === 0 && onScreen && !reduced) playVideo(video);
+      else video.pause();
+      if (depth === 1 && onScreen) loadVideo(video);
+    });
+  };
+  const layout = () => {
+    cards.forEach((card, depth) => { card.dataset.depth = String(depth); });
+    syncFilm();
+  };
+  const reset = (card) => ['--x', '--y', '--r'].forEach((prop) => card.style.removeProperty(prop));
+  // The top card flies off (RTL: forward is to the left) and slips to the back of the pile
+  const fly = (dirX) => {
+    if (busy) return;
+    busy = true;
+    const top = cards[0];
+    top.classList.remove('is-dragging');
+    top.classList.add('is-flying');
+    top.style.setProperty('--x', `${dirX * 150}%`);
+    top.style.setProperty('--y', '-8%');
+    top.style.setProperty('--r', `${dirX * 26}deg`);
+    setTimeout(() => {
+      cards = [...cards.slice(1), top];
+      if (isFilm) top.firstChild.currentTime = 0;
+      layout();
+      top.classList.remove('is-flying');
+      reset(top);
+      busy = false;
+    }, 450);
+  };
+  const stop = () => clearInterval(timer);
+
+  // A chapter that ends deals the next one — or, once a finger has taken over, plays again
+  if (isFilm) {
+    cards.forEach((card) => card.firstChild.addEventListener('ended', () => {
+      if (cards[0] !== card) return;
+      if (touched) playVideo(card.firstChild);
+      else fly(-1);
+    }));
+  }
+
+  // Opening the row (living rows on): the photo the row was showing is on top of the pile.
+  // The panel is still unfolding, so the pile re-stacks at once, without motion.
+  pillar.addEventListener('pillar-toggle', (e) => {
+    const shown = pillar.querySelector('.row-photos .peek.is-current');
+    if (!e.detail.open || busy || !shown) return;
+    const top = inPhotoOrder[[...shown.parentElement.children].indexOf(shown)];
+    const at = cards.indexOf(top);
+    if (at <= 0) return;
+    cards = [...cards.slice(at), ...cards.slice(0, at)];
+    stack.classList.add('is-settling');
+    layout();
+    void stack.offsetWidth;
+    stack.classList.remove('is-settling');
+  });
+
+  stack.addEventListener('pointerdown', (e) => {
+    touched = true;
+    if (busy || !cards[0].contains(e.target)) return;
+    stop();
+    drag = { x: e.clientX, y: e.clientY, dx: 0, active: false };
+  });
+  stack.addEventListener('pointermove', (e) => {
+    if (!drag) return;
+    const dx = e.clientX - drag.x;
+    const dy = e.clientY - drag.y;
+    if (!drag.active) {
+      if (Math.abs(dx) < 8 && Math.abs(dy) < 8) return;
+      if (Math.abs(dy) > Math.abs(dx)) { drag = null; return; }   // a vertical swipe scrolls the page
+      drag.active = true;
+      cards[0].classList.add('is-dragging');
+      cards[0].setPointerCapture(e.pointerId);
+    }
+    drag.dx = dx;
+    cards[0].style.setProperty('--x', `${dx}px`);
+    cards[0].style.setProperty('--r', `${-2 + dx * 0.08}deg`);
+  });
+  stack.addEventListener('pointerup', () => {
+    if (!drag) return;
+    const { dx, active } = drag;
+    drag = null;
+    if (!active) { fly(-1); return; }   // a tap deals the next card
+    if (Math.abs(dx) > 70) { fly(Math.sign(dx)); return; }
+    cards[0].classList.remove('is-dragging');
+    reset(cards[0]);
+  });
+  stack.addEventListener('pointercancel', () => {
+    if (!drag) return;
+    drag = null;
+    cards[0].classList.remove('is-dragging');
+    reset(cards[0]);
+  });
+  // On screen: photos deal themselves every few seconds until a finger touches the pile;
+  // a film plays its top chapter (its end deals the next)
+  if (reduced || !('IntersectionObserver' in window)) return;
+  new IntersectionObserver(([entry]) => {
+    onScreen = entry.isIntersecting;
+    stop();
+    syncFilm();
+    if (onScreen && !touched && !isFilm) timer = setInterval(() => fly(-1), 3400);
+  }, { threshold: 0.6 }).observe(stack);
+}
+
+// 2 · Living rows, for the Space film: the title film loops in the row's window while the
+// row is closed and on screen
+function buildRowVideo(pillar, film) {
+  const layer = document.createElement('span');
+  layer.className = 'row-video';
+  layer.setAttribute('aria-hidden', 'true');
+  const video = cloneFilm(film.querySelector('.film-title'), true);
+  layer.append(video);
+  pillar.querySelector('.pillar-head').prepend(layer);
+  pillar.classList.add('has-film');
+  if (prefersReducedMotion() || !('IntersectionObserver' in window)) return;
+  let onScreen = false;
+  const sync = () => {
+    if (onScreen && !pillar.classList.contains('is-open')) playVideo(video);
+    else video.pause();
+  };
+  pillar.addEventListener('pillar-toggle', sync);
+  new IntersectionObserver(([entry]) => { onScreen = entry.isIntersecting; sync(); }, { threshold: 0.3 }).observe(layer);
+}
+
+// Desktop: the Space card's arch plays the title film while closed; opened, its three
+// chapters, one after another (each one's end brings the next)
+function initFilms() {
+  document.querySelectorAll('.pillar-film').forEach((film) => {
+    const pillar = film.closest('.pillar');
+    const title = film.querySelector('.film-title');
+    const chapters = [...film.querySelectorAll('.film-chapter')];
+    let current = 0;
+    let onScreen = false;
+    const sync = () => {
+      const open = pillar.classList.contains('is-open');
+      film.classList.toggle('is-chapters', open);
+      chapters.forEach((chapter, i) => chapter.classList.toggle('is-current', i === current));
+      [title, ...chapters].forEach((video) => video.pause());
+      if (!onScreen || prefersReducedMotion()) return;
+      if (open) {
+        playVideo(chapters[current]);
+        loadVideo(chapters[(current + 1) % chapters.length]);
+      } else {
+        playVideo(title);
+      }
+    };
+    chapters.forEach((chapter, i) => chapter.addEventListener('ended', () => {
+      current = (i + 1) % chapters.length;
+      chapters[current].currentTime = 0;
+      sync();
+    }));
+    pillar.addEventListener('pillar-toggle', sync);
+    if (!('IntersectionObserver' in window)) return;
+    new IntersectionObserver(([entry]) => { onScreen = entry.isIntersecting; sync(); }, { threshold: 0.4 }).observe(film);
+  });
+}
+
+// 5 · Ribbon: every photo as a little arch, in one band between the title and the list
+function buildRibbon(lists) {
+  const anchor = document.querySelector('.pillar-grid');
+  if (!anchor || !lists.length) return;
+  // Interleave the cards' photos, so a dish follows a moment
+  const photos = [];
+  for (let i = 0; i < Math.max(...lists.map((l) => l.length)); i++) {
+    lists.forEach((list) => { if (list[i]) photos.push(list[i]); });
+  }
+  const ribbon = document.createElement('div');
+  ribbon.className = 'photo-ribbon';
+  ribbon.setAttribute('aria-hidden', 'true');
+  const track = document.createElement('div');
+  track.className = 'ribbon-track';
+  // Two copies: when the first has slid one set along, the second stands exactly in its place
+  [0, 1].forEach(() => photos.forEach((photo) => {
+    const tile = document.createElement('span');
+    tile.className = 'ribbon-tile';
+    const img = document.createElement('img');
+    img.alt = '';
+    img.loading = 'lazy';
+    img.decoding = 'async';
+    img.src = photo.small;
+    focusPhoto(img, photo);
+    tile.append(img);
+    track.append(tile);
+  }));
+  ribbon.append(track);
+  anchor.before(ribbon);
+  observeFrames(track);
+
+  if (prefersReducedMotion() || !('IntersectionObserver' in window)) return;
+  // Drifts about 24px a second; scrolling the page pushes it along (and back)
+  let offset = 0;
+  let last = 0;
+  let lastY = 0;
+  let frame = 0;
+  const tick = (now) => {
+    const dt = last ? Math.min(now - last, 64) : 16;
+    last = now;
+    const y = window.scrollY;
+    const set = track.scrollWidth / 2;
+    offset += dt * 0.024 + (y - lastY) * 0.45;
+    lastY = y;
+    if (set) offset = ((offset % set) + set) % set;
+    track.style.transform = `translateX(${offset}px)`;
+    frame = requestAnimationFrame(tick);
+  };
+  new IntersectionObserver(([entry]) => {
+    cancelAnimationFrame(frame);
+    if (!entry.isIntersecting) return;
+    last = 0;
+    lastY = window.scrollY;
+    frame = requestAnimationFrame(tick);
+  }).observe(ribbon);
+}
+
+function initPhoneOptions() {
+  const pillars = [...document.querySelectorAll('.pillar.has-story')];
+  if (!pillars.length) return;
+  const lists = pillars.map((pillar) => {
+    const photos = storyPhotos(pillar);
+    buildRowPhotos(pillar, photos);
+    buildReel(pillar, photos);
+    buildStack(pillar, photos.map((photo) => {
+      const img = photoImg(photo, '', '(min-width: 600px) 250px, 64vw');
+      focusPhoto(img, photo);
+      return img;
+    }));
+    return photos;
+  });
+  buildRibbon(lists);
+  // The Space film: its title film in the living row, its chapters in the deck
+  document.querySelectorAll('.pillar-film').forEach((film) => {
+    const pillar = film.closest('.pillar');
+    buildRowVideo(pillar, film);
+    buildStack(pillar, [...film.querySelectorAll('.film-chapter')].map((chapter) => cloneFilm(chapter, false)));
+  });
+
+  // The option: rows + deck for visitors; on a test URL, ?phone=<1–6>, else the last one picked
+  const ids = PHONE_MODES.map(([id]) => id);
+  const params = new URLSearchParams(location.search);
+  const isTest = params.has('phone') || ['localhost', '127.0.0.1'].includes(location.hostname);
+  let mode = PHONE_DEFAULT;
+  if (isTest) {
+    try {
+      const saved = localStorage.getItem('phoneMode2');
+      if (ids.includes(saved)) mode = saved;
+    } catch (_) { /* storage unavailable */ }
+    const asked = params.get('phone');
+    if (ids.includes(asked)) mode = asked;
+    else if (ids[Number(asked) - 1]) mode = ids[Number(asked) - 1];
+  }
+  document.documentElement.dataset.phone = mode;
+  if (!isTest) return;
+
+  // The test switcher: shows while the components section is on screen
+  const bar = document.createElement('div');
+  bar.className = 'phone-switch is-away';
+  bar.setAttribute('role', 'group');
+  bar.setAttribute('aria-label', 'אפשרויות תמונות לטלפון (בדיקה)');
+  const name = document.createElement('span');
+  name.className = 'phone-switch-name';
+  bar.append(name);
+  const buttons = PHONE_MODES.map(([id, label], i) => {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.textContent = String(i + 1);
+    btn.setAttribute('aria-label', label);
+    btn.addEventListener('click', () => select(id));
+    bar.append(btn);
+    return btn;
+  });
+  const select = (id) => {
+    document.documentElement.dataset.phone = id;
+    try { localStorage.setItem('phoneMode2', id); } catch (_) { /* ignore */ }
+    name.textContent = PHONE_MODES.find(([key]) => key === id)[1];
+    buttons.forEach((btn, i) => btn.setAttribute('aria-pressed', String(ids[i] === id)));
+  };
+  select(mode);
+  document.body.append(bar);
+  const section = document.getElementById('pillars');
+  if (section && 'IntersectionObserver' in window) {
+    new IntersectionObserver(([entry]) => bar.classList.toggle('is-away', !entry.isIntersecting)).observe(section);
+  } else {
+    bar.classList.remove('is-away');
+  }
+}
+
 // ── Hero video ────────────────────────────────────────────────
 // Play only while the hero is on screen; respect reduced-motion.
 function initHeroVideo() {
@@ -938,5 +1810,9 @@ document.addEventListener('DOMContentLoaded', () => {
   initFloatingButton();
   initHeroVideo();
   initPillars();
+  initStories();
+  initPhoneOptions();
+  initFilms();
+  initRotators();
   applyLanguage(currentLang);
 });

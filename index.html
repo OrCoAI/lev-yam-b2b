@@ -133,18 +133,38 @@
      Desktop: three cards in a row; "מידע נוסף" opens all three together (as the old packages did),
      and JS lines up the matching blocks across the cards (data-row).
      Mobile: one grouped list; tapping a row opens it and closes the others.
-     Photos, when they arrive, go as the first child of each .pillar-body. -->
+     Photo test (Or, 2026-10-14): two rotating treatments side by side, the winner goes to all three cards.
+     התוכן = cover: edge-to-edge, each photo sweeps in behind a zig-zag edge, story bars count them,
+     the icon sits on its lower edge. האוכל = deck: a fan of arches in the icon's place; the next dish
+     swings to the front. המרחב keeps its icon until its photos arrive. The photos sit in the head, so a
+     tap opens the card. Without JS: the first photo / a still fan.
+     Phones and tablets (list): the rows stay as they were; JS turns the icon of a card with photos into
+     a story ring (its photos change inside it) that opens the photo stories (#story). data-story-icon
+     is the icon the stories show beside the card's title. data-focus on each photo is its subject
+     (x y, as fractions of the photo): the phone crops are framed around it. -->
 <section class="section pillars" id="pillars">
   <div class="container">
     <h2 class="center h2-accent" data-i18n="pillars-h2">שלושה מרכיבים. אינספור אפשרויות.</h2>
 
     <div class="pillar-grid">
 
-      <!-- המרחב -->
+      <!-- המרחב — videos (Or, 2026-10-14): the short one is the card's title film, the long one is cut into
+           three chapters (by the sea, inside, sunset) that play when the card opens. The film below is
+           the one list of them: desktop plays them inside the card's own icon (the house, its doors cut
+           out); phones build the living row and the deck from it.
+           Videos load (data-src) only when they are about to play; the posters show until then. -->
       <article class="pillar" id="space">
         <h3 class="pillar-heading">
           <button type="button" class="pillar-head" id="pillar-head-space" aria-expanded="false" aria-controls="pillar-panel-space">
-            <span class="pillar-icon" aria-hidden="true"><img src="content/brand/icons-4.png" alt="" width="469" height="310"></span>
+            <span class="pillar-film" aria-hidden="true">
+              <span class="film-frame">
+                <video class="film-title" muted loop playsinline preload="none" poster="content/images/space-title-poster.webp" data-src="content/images/space-title.mp4"></video>
+                <video class="film-chapter" muted playsinline preload="none" poster="content/images/space-sea-poster.webp" data-src="content/images/space-sea.mp4"></video>
+                <video class="film-chapter" muted playsinline preload="none" poster="content/images/space-inside-poster.webp" data-src="content/images/space-inside.mp4"></video>
+                <video class="film-chapter" muted playsinline preload="none" poster="content/images/space-sunset-poster.webp" data-src="content/images/space-sunset.mp4"></video>
+              </span>
+            </span>
+            <span class="pillar-icon pillar-icon-phone" aria-hidden="true"><img src="content/brand/icons-4.png" alt="" width="469" height="310"></span>
             <span class="pillar-titles">
               <span class="pillar-title"><span data-i18n="nav-space">המרחב</span></span>
               <span class="pillar-subtitle" data-row="subtitle" data-i18n="p1-h3">משנים אווירה. פותחים את הראש.</span>
@@ -181,10 +201,19 @@
       </article>
 
       <!-- האוכל -->
-      <article class="pillar" id="food">
+      <article class="pillar" id="food" data-story-icon="content/brand/icons-1.png">
         <h3 class="pillar-heading">
           <button type="button" class="pillar-head" id="pillar-head-food" aria-expanded="false" aria-controls="pillar-panel-food">
-            <span class="pillar-icon" aria-hidden="true"><img src="content/brand/icons-1.png" alt="" width="613" height="949"></span>
+            <span class="pillar-deck" aria-hidden="true" data-rotator="deck">
+              <span class="deck-card" data-pos="0"><img src="content/images/food-salads-400.webp" data-focus="0.5 0.62" srcset="content/images/food-salads-400.webp 400w, content/images/food-salads-724.webp 724w" sizes="(min-width: 1024px) 165px, 64px" alt="" width="724" height="1086" loading="lazy" decoding="async"></span>
+              <span class="deck-card" data-pos="1"><img src="content/images/food-stuffed-400.webp" data-focus="0.55 0.7" srcset="content/images/food-stuffed-400.webp 400w, content/images/food-stuffed-724.webp 724w" sizes="(min-width: 1024px) 165px, 64px" alt="" width="724" height="1086" loading="lazy" decoding="async"></span>
+              <span class="deck-card" data-pos="2"><img src="content/images/food-salad-400.webp" data-focus="0.58 0.68" srcset="content/images/food-salad-400.webp 400w, content/images/food-salad-768.webp 768w" sizes="(min-width: 1024px) 165px, 64px" alt="" width="768" height="1024" loading="lazy" decoding="async"></span>
+              <span class="deck-card" data-pos="3"><img class="focus-mid" src="content/images/food-vine-400.webp" data-focus="0.45 0.6" srcset="content/images/food-vine-400.webp 400w, content/images/food-vine-800.webp 800w, content/images/food-vine-1024.webp 1024w" sizes="(min-width: 1024px) 280px, 110px" alt="" width="1024" height="768" loading="lazy" decoding="async"></span>
+              <span class="deck-card" data-pos="4"><img src="content/images/food-buffet-400.webp" data-focus="0.5 0.68" srcset="content/images/food-buffet-400.webp 400w, content/images/food-buffet-768.webp 768w" sizes="(min-width: 1024px) 165px, 64px" alt="" width="768" height="1024" loading="lazy" decoding="async"></span>
+              <span class="deck-card" data-pos="5"><img src="content/images/food-plate-400.webp" data-focus="0.47 0.67" srcset="content/images/food-plate-400.webp 400w, content/images/food-plate-768.webp 768w" sizes="(min-width: 1024px) 165px, 64px" alt="" width="768" height="1024" loading="lazy" decoding="async"></span>
+            </span>
+            <!-- The deck took the icon's place on desktop; the phone options bring the icon back -->
+            <span class="pillar-icon pillar-icon-phone" aria-hidden="true"><img src="content/brand/icons-1.png" alt="" width="613" height="949" loading="lazy"></span>
             <span class="pillar-titles">
               <span class="pillar-title"><span data-i18n="nav-food">האוכל</span></span>
               <span class="pillar-subtitle" data-row="subtitle" data-i18n="p2-h3">טעמים מקומיים. אירוח מכל הלב.</span>
@@ -221,9 +250,17 @@
       </article>
 
       <!-- התוכן -->
-      <article class="pillar" id="content">
+      <article class="pillar" id="content" data-story-icon="content/brand/icons-22.png">
         <h3 class="pillar-heading">
           <button type="button" class="pillar-head" id="pillar-head-content" aria-expanded="false" aria-controls="pillar-panel-content">
+            <span class="pillar-cover" aria-hidden="true" data-rotator="cover">
+              <img class="slide" src="content/images/content-yoga-800.webp" data-focus="0.5 0.55" srcset="content/images/content-yoga-400.webp 400w, content/images/content-yoga-800.webp 800w, content/images/content-yoga-1024.webp 1024w" sizes="(min-width: 1024px) 340px, 92vw" alt="" width="1024" height="768" loading="lazy" decoding="async">
+              <img class="slide" src="content/images/content-boat-768.webp" data-focus="0.48 0.42" srcset="content/images/content-boat-400.webp 400w, content/images/content-boat-768.webp 768w" sizes="(min-width: 1024px) 340px, 92vw" alt="" width="768" height="1024" loading="lazy" decoding="async">
+              <img class="slide" src="content/images/content-table-800.webp" data-focus="0.55 0.5" srcset="content/images/content-table-400.webp 400w, content/images/content-table-800.webp 800w, content/images/content-table-1024.webp 1024w" sizes="(min-width: 1024px) 340px, 92vw" alt="" width="1024" height="768" loading="lazy" decoding="async">
+              <img class="slide focus-top" src="content/images/content-sea-768.webp" data-focus="0.5 0.36" srcset="content/images/content-sea-400.webp 400w, content/images/content-sea-768.webp 768w" sizes="(min-width: 1024px) 340px, 92vw" alt="" width="768" height="1024" loading="lazy" decoding="async">
+              <img class="slide" src="content/images/content-circle-768.webp" data-focus="0.5 0.48" srcset="content/images/content-circle-400.webp 400w, content/images/content-circle-768.webp 768w" sizes="(min-width: 1024px) 340px, 92vw" alt="" width="768" height="1024" loading="lazy" decoding="async">
+              <img class="slide focus-top" src="content/images/content-move-768.webp" data-focus="0.45 0.45" srcset="content/images/content-move-400.webp 400w, content/images/content-move-768.webp 768w" sizes="(min-width: 1024px) 340px, 92vw" alt="" width="768" height="1024" loading="lazy" decoding="async">
+            </span>
             <span class="pillar-icon" aria-hidden="true"><img src="content/brand/icons-22.png" alt="" width="370" height="340"></span>
             <span class="pillar-titles">
               <span class="pillar-title"><span data-i18n="nav-content">התוכן</span></span>
@@ -511,6 +548,31 @@
   <svg class="wa-icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-wa"/></svg>
   <span class="wa-float-label" data-i18n="nav-wa">דברו איתנו</span>
 </a>
+
+<!-- ── Photo stories (phones and tablets) ───── -->
+<!-- Opened from a story ring in the components list; JS fills the slides, the bars, the title and the
+     tagline from the card. One tour: after a card's last photo, the next card's photos follow. -->
+<div class="story" id="story" role="dialog" aria-modal="true" aria-labelledby="story-title" hidden>
+  <div class="story-stage">
+    <div class="story-slides"></div>
+    <button type="button" class="story-zone story-zone-prev" aria-label="התמונה הקודמת" data-i18n-aria="story-prev"></button>
+    <button type="button" class="story-zone story-zone-next" aria-label="התמונה הבאה" data-i18n-aria="story-next"></button>
+    <div class="story-top">
+      <div class="story-bars"></div>
+      <div class="story-head">
+        <span class="story-icon" aria-hidden="true"><img src="content/brand/icons-1.png" alt="" width="40" height="40"></span>
+        <p class="story-title" id="story-title"></p>
+        <button type="button" class="story-close" aria-label="סגור" data-i18n-aria="pillar-less">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+    </div>
+    <div class="story-bottom">
+      <p class="story-tagline"></p>
+      <a href="#plan" class="btn btn-primary story-cta" data-track="story-plan" data-i18n="cta-plan">בואו נתכנן את היום שלכם!</a>
+    </div>
+  </div>
+</div>
 
 <!-- ── SVG sprite ───────────────────────────── -->
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
