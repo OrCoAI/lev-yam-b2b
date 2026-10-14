@@ -137,7 +137,9 @@ One WhatsApp entry point per viewport: header button on desktop, floating button
 - **No CSS framework.** We own the layout.
 - **One type scale, one spacing scale** (2026-10-14 polish). Tokens on `:root` in `css/style.css`:
   `--fs-xs/sm/md/lead/h3/h2/h1` (one size per role; leads and headings are fluid), `--lh-heading/ui/lead/body`
-  (1.2 / 1.35 / 1.5 / 1.65), `--space-title` (title → text, 1.5rem) and `--space-object` (text → the thing it
+  (1.2 / 1.35 / 1.5 / 1.65), `--space-section` (a section's edge → its content, top and bottom, 48px on phones →
+  80px wide — every section uses it; only the intro's top is smaller, because the hero's wave already adds ≈ 26px of
+  cream; tightened ~20% by Or, 2026-10-14), `--space-title` (title → text, 1.5rem) and `--space-object` (text → the thing it
   introduces, 2.5rem), `--pad-card`, `--radius-sm/md/lg`, `--wave`. Use them instead of ad-hoc values: the
   same relationship gets the same gap in every section. `p + p` is half a line (`0.5lh`). Headings use
   `text-wrap: balance`, paragraphs and list items `text-wrap: pretty` — no lonely last words; never fix a

@@ -45,7 +45,8 @@
   --lh-lead: 1.5;
   --lh-body: 1.65;
   /* Spacing — the same gap for the same relationship in every section */
-  --space-title: 1.5rem;    /* section title (and its wave) → the text under it */
+  --space-section: clamp(3rem, 6vw, 5rem);   /* a section's edge → its content, top and bottom (48px on phones → 80px wide) */
+  --space-title: 1.5rem;   /* section title (and its wave) → the text under it */
   --space-object: 2.5rem;   /* section text → the thing it introduces: a CTA, the cards, the list, the planner */
   --pad-card: 1.15rem;      /* inner gutter of cards and panels on phones */
   --radius-md: 16px;
@@ -183,7 +184,7 @@ html[lang="ar"] .h2-accent { padding-bottom: 1.5rem; }
 }
 .container.narrow { max-width: 600px; }  /* ≈ 72 characters of body text */
 
-.section { padding-block: clamp(3.5rem, 8vw, 6.5rem); }
+.section { padding-block: var(--space-section); }
 .section-cream { background: var(--cream); }
 
 /* ── Buttons ─────────────────────────────────── */
@@ -512,8 +513,8 @@ html[lang="ar"] .hero h1 { font-size: min(var(--fs-h1), 8.9vw); }
 .section-cream .ph { background-color: var(--white); }
 
 /* ── Intro — the two opening sentences, right under the hero ── */
-/* The hero's curve already hands some cream to the top of the section */
-.intro { padding-block: clamp(2.25rem, 5vw, 4rem) clamp(2.75rem, 6vw, 4.5rem); }
+/* The hero's curve already hands some cream (≈ 26px on average) to the top of the section */
+.intro { padding-block: clamp(2rem, 4vw, 3.25rem) var(--space-section); }
 .lede {
   max-width: 700px;   /* ≈ 72 characters of the lead size */
   margin: 0 auto;
@@ -840,6 +841,7 @@ html[lang="ar"] .hero h1 { font-size: min(var(--fs-h1), 8.9vw); }
   .fit-types { display: contents; }   /* the title and the list take their own grid areas */
   .fit-types-title { grid-area: thead; align-self: baseline; align-self: last baseline; margin-bottom: 0; }   /* the H2 may run two lines (Arabic) */
   .fit-list { grid-area: types; grid-template-columns: minmax(0, 1fr); }
+  .fit-item:last-child { padding-bottom: 0; }   /* no hairline under the last row, so no space for one: the section ends on the same gap as the others */
 }
 
 /* One type: the brand icon in a white circle and the name, on a hairline — a
@@ -911,7 +913,7 @@ html[lang="ar"] .hero h1 { font-size: min(var(--fs-h1), 8.9vw); }
 .plan {
   background: var(--blue);
   color: var(--white);
-  padding-bottom: calc(clamp(3.5rem, 8vw, 6.5rem) + env(safe-area-inset-bottom, 0px));
+  padding-bottom: calc(var(--space-section) + env(safe-area-inset-bottom, 0px));
 }
 .plan h2 { color: var(--white); }
 /* White on blue is read at ≥ 19px bold */
