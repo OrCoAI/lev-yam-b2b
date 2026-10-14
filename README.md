@@ -43,11 +43,11 @@ Merging to `main` deploys.
 | 1 | Hero — brand stamp, H1, subtitle, lead, two CTAs, video | `#hero` |
 | 2 | Facts strip *(hidden until data)* | `#facts` |
 | 3 | Intro — the two opening sentences | `#intro` |
-| 4 | Three components — space, food, content; folded (desktop cards open together, mobile list one at a time) | `#space` `#food` `#content` |
+| 4 | Three components — space, food, content; folded (cards from 1024px open together; below that one list, one item at a time) | `#space` `#food` `#content` |
 | 4b | Testimonials + logos *(hidden until content)* | `#testimonials` |
 | 5 | One day, exactly for you — the six types as an icon list + CTA | `#fit` |
 | 6 | Good experience, good impact | `#impact` |
-| 7 | Let's meet — closing + WhatsApp planner: four one-tap questions beside the message they write (blue finale, one white card) | `#plan` |
+| 7 | Let's meet — closing + WhatsApp planner: four one-tap questions beside the message they write (blue finale, one white card; side by side from 1024px) | `#plan` |
 | 8 | Footer — removed for now (Or, 2026-10-12); its copy is kept in `content/copy.md` | — |
 | — | Floating WhatsApp button (mobile only) | `#wa-float` |
 

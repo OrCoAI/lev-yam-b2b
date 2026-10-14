@@ -456,11 +456,16 @@ function escapeHtml(s) {
   return s.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 }
 
+// A number range ("15-30") is wrapped so it never breaks at the hyphen inside RTL text
+function keepRanges(html) {
+  return html.replace(/(\d+)-(\d+)/g, '<span class="range">$1-$2</span>');
+}
+
 function composePreviewHtml(changed) {
   return composeParts()
     .map((p) => {
-      if (!p.mark) return escapeHtml(p.text);
-      return `<mark class="sel${p.mark === changed ? ' is-new' : ''}">${escapeHtml(p.text)}</mark>`;
+      if (!p.mark) return keepRanges(escapeHtml(p.text));
+      return `<mark class="sel${p.mark === changed ? ' is-new' : ''}">${keepRanges(escapeHtml(p.text))}</mark>`;
     })
     .join('');
 }
@@ -545,6 +550,8 @@ function renderStep({ animate = false, back = false } = {}) {
   });
 
   root.querySelectorAll('.flow-progress span').forEach((seg, i) => seg.classList.toggle('is-done', i <= index));
+  const backBtn = root.querySelector('.flow-back');
+  if (backBtn) backBtn.disabled = currentStep === 'event';  // stays in place, faded (see .flow-back in the CSS)
   const count = document.getElementById('flow-count');
   if (count && QUESTION_KEYS[currentStep]) {
     const total = Object.keys(QUESTION_KEYS).length;
@@ -585,7 +592,14 @@ function revealSendButton() {
   const cta = document.getElementById('plan-cta');
   if (!cta) return;
   const hidden = cta.getBoundingClientRect().bottom - window.innerHeight + 20;
-  if (hidden > 0) window.scrollBy({ top: hidden, behavior: prefersReducedMotion() ? 'auto' : 'smooth' });
+  if (hidden <= 0) return;
+  // ...but never drag the ready step (the stamp) under the fixed header
+  const step = document.querySelector('.step-ready');
+  const header = document.getElementById('site-header');
+  const headerH = header ? header.getBoundingClientRect().height : 0;
+  const room = step ? step.getBoundingClientRect().top - (headerH + 8) : hidden;
+  const by = Math.min(hidden, Math.max(0, room));
+  if (by > 0) window.scrollBy({ top: by, behavior: prefersReducedMotion() ? 'auto' : 'smooth' });
 }
 
 function goToStep(step, { via = 'next' } = {}) {
@@ -728,26 +742,27 @@ function initHeader() {
 }
 
 // ── Floating WhatsApp button ──────────────────────────────────
-// Hidden while the planner (questions, message, send button) is on screen, so there
-// is never a second WhatsApp button competing with the one the user is about to tap.
+// Hidden while the hero's own buttons or the planner (questions, message, send
+// button) are on screen, so there is never a second WhatsApp button competing
+// with the one the user is about to tap.
 function initFloatingButton() {
   const float = document.getElementById('wa-float');
   if (!float || !('IntersectionObserver' in window)) return;
   const visible = new Set();
-  const targets = [document.getElementById('planner')].filter(Boolean);
+  const targets = [document.getElementById('planner'), document.querySelector('.hero-ctas')].filter(Boolean);
   const io = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
       if (entry.isIntersecting) visible.add(entry.target); else visible.delete(entry.target);
     });
     float.classList.toggle('is-hidden', visible.size > 0);
-  }, { threshold: 0.05 });
+  }, { threshold: 0 });
   targets.forEach((el) => io.observe(el));
 }
 
 // ── Three components accordion ────────────────────────────────
-// Desktop (≥900px): the three cards open and close together, as the old packages did.
-// Mobile: one at a time; opening an item closes the others.
-const desktopMQ = window.matchMedia('(min-width: 900px)');
+// Desktop (≥1024px): the three cards open and close together, as the old packages did.
+// Mobile and tablets: one at a time; opening an item closes the others.
+const desktopMQ = window.matchMedia('(min-width: 1024px)');
 
 function setPillarOpen(pillar, open) {
   pillar.classList.toggle('is-open', open);

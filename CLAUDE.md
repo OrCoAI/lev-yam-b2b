@@ -60,35 +60,51 @@ logos, footer contact details. Switch on by removing `hidden` once real content 
 
 0. Sticky header — logo mark, anchors (המרחב · האוכל · התוכן · למי זה מתאים · צרו קשר), HE/AR, WhatsApp
    (desktop ≥900px). At the very top the logo mark is hidden (the hero stamp is the logo); it fades in on scroll.
+   The nav sits on the page's centre line (grid 1fr auto 1fr). Over the hero the WhatsApp button is a white
+   outline (the hero's own button is the one orange thing on the first screen); it turns orange once scrolled.
+   The language pill is dark glass so its white label reads on any video frame; each half is a 44px target.
 1. Hero `#hero` — the brand stamp (lands on load; the place-name eyebrow was removed by Or), H1
    "יוצאים מהשגרה. נפגשים אחרת.", subtitle, lead with "לב ים" bold (as in the doc), CTAs
-   "בואו נתכנן את היום שלכם!" → `#plan` / "גלו את לב ים" → `#intro`; vertical video on all screens
+   "בואו נתכנן את היום שלכם!" → `#plan` / "גלו את לב ים" → `#intro`; vertical video on all screens.
+   The two H1 sentences are flex items: one line when both fit, otherwise stacked and centred. On short
+   phones (≤740px tall) the stack tightens so both buttons stay above the fold; the floating WhatsApp
+   button hides while the hero buttons are on screen. A soft dark band at the top of the video keeps the
+   white header legible.
 2. Facts strip `#facts` — hidden until data
 3. Intro `#intro` — the two opening sentences ("מקום לצאת מהשגרה…", "בין אם אתם מתכננים…") on cream,
    right under the hero. The "why" section that followed them (H2, story, quote, photo) was removed by Or
    (2026-10-13); its text is kept in `content/copy.md` under "הוסר מהדף".
 4. Three components `#space` `#food` `#content` — straight after the intro. Folded (Or, 2026-10-12).
-   Desktop: three cream cards in a row like the old packages; "מידע נוסף" opens all three together.
-   Mobile: one grouped list, one item open at a time (an item above closes instantly with scroll
-   compensation). Every item has Or's structure (text by Or, 2026-10-13), with the same spacing: title +
-   tagline → entry paragraph → list label + six bullets → end paragraph (white box). No 01/02/03 numbers.
-   On desktop, JS lines up matching blocks across the cards (`data-row`, `--row-*`). Header links open
-   the item. Real photos go at the top of each `.pillar-body`.
+   Desktop (≥1024px — below that the cards would be too narrow for a line of text): three cream cards in
+   a row like the old packages; "מידע נוסף" opens all three together. Phones and tablets: one grouped
+   list (max 880px), one item open at a time (an item above closes instantly with scroll compensation);
+   tablets 900–1023 show the bullets in two columns. Every item has Or's structure (text by Or,
+   2026-10-13), with the same spacing: title + tagline → small wave → entry paragraph → list label + six
+   bullets → end paragraph (white box). No 01/02/03 numbers. On desktop, JS equalises the taglines and
+   the entry paragraphs across the cards (`data-row`, `--row-subtitle/intro`) so the three lists start
+   on one line; lists and note boxes keep their natural heights and the slack sits above the foot bar.
+   Header links open the item. Real photos go at the top of each `.pillar-body`.
    **Never remove copy to fix layout** — Or wants all text kept; solve it with structure and spacing.
 4b. Testimonials + logos `#testimonials` — hidden until content
-5. Fit `#fit` — "יום אחד. בדיוק בשבילכם." + text + "מתאים במיוחד ל:" (the six types as rows with their
-   brand icons; they rise in on first view) + CTA. A plain list, not controls: Or asked (2026-10-13) that
-   nothing here touches the planner. Phones: one column; 600px: two; from 900px the text and the button
-   sit on one side and the list on the other.
+5. Fit `#fit` — "יום אחד. בדיוק בשבילכם." + text + "מתאים במיוחד ל:" (the six types as rows: brand icon
+   in a white circle, the name, a hairline between rows; they rise in on first view) + CTA. A list to read,
+   not buttons: Or asked (2026-10-13) that nothing here touches the planner, and the rows deliberately
+   don't look like the planner's tiles. Phones: one column, full-width button; 600px: two columns in the
+   text's 680px measure; from 900px the text and the button sit on one side and the list on the other,
+   "מתאים במיוחד ל:" at h3 size with its baseline on the H2's.
 6. Impact `#impact` — full-bleed photo, short text
 7. Plan `#plan` — the finale: blue full-bleed section, one white card in two parts (side by side from
    900px, stacked below): the questions and the cream message panel. Four questions, one at a time,
-   one tap each, and the flow moves on by itself: what (6 types, #fit icons) → how many (4 sizes) →
-   when (next 6 months, built by JS, + "later" / "not decided") → what to include (several; "המשך").
+   one tap each, and the flow moves on by itself: what (6 types, #fit icons; equal tiles, icons on one
+   line) → how many (4 sizes) → when (next 6 months, built by JS, three to a row like quarters, + "later" /
+   "not decided" sharing the last row) → what to include (several; "המשך"). Side by side from 1024px
+   (stacked below: the tiles need the width).
    Then a ready step: the brand stamp lands and the answers show as pills that can be changed.
-   The message rewrites itself with every answer (new fragment drawn in orange marker). The send
-   button stays white until the ready step, then turns orange; it works at every step. Back and
-   skip in the top row. All answers optional. Without JS only the message and button show.
+   The message rewrites itself with every answer (new fragment drawn in orange marker; the message is
+   regular weight, the chosen fragments bold; "15-30" is wrapped so it never breaks at the hyphen). The
+   send button follows the message and stays white until the ready step, then turns orange; it works at
+   every step. Back (faded on the first question, keeping its place) and skip in the top row; every control
+   is a 44px target. All answers optional. Without JS only the message and button show.
    The fun is in the motion, not in decoration — a busy chat-card version was rejected; keep it
    clean. No direct number (removed). Group-size ranges in the message use a plain hyphen
    (an en dash shows reversed in RTL/WhatsApp).
@@ -105,6 +121,14 @@ One WhatsApp entry point per viewport: header button on desktop, floating button
 - **Mobile-first.** Most visitors will be on phones. Test at 375px width; photo before text on mobile.
 - **Fast.** No CDN libraries unless absolutely necessary. No heavy JS. Hero video stays ≤ ~2.5 MB.
 - **No CSS framework.** We own the layout.
+- **One type scale, one spacing scale** (2026-10-14 polish). Tokens on `:root` in `css/style.css`:
+  `--fs-xs/sm/md/lead/h3/h2/h1` (one size per role; leads and headings are fluid), `--lh-heading/ui/lead/body`
+  (1.2 / 1.35 / 1.5 / 1.65), `--space-title` (title → text, 1.5rem) and `--space-object` (text → the thing it
+  introduces, 2.5rem), `--pad-card`, `--radius-sm/md/lg`, `--wave`. Use them instead of ad-hoc values: the
+  same relationship gets the same gap in every section. `p + p` is half a line (`0.5lh`). Headings use
+  `text-wrap: balance`, paragraphs and list items `text-wrap: pretty` — no lonely last words; never fix a
+  wrap by editing copy. Running text keeps a measure of ≈ 72 characters (`.container.narrow` 600px,
+  `.lede` 700px, `.hero-lead` 560px). Hover effects live under `@media (hover: hover)`.
 - **Brand colours only** (Or, 2026-10-12): orange `#f49834`, cream `#fff7ea`, blue `#2c92bf`, plus white
   and a neutral dark for text. No navy, teal, mint or extra tints; tints are the brand colours at low
   alpha. Blue is the dark background; orange is for CTAs, selected states and accents.
