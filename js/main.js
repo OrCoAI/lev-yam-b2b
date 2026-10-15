@@ -906,16 +906,15 @@ function initPillars() {
 }
 
 // ── Photo rotators (2026-10-14) ───────────────────────────────
-// Desktop cards — התוכן (cover): the photos sweep in one after another, story bars count
-// them; האוכל (deck): a fan of arches, the next dish swings to the front.
+// Desktop cards (cover): the photos sweep in one after another, story bars count them —
+// all three cards alike (Or, 2026-10-15); Space's cover plays its clips the same way.
 // Phones — the living rows (rows): the photos cross-fade behind the chevron.
-// The clock is a CSS animation (the active story bar, the front card's hold, the row's
-// drift): when it ends, the next photo comes in. CSS pauses it under the pointer and while
-// the card is open; here it pauses off screen. Reduced motion: the first photo / a still fan.
-const ROTATOR_CLOCKS = ['cover-bar', 'deck-hold', 'peek-drift'];
-const ROTATOR_ITEMS = { cover: '.slide', deck: '.deck-card', rows: '.peek' };
-
-const imgOf = (el) => (el.tagName === 'IMG' ? el : el.querySelector('img'));
+// The clock is a CSS animation (the active story bar, the row's drift): when it ends, the
+// next photo comes in. CSS pauses it under the pointer and while the card is open; here it
+// pauses off screen. A clip is its own clock: its end brings the next, and its bar follows
+// it. Reduced motion: the first photo (or poster) stays.
+const ROTATOR_CLOCKS = ['cover-bar', 'peek-drift'];
+const ROTATOR_ITEMS = { cover: '.slide', rows: '.peek' };
 
 // A photo waiting in data-src loads one step before it is shown
 function loadDeferred(img) {
@@ -927,6 +926,7 @@ function loadDeferred(img) {
 function startRotator(rotator) {
   const type = rotator.dataset.rotator;
   const items = [...rotator.querySelectorAll(ROTATOR_ITEMS[type])];
+  const isFilm = items[0].tagName === 'VIDEO';
   let current = 0;
   let bars = [];
 
@@ -938,25 +938,37 @@ function startRotator(rotator) {
   }
 
   const show = (next) => {
-    if (type === 'deck') {
-      items.forEach((card, i) => { card.dataset.pos = String((i - next + items.length) % items.length); });
-    } else {
-      items.forEach((item) => item.classList.remove('is-leaving'));
-      if (next !== current) items[current].classList.replace('is-current', 'is-leaving');
-      items[next].classList.add('is-current');
-      bars.forEach((bar, i) => {
-        bar.classList.toggle('is-done', i < next);
-        bar.classList.toggle('is-active', i === next);
-      });
-    }
-    loadDeferred(imgOf(items[(next + 1) % items.length]));
+    const leaving = items[current];
+    items.forEach((item) => item.classList.remove('is-leaving'));
+    if (next !== current) leaving.classList.replace('is-current', 'is-leaving');
+    items[next].classList.add('is-current');
+    bars.forEach((bar, i) => {
+      bar.classList.toggle('is-done', i < next);
+      bar.classList.toggle('is-active', i === next);
+    });
     current = next;
+    if (!isFilm) {
+      loadDeferred(items[(next + 1) % items.length]);
+      return;
+    }
+    // A clip starts as it sweeps in (the next one buffers meanwhile); the one it covers
+    // rests once the sweep is over
+    bars[next].style.setProperty('--progress', '0');
+    if (!rotator.classList.contains('is-paused')) playVideo(items[next]);
+    loadVideo(items[(next + 1) % items.length]);
+    if (leaving !== items[next]) {
+      setTimeout(() => {
+        if (leaving.classList.contains('is-current')) return;
+        leaving.pause();
+        leaving.currentTime = 0;
+      }, 1100);
+    }
   };
 
   // Moves on only once the next photo has loaded, so a slow image never comes in blank
   const advance = () => {
     const next = (current + 1) % items.length;
-    const img = imgOf(items[next]);
+    const img = items[next];
     loadDeferred(img);
     if (img.complete) { show(next); return; }
     const go = () => show(next);
@@ -964,38 +976,64 @@ function startRotator(rotator) {
     img.addEventListener('error', go, { once: true });
   };
 
-  rotator.addEventListener('animationend', (e) => {
-    if (ROTATOR_CLOCKS.includes(e.animationName)) advance();
-  });
+  if (isFilm) {
+    // The story bar follows the clip, frame by frame, while it plays
+    let frame = 0;
+    const follow = () => {
+      const video = items[current];
+      if (video.duration) bars[current].style.setProperty('--progress', (video.currentTime / video.duration).toFixed(4));
+      frame = video.paused || video.ended ? 0 : requestAnimationFrame(follow);
+    };
+    items.forEach((video, i) => {
+      video.addEventListener('playing', () => { if (i === current && !frame) frame = requestAnimationFrame(follow); });
+      video.addEventListener('ended', () => { if (i === current) show((i + 1) % items.length); });
+    });
+    // Off screen the clip pauses; back on screen it carries on
+    rotator.addEventListener('rotator-visibility', () => {
+      if (rotator.classList.contains('is-paused')) items[current].pause();
+      else playVideo(items[current]);
+    });
+    rotator.classList.add('is-film');
+  } else {
+    rotator.addEventListener('animationend', (e) => {
+      if (ROTATOR_CLOCKS.includes(e.animationName)) advance();
+    });
+  }
   rotator.classList.add('is-rotating');
   show(0);
 }
 
 function initRotators() {
+  // Every cover photo is framed on its subject (also when it stands still)
+  document.querySelectorAll('.pillar-cover').forEach(observeFrames);
   const rotators = document.querySelectorAll('[data-rotator]');
   if (!rotators.length || prefersReducedMotion() || !('IntersectionObserver' in window)) return;
 
   // Each rotator starts the first time it is well on screen (the cover's first photo sweeps
-  // in, the fan opens) and pauses whenever it scrolls away. A hidden one (the desktop media
-  // on a phone, the living rows on desktop) never intersects, so it never runs.
+  // in) and pauses whenever it scrolls away. A hidden one (the desktop covers on a phone,
+  // the living rows on desktop) never intersects, so it never runs.
   const io = new IntersectionObserver((entries) => {
     entries.forEach(({ target, isIntersecting }) => {
       target.classList.toggle('is-paused', !isIntersecting);
       if (isIntersecting && !target.classList.contains('is-rotating')) startRotator(target);
+      else target.dispatchEvent(new Event('rotator-visibility'));
     });
   }, { threshold: 0.4 });
 
   rotators.forEach((rotator) => {
     rotator.classList.add('is-armed');
     io.observe(rotator);
+    // A clip cover's first clip loads a little before it is seen, so it starts at once
+    const firstClip = rotator.querySelector('video.slide');
+    if (firstClip) loadNear(rotator, firstClip);
   });
 }
 
 // ── Card photos ───────────────────────────────────────────────
 // The photos of a card, read from its desktop markup (the one list of photos): sources,
-// size, and the subject (data-focus) that every phone crop is framed around
+// size, and the subject (data-focus) that every crop is framed around
 function cardPhotos(pillar) {
-  return [...pillar.querySelectorAll('.pillar-cover .slide, .deck-card img')].map((img) => {
+  return [...pillar.querySelectorAll('.pillar-cover img.slide')].map((img) => {
     const srcset = img.getAttribute('srcset') || '';
     const src = img.getAttribute('src');
     return {
@@ -1011,19 +1049,32 @@ function cardPhotos(pillar) {
 
 // Frames a cropped photo on its subject: data-focus (x y, fractions of the photo) lands on
 // data-target (x y, fractions of the frame; the centre unless set), as far as the photo's
-// edges allow. Re-framed whenever a frame changes size — fonts, language, rotation.
+// edges allow. A focus that also gives the subject's size (x y w h — the dish, for the food)
+// zooms in until the subject fills the frame: halfway (geometrically) between showing all of
+// it and covering the frame with it, so a wide dish in a tall frame loses only its rims.
+// Re-framed whenever a frame changes size — fonts, language, rotation.
+const MAX_ZOOM = 1.8;
 function framePhoto(img) {
   const cw = img.clientWidth;
   const ch = img.clientHeight;
   const iw = Number(img.dataset.w || img.getAttribute('width'));
   const ih = Number(img.dataset.h || img.getAttribute('height'));
   if (!cw || !ch || !iw || !ih) return;
-  const [fx, fy] = img.dataset.focus.split(' ').map(Number);
+  const [fx, fy, fw, fh] = img.dataset.focus.split(' ').map(Number);
   const [tx, ty] = (img.dataset.target || '0.5 0.5').split(' ').map(Number);
-  const scale = Math.max(cw / iw, ch / ih);
+  const cover = Math.max(cw / iw, ch / ih);
+  const scale = fw && fh
+    ? Math.min(Math.max(cover, Math.sqrt((cw / (fw * iw)) * (ch / (fh * ih)))), cover * MAX_ZOOM)
+    : cover;
   const x = Math.min(0, Math.max(cw - iw * scale, tx * cw - fx * iw * scale));
   const y = Math.min(0, Math.max(ch - ih * scale, ty * ch - fy * ih * scale));
-  img.style.objectPosition = `${x.toFixed(1)}px ${y.toFixed(1)}px`;
+  // object-fit draws the photo at the cover scale; the rest of the zoom is a scale about the
+  // frame's centre, so the photo is placed where that scale carries it to (x, y)
+  const zoom = scale / cover;
+  const px = cw / 2 + (x - cw / 2) / zoom;
+  const py = ch / 2 + (y - ch / 2) / zoom;
+  img.style.objectPosition = `${px.toFixed(1)}px ${py.toFixed(1)}px`;
+  img.style.scale = zoom > 1.001 ? zoom.toFixed(3) : '';
 }
 const photoFrames = 'ResizeObserver' in window
   ? new ResizeObserver((entries) => entries.forEach(({ target }) => target.querySelectorAll('img[data-focus]').forEach(framePhoto)))
@@ -1082,11 +1133,23 @@ function buildRowPhotos(pillar, photos) {
   observeFrames(layer);
 }
 
-// Videos wait in data-src (only the poster loads) until they are about to play
+// Videos wait in data-src (only the poster loads) until they are about to play; a loaded one
+// buffers in full, so it starts the moment its turn comes, not a second later
 function loadVideo(video) {
   if (!video.dataset.src) return;
+  video.preload = 'auto';
   video.src = video.dataset.src;
   delete video.dataset.src;
+}
+// Load a video a little before it scrolls into view
+function loadNear(target, video) {
+  if (!('IntersectionObserver' in window)) return;
+  const io = new IntersectionObserver(([entry]) => {
+    if (!entry.isIntersecting) return;
+    loadVideo(video);
+    io.disconnect();
+  }, { rootMargin: '50% 0px' });
+  io.observe(target);
 }
 function playVideo(video) {
   loadVideo(video);
@@ -1114,13 +1177,18 @@ function buildStack(pillar, media) {
   stack.className = 'pillar-stack';
   stack.setAttribute('aria-hidden', 'true');
   const isFilm = media[0].tagName === 'VIDEO';
+  // Each photo sits in its own window, which clips it when it is zoomed onto its subject
   let cards = media.map((item, i) => {
     const card = document.createElement('div');
     card.className = 'stack-card';
     card.dataset.depth = String(i);
-    card.append(item);
+    const frame = document.createElement('span');
+    frame.className = 'stack-photo';
+    frame.append(item);
+    card.append(frame);
     return card;
   });
+  const mediaOf = (card) => card.firstChild.firstChild;
   const inPhotoOrder = [...cards];
   stack.append(...cards);
   pillar.querySelector('.pillar-body').append(stack);
@@ -1136,7 +1204,7 @@ function buildStack(pillar, media) {
   const syncFilm = () => {
     if (!isFilm) return;
     cards.forEach((card, depth) => {
-      const video = card.firstChild;
+      const video = mediaOf(card);
       if (depth === 0 && onScreen && !reduced) playVideo(video);
       else video.pause();
       if (depth === 1 && onScreen) loadVideo(video);
@@ -1157,9 +1225,10 @@ function buildStack(pillar, media) {
     top.style.setProperty('--x', `${dirX * 150}%`);
     top.style.setProperty('--y', '-8%');
     top.style.setProperty('--r', `${dirX * 26}deg`);
+    if (isFilm && onScreen && !reduced) playVideo(mediaOf(cards[1]));
     setTimeout(() => {
       cards = [...cards.slice(1), top];
-      if (isFilm) top.firstChild.currentTime = 0;
+      if (isFilm) mediaOf(top).currentTime = 0;
       layout();
       top.classList.remove('is-flying');
       reset(top);
@@ -1170,9 +1239,9 @@ function buildStack(pillar, media) {
 
   // A chapter that ends deals the next one — or, once a finger has taken over, plays again
   if (isFilm) {
-    cards.forEach((card) => card.firstChild.addEventListener('ended', () => {
+    cards.forEach((card) => mediaOf(card).addEventListener('ended', () => {
       if (cards[0] !== card) return;
-      if (touched) playVideo(card.firstChild);
+      if (touched) playVideo(mediaOf(card));
       else fly(-1);
     }));
   }
@@ -1180,6 +1249,7 @@ function buildStack(pillar, media) {
   // Opening the row (living rows on): the photo the row was showing is on top of the pile.
   // The panel is still unfolding, so the pile re-stacks at once, without motion.
   pillar.addEventListener('pillar-toggle', (e) => {
+    if (isFilm && e.detail.open && !desktopMQ.matches) cards.slice(0, 2).forEach((card) => loadVideo(mediaOf(card)));
     const shown = pillar.querySelector('.row-photos .peek.is-current');
     if (!e.detail.open || busy || !shown) return;
     const top = inPhotoOrder[[...shown.parentElement.children].indexOf(shown)];
@@ -1235,21 +1305,22 @@ function buildStack(pillar, media) {
     onScreen = entry.isIntersecting;
     stop();
     syncFilm();
-    if (onScreen && !touched && !isFilm) timer = setInterval(() => fly(-1), 3400);
+    if (onScreen && !touched && !isFilm) timer = setInterval(() => fly(-1), 2400);
   }, { threshold: 0.6 }).observe(stack);
 }
 
 // Living rows, for the Space film: the title film loops in the row's window while the row is
 // closed and on screen
-function buildRowVideo(pillar, film) {
+function buildRowVideo(pillar, title) {
   const layer = document.createElement('span');
   layer.className = 'row-video';
   layer.setAttribute('aria-hidden', 'true');
-  const video = cloneFilm(film.querySelector('.film-title'), true);
+  const video = cloneFilm(title, true);
   layer.append(video);
   pillar.querySelector('.pillar-head').prepend(layer);
   pillar.classList.add('has-film');
   if (prefersReducedMotion() || !('IntersectionObserver' in window)) return;
+  loadNear(layer, video);
   let onScreen = false;
   const sync = () => {
     if (onScreen && !pillar.classList.contains('is-open')) playVideo(video);
@@ -1257,39 +1328,6 @@ function buildRowVideo(pillar, film) {
   };
   pillar.addEventListener('pillar-toggle', sync);
   new IntersectionObserver(([entry]) => { onScreen = entry.isIntersecting; sync(); }, { threshold: 0.3 }).observe(layer);
-}
-
-// Desktop: the Space card's arch plays the title film while closed; opened, its three
-// chapters, one after another (each one's end brings the next)
-function initFilms() {
-  document.querySelectorAll('.pillar-film').forEach((film) => {
-    const pillar = film.closest('.pillar');
-    const title = film.querySelector('.film-title');
-    const chapters = [...film.querySelectorAll('.film-chapter')];
-    let current = 0;
-    let onScreen = false;
-    const sync = () => {
-      const open = pillar.classList.contains('is-open');
-      film.classList.toggle('is-chapters', open);
-      chapters.forEach((chapter, i) => chapter.classList.toggle('is-current', i === current));
-      [title, ...chapters].forEach((video) => video.pause());
-      if (!onScreen || prefersReducedMotion()) return;
-      if (open) {
-        playVideo(chapters[current]);
-        loadVideo(chapters[(current + 1) % chapters.length]);
-      } else {
-        playVideo(title);
-      }
-    };
-    chapters.forEach((chapter, i) => chapter.addEventListener('ended', () => {
-      current = (i + 1) % chapters.length;
-      chapters[current].currentTime = 0;
-      sync();
-    }));
-    pillar.addEventListener('pillar-toggle', sync);
-    if (!('IntersectionObserver' in window)) return;
-    new IntersectionObserver(([entry]) => { onScreen = entry.isIntersecting; sync(); }, { threshold: 0.4 }).observe(film);
-  });
 }
 
 function initPhoneMedia() {
@@ -1305,11 +1343,13 @@ function initPhoneMedia() {
       return img;
     }));
   });
-  // The Space film: its title film in the living row, its chapters in the deck
-  document.querySelectorAll('.pillar-film').forEach((film) => {
-    const pillar = film.closest('.pillar');
-    buildRowVideo(pillar, film);
-    buildStack(pillar, [...film.querySelectorAll('.film-chapter')].map((chapter) => cloneFilm(chapter, false)));
+  // The Space film: its title film in the living row, its chapters (kept in a template, as
+  // desktop plays the tour in full) in the deck
+  document.querySelectorAll('.pillar-cover .film-title').forEach((title) => {
+    const pillar = title.closest('.pillar');
+    const chapters = pillar.querySelector('template.film-chapters');
+    buildRowVideo(pillar, title);
+    if (chapters) buildStack(pillar, [...chapters.content.querySelectorAll('video')].map((chapter) => cloneFilm(chapter, false)));
   });
 }
 
@@ -1349,7 +1389,6 @@ document.addEventListener('DOMContentLoaded', () => {
   initHeroVideo();
   initPillars();
   initPhoneMedia();
-  initFilms();
   initRotators();
   applyLanguage(currentLang);
 });

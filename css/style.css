@@ -643,18 +643,20 @@ html[lang="ar"] .hero h1 { font-size: min(var(--fs-h1), 8.9vw); }
 }
 .pillar-icon img { width: auto; height: auto; max-width: 32px; max-height: 32px; }
 
-/* Photos and videos (Or, 2026-10-14) — on desktop each card has its own frame (A cover,
-   B fan of arches, C its films in its icon). Each frame decides the crop and its photos fill
-   it; .focus-* moves the crop of a photo whose subject sits higher. Each rotator's clock is a
-   CSS animation (the active story bar, the front card's hold) and JS moves on when it ends,
-   so pausing the animation pauses the photos: under the pointer, while the card is open,
-   off screen (JS). */
+/* Photos and videos (Or, 2026-10-14) — on desktop the three cards share one frame, the
+   cover (Or, 2026-10-15: food and Space like התוכן). Its photos are framed on their subject
+   (data-focus, by JS; .focus-* is the fallback without it). The clock of a photo cover is a
+   CSS animation (the active story bar) and JS moves on when it ends, so pausing the animation
+   pauses the photos: under the pointer, while the card is open, off screen (JS). The Space
+   cover plays its clips one after another; each one's end brings the next, and its story bar
+   follows the clip (JS). */
 .pillar-cover img,
-.deck-card img { width: 100%; height: 100%; object-fit: cover; }
+.pillar-cover video { width: 100%; height: 100%; object-fit: cover; }
 
-/* A · cover (התוכן): a wide frame on a line of its own above the icon, titles and chevron.
+/* The cover: a wide frame on a line of its own above the icon, titles and chevron.
    Each photo sweeps in from the right behind a zig-zag edge — the brand's wave on its side —
-   while the photo on screen drifts slowly closer or away. */
+   while the photo on screen drifts slowly closer or away. A clip sweeps in the same way and
+   needs no drift: it moves by itself. */
 .pillar-cover {
   position: relative;
   display: block;
@@ -673,11 +675,18 @@ html[lang="ar"] .hero h1 { font-size: min(var(--fs-h1), 8.9vw); }
 /* is-leaving keeps the same animations, so the outgoing photo keeps drifting under the sweep */
 .pillar-cover .slide.is-current,
 .pillar-cover .slide.is-leaving {
-  animation: cover-wipe 1.1s cubic-bezier(0.7, 0, 0.3, 1) both, cover-drift-out 6.5s linear both;
+  animation: cover-wipe 1.1s cubic-bezier(0.7, 0, 0.3, 1) both, cover-drift-out 4.5s linear both;
 }
 .pillar-cover .slide:nth-of-type(even).is-current,
 .pillar-cover .slide:nth-of-type(even).is-leaving { animation-name: cover-wipe, cover-drift-in; }
+.pillar-cover.is-film .slide.is-current,
+.pillar-cover.is-film .slide.is-leaving { animation: cover-wipe 1.1s cubic-bezier(0.7, 0, 0.3, 1) both; }
 .pillar-cover .slide.is-current { z-index: 1; }
+/* The clips are tall and the cover is wide: frame the band with the pergola and the sea */
+.pillar-cover video { object-position: 50% 42%; background: var(--blue-soft); }
+/* With scripting off, browsers force their player controls onto videos; these are decoration
+   and have no source until JS gives them one, so the poster shows on its own */
+.pillar-cover video::-webkit-media-controls { display: none !important; }
 /* Story bars: one per photo, filling right to left; the active bar is the clock */
 .pillar-cover.is-armed::after {
   content: '';
@@ -711,7 +720,9 @@ html[lang="ar"] .hero h1 { font-size: min(var(--fs-h1), 8.9vw); }
   transform-origin: right;
 }
 .cover-bars span.is-done::after { transform: none; }
-.cover-bars span.is-active::after { animation: cover-bar 5s linear both; }
+.cover-bars span.is-active::after { animation: cover-bar 3s linear both; }
+/* A clip's bar is filled by the clip itself (JS sets --progress as it plays) */
+.pillar-cover.is-film .cover-bars span.is-active::after { animation: none; transform: scaleX(var(--progress, 0)); }
 .pillar.is-open .pillar-cover .slide,
 .pillar-cover.is-paused .slide { animation-play-state: running, paused; }
 .pillar.is-open .cover-bars span::after,
@@ -744,100 +755,23 @@ html[lang="ar"] .hero h1 { font-size: min(var(--fs-h1), 8.9vw); }
 @keyframes cover-drift-in { from { transform: scale(1); } to { transform: scale(1.08); } }
 @keyframes cover-bar { to { transform: none; } }
 
-/* B · deck (האוכל): a fan of arches in the icon's place, each framed in white like the icon
-   circles (50%/40% radii make a true semicircle on a 4:5 frame). The front dish holds for a
-   moment, then the next swings in from the left (forward, in RTL) and the old one lifts
-   away behind the fan. */
-.pillar-deck {
-  position: relative;
-  display: block;
-  flex: none;
-  width: 64px;
-  aspect-ratio: 4 / 5;
-  margin-inline: 0.35rem;   /* the fanned cards swing a little past the frame */
-}
-.deck-card {
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
-  border: 3px solid var(--white);
-  border-radius: 50% 50% 8px 8px / 40% 40% 8px 8px;
-  background: var(--blue-soft);
-  box-shadow: 0 4px 14px rgba(44, 146, 191, 0.2);
-  transform-origin: 50% 100%;
-  transition: transform 0.8s var(--spring), opacity 0.5s var(--ease);
-}
-.deck-card img { object-position: 50% 70%; }
-.deck-card img.focus-mid { object-position: 50% 50%; }
-.deck-card[data-pos="0"] { z-index: 3; }
-.deck-card[data-pos="1"] { z-index: 2; transform: rotate(-11deg); }
-.deck-card[data-pos="2"] { z-index: 1; transform: rotate(11deg); }
-.deck-card:not([data-pos="0"], [data-pos="1"], [data-pos="2"]) {
-  opacity: 0;
-  transform: translateY(-10%) rotate(11deg) scale(0.9);
-}
-/* With JS the fan stays closed until it is first seen, then opens */
-.pillar-deck.is-armed:not(.is-rotating) .deck-card { transform: none; }
-/* The clock: the front card's hold */
-.pillar-deck.is-rotating .deck-card[data-pos="0"] { animation: deck-hold 3.6s linear both; }
-.pillar.is-open .deck-card,
-.pillar-deck.is-paused .deck-card { animation-play-state: paused; }
-@media (hover: hover) { .pillar-deck:hover .deck-card { animation-play-state: paused; } }
-@keyframes deck-hold { from, to { opacity: 1; } }
-
-/* C · film (המרחב, Or's videos): the title film and the three chapters of the tour,
-   stacked in one frame. Closed, the title film loops; open (desktop opens all three cards),
-   the chapters play one after another, cross-fading. On desktop the frame is the card's own
-   icon — the house, its arched doors cut out (below); without JS a phone shows it as a small
-   arch in the icon's place, like the still fan. */
-.pillar-film {
-  position: relative;
-  display: block;
-  flex: none;
-  width: 64px;
-  aspect-ratio: 4 / 5;
-  overflow: hidden;
-  border: 3px solid var(--white);
-  border-radius: 50% 50% 8px 8px / 40% 40% 8px 8px;
-  background: var(--blue-soft);
-  box-shadow: 0 4px 14px rgba(44, 146, 191, 0.2);
-}
-.pillar-film video,
+/* The phone layers' videos (the living row's title film, the deck's chapters) */
 .row-video video,
 .stack-card video {
   object-fit: cover;
   background: var(--blue-soft);
 }
-.film-frame { position: absolute; inset: 0; display: block; }
-.pillar-film video {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  opacity: 0;
-  transition: opacity 0.9s var(--ease);
-}
-.pillar-film .film-title,
-.pillar-film.is-chapters .film-chapter.is-current { opacity: 1; }
-.pillar-film.is-chapters .film-title { opacity: 0; }
-/* With scripting off, browsers force their player controls onto videos; these are decoration
-   and have no source until JS gives them one, so the poster shows on its own */
-.pillar-film video::-webkit-media-controls { display: none !important; }
 
 /* ── Phones and tablets (the list): living rows and a flick deck (Or's pick, 2026-10-14) ──
    With JS (html.phone-media) the list's rows stay as they were — icon, title, tagline,
-   chevron — and the desktop cover, fan and film step aside: the card's photos (or title
-   film) breathe behind the chevron, and an open item ends with a flick deck. Without JS the
-   phone shows the desktop's first photo, still fan and film poster in the icon's place. */
-.pillar-icon-phone { display: none; }
+   chevron — and the desktop covers step aside: the card's photos (or title film) breathe
+   behind the chevron, and an open item ends with a flick deck. Without JS the phone shows
+   each cover's first photo (or poster) on a line of its own above the row. */
 .row-photos,
 .row-video,
 .pillar-stack { display: none; }
 @media (max-width: 1023px) {
-  html.phone-media .pillar-head > .pillar-cover,
-  html.phone-media .pillar-head > .pillar-deck,
-  html.phone-media .pillar-head > .pillar-film { display: none; }
-  html.phone-media .pillar-icon-phone { display: grid; }
+  html.phone-media .pillar-head > .pillar-cover { display: none; }
 }
 
 /* The row's photos cross-fade, each drifting a little closer; the drift is the clock */
@@ -853,9 +787,9 @@ html[lang="ar"] .hero h1 { font-size: min(var(--fs-h1), 8.9vw); }
 [data-rotator]:not(.is-rotating) .peek:first-child,
 .peek.is-current,
 .peek.is-leaving { opacity: 1; }
-.peek.is-current { z-index: 1; animation: peek-drift 3.2s linear both; }
+.peek.is-current { z-index: 1; animation: peek-drift 2.8s linear both; }
 .is-paused .peek { animation-play-state: paused; }
-@keyframes peek-drift { from { scale: 1.12; } to { scale: 1; } }
+@keyframes peek-drift { from { transform: scale(1.12); } to { transform: none; } }  /* a transform: it adds to a photo's zoom (the scale property, JS) */
 
 /* Living rows: the rows keep their height; on the far side, behind the chevron, the card's
    photos (or the Space title film) breathe and melt into the cream before they reach the
@@ -881,9 +815,7 @@ html[lang="ar"] .hero h1 { font-size: min(var(--fs-h1), 8.9vw); }
     mask-image: linear-gradient(to right, #000 30%, rgba(0, 0, 0, 0.3) 70%, transparent 94%);
     transition: opacity 0.4s var(--ease);
   }
-  html.phone-media .row-photos .peek { transition-duration: 1.4s; }
-  html.phone-media .row-photos .peek.is-current { animation-duration: 4.2s; }
-  html.phone-media .has-photos ~ .has-photos .row-photos .peek.is-current { animation-duration: 5.1s; }
+  html.phone-media .has-photos ~ .has-photos .row-photos .peek.is-current { animation-duration: 3.4s; }
   /* The title film fills the window, framed on the pergola and the sea */
   .row-video video { width: 100%; height: 100%; object-position: 50% 40%; }
   /* An open row hands its photos to the deck below: the row goes quiet */
@@ -918,14 +850,20 @@ html[lang="ar"] .hero h1 { font-size: min(var(--fs-h1), 8.9vw); }
     transition: transform 0.5s var(--spring), opacity 0.35s var(--ease);
     touch-action: pan-y;
   }
+  /* The photo's window clips it when it is zoomed onto its subject (JS) */
+  .stack-photo {
+    display: block;
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    border-radius: 3px;
+    background: var(--blue-soft);
+  }
   .stack-card img,
   .stack-card video {
     display: block;
     width: 100%;
-    aspect-ratio: 4 / 5;
+    height: 100%;
     object-fit: cover;
-    border-radius: 3px;
-    background: var(--blue-soft);
     pointer-events: none;
   }
   .stack-card::after {
@@ -969,7 +907,6 @@ html[lang="ar"] .hero h1 { font-size: min(var(--fs-h1), 8.9vw); }
   .pillar-head { gap: 0.75rem; padding: 1rem 0.9rem; }
   .pillar-icon { width: 48px; height: 48px; }
   .pillar-icon img { max-width: 28px; max-height: 28px; }
-  .pillar-deck { width: 56px; }
 }
 
 .pillar-chevron {
@@ -1086,7 +1023,7 @@ html[lang="ar"] .hero h1 { font-size: min(var(--fs-h1), 8.9vw); }
   @media (hover: hover) { .pillar:not(.is-open):hover { transform: translateY(-3px); box-shadow: var(--shadow); } }
 
   /* Every head reserves the same media band above its titles, so the three titles
-     start on one line whatever sits above them (cover, deck or icon) */
+     start on one line (a card without a cover would show its icon in the band) */
   .pillar-grid { --pillar-media: 15rem; }
   .pillar-head {
     display: grid;
@@ -1097,15 +1034,13 @@ html[lang="ar"] .hero h1 { font-size: min(var(--fs-h1), 8.9vw); }
     text-align: center;
   }
   .pillar-cover,
-  .pillar-deck,
-  .pillar-film,
   .pillar-icon { grid-area: 1 / 1; }
   .pillar-icon { width: 92px; height: 92px; align-self: center; margin-top: 2.25rem; }
   .pillar-icon img { max-width: 50px; max-height: 50px; }
   .pillar-titles { align-items: center; gap: 0.5rem; }
   .pillar-head .pillar-chevron { display: none; }
 
-  /* A · cover: edge to edge across the top of the card; the icon sits on its lower
+  /* The cover: edge to edge across the top of the card; the icon sits on its lower
      edge in a cream ring (the photo ends half an icon — 46px — above the band's end) */
   .pillar-cover {
     justify-self: stretch;
@@ -1122,42 +1057,6 @@ html[lang="ar"] .hero h1 { font-size: min(var(--fs-h1), 8.9vw); }
     box-shadow: 0 0 0 6px var(--cream);
   }
   .cover-bars { inset: 14px 16px auto; }
-  /* B · deck: stands on the band's floor, as tall as the band below the card's top padding */
-  .pillar-deck {
-    align-self: end;
-    width: auto;
-    height: calc(var(--pillar-media) - 2.25rem);
-    margin: 0;
-  }
-  /* C · film: the house icon is the frame. The videos show through its shape (a mask from
-     the icon itself); a thin white line and a soft shadow follow its hand-drawn edge, the
-     doors included (drop-shadows on the unmasked parent trace the mask's outline). */
-  .pillar-film {
-    align-self: end;
-    width: min(100%, 272px);
-    aspect-ratio: 469 / 310;
-    overflow: visible;
-    border: 0;
-    border-radius: 0;
-    background: none;
-    box-shadow: none;
-    filter:
-      drop-shadow(2px 0 0 var(--white)) drop-shadow(-2px 0 0 var(--white))
-      drop-shadow(0 2px 0 var(--white)) drop-shadow(0 -2px 0 var(--white))
-      drop-shadow(0 8px 14px rgba(44, 146, 191, 0.22));
-  }
-  .film-frame {
-    -webkit-mask: url("../content/brand/icons-4.png") center / contain no-repeat;
-    mask: url("../content/brand/icons-4.png") center / contain no-repeat;
-  }
-  /* The videos are tall and the house is wide: frame the band with the pergola and the sea */
-  .pillar-film video { object-position: 50% 42%; }
-  .deck-card {
-    border-width: 5px;
-    border-radius: 50% 50% var(--radius-sm) var(--radius-sm) / 40% 40% var(--radius-sm) var(--radius-sm);
-    box-shadow: 0 8px 24px rgba(44, 146, 191, 0.2);
-  }
-
   /* The panel fills the card, so the note can sit at the bottom of the body (the body
      lives inside the panel's grid, not in the card's flex column) */
   .pillar-panel { flex: 1; }
@@ -1250,9 +1149,10 @@ html[lang="ar"] .hero h1 { font-size: min(var(--fs-h1), 8.9vw); }
 @media (min-width: 900px) {
   /* The title is centred over both columns, like every section title (Or, 2026-10-14). Under it,
      the text and the button on one side, "מתאים במיוחד ל:" and the list on the other; the text's
-     first line and the list's title share one baseline */
+     first line and the list's title share one baseline. The two columns are equal, so the gap
+     between them sits right under the title's centre, under the wave (Or, 2026-10-15) */
   .fit-layout {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     grid-template-rows: auto auto 1fr;
     grid-template-areas:
       "head  head"

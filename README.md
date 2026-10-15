@@ -25,6 +25,10 @@ Merging to `main` deploys.
 - Hebrew (RTL) with an Arabic version (language switch; Arabic translation is a draft pending native review)
 - Hero with a muted background video, three "components" (space / food / content), who it suits,
   community impact, and a closing section with a **WhatsApp planner**
+- The components carry Or's photos and videos: on desktop each card has a cover (photos sweep in
+  behind a zig-zag edge, story bars; Space plays its title film, then the full tour); on phones the
+  photos breathe behind each row, and an open item ends with a flick deck of polaroids (Space: three
+  video chapters)
 - The planner asks four optional questions, one at a time and one tap each (event type, group size,
   month, what to include), then shows a "ready" step; the answers compose a pre-filled WhatsApp
   message that is visible while it's built — no form, no backend, nothing stored
@@ -75,7 +79,7 @@ lev-yam-b2b/
 ├── content/
 │   ├── copy.md             # All page copy, from the Google Doc — read before changing text
 │   ├── packages.md         # Legacy packages/prices — not shown on the page, used for quotes only
-│   ├── images/             # Hero video + poster, brand OG image. No photos yet — the page shows brand placeholders
+│   ├── images/             # Hero video + poster, OG image, card photos (content-*, food-*) + Space clips (space-*)
 │   └── brand/              # Logos, icons, brand guide, colors, fonts
 ├── scripts/build_media.py  # Generates WebP/JPEG variants, compressed hero video, poster, OG image
 ├── worker/                 # Legacy Cloudflare Worker (Grow webhook → Supabase) — unused by the page
@@ -90,17 +94,24 @@ lev-yam-b2b/
 
 1. Copy changes go into `content/copy.md` first (source: the Google Doc), then into `index.html`
    (Hebrew) and the `TRANSLATIONS` dictionary in `js/main.js` (Hebrew + Arabic).
-2. New photos: drop the original in `content/images/`, run the media script (below), then reference
-   the generated variants in a `<picture>` element. Replace a placeholder by swapping the `div.ph`
-   inside the `figure[data-pending]` for the `<picture>` and removing `data-pending`.
-   Design rule from Or: brand colours only (orange, cream, blue) and the brand icons in `content/brand/`.
+2. New photos: copy the original to `content/images/` under a clean name (`food-*.jpeg`,
+   `content-*.jpeg`), run the media script (below), and add an `img.slide` to the card's cover in
+   `index.html` with its `srcset` and a `data-focus="x y"` (the subject's centre, as fractions of the
+   photo; food adds the dish's size, `"x y w h"`, so every frame zooms onto it). Phones build their
+   rows and decks from the same list. Or's raw uploads (`content/images/Content|Food|Space/`) are not
+   committed. Design rule from Or: brand colours only (orange, cream, blue) and the brand icons in
+   `content/brand/`.
 3. Sections marked `hidden data-pending="…"` are switched on by removing `hidden` once real content is in.
 
 ### Media script
 
 ```bash
-# Photo variants (-1600.jpg, -1600.webp, -800.webp) for one or more originals
-python3 scripts/build_media.py content/images/food.jpeg content/images/yoga.jpeg
+# Photo variants (-1600.jpg, -1600.webp, -800.webp, -400.webp, and a webp at the photo's own width
+# when it is narrower than 1600) for one or more originals
+python3 scripts/build_media.py content/images/food-plate.jpeg content/images/content-yoga.jpeg
+
+# Card clips: a part of a video (540 wide, muted) + poster; --pingpong for a seamless loop
+python3 scripts/build_media.py --clip "content/images/Space/tour.MP4" 9.5 19 space-inside
 
 # Hero video (muted, bitrate-capped, faststart) + poster frame
 python3 scripts/build_media.py --video "content/images/Video HERO.mp4"

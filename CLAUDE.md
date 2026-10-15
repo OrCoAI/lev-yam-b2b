@@ -18,7 +18,8 @@ packages, prices, early-bird offers, the "50 teams" counter and the security sit
 purpose — do not bring it back.
 
 **Goals, in order:**
-1. A perfect, high-quality website (current step — branch `venue-landing`).
+1. A perfect, high-quality website — **live since 2026-10-15** at b2b.levyam.com (`main`). Work continues
+   on branch `venue-landing`; merging it to `main` deploys.
 2. Integrate the page in a smart way under www.levyam.com (next step — not started).
 
 ---
@@ -33,8 +34,10 @@ habit: flag, don't silently rewrite. `content/packages.md` is legacy and is **no
 Or's raw uploads sit in `content/images/Content|Food|Space/` (not committed — duplicates, unused shots and
 video sources); the page uses clean-named copies (`content-*.jpeg`, `food-*.jpeg`) and their builds, and
 the Space clips (`space-*.mp4`). Photos in use are the reduced Photos exports (≤1024px) — Or will send
-full-size originals. Each photo carries `data-focus="x y"` (its subject, as fractions): every phone crop
-is framed around it by JS. Ask Or for assets.
+full-size originals. Each photo carries `data-focus="x y"` (its subject, as fractions): every crop, phone
+and desktop, is framed around it by JS. The food photos give the dish's size too, `data-focus="x y w h"`:
+every frame then zooms in until the dish fills it (Or, 2026-10-15: "the food should appear clearly").
+Ask Or for assets.
 
 **Language:** Hebrew (RTL) is the source; an Arabic version is switched in via `data-i18n` keys and the
 `TRANSLATIONS` dictionary in `js/main.js`. The Arabic is a draft pending native review. Venue name in
@@ -93,18 +96,24 @@ logos, footer contact details. Switch on by removing `hidden` once real content 
    three lists start on one line, the three white boxes are one height (text top-aligned) and sit on one
    line above the foot bars, and a card's slack hides between its last bullet and its note. Closing from
    the "סגור" bar brings the section back to the top of the screen. Header links open the item.
-   **Photos and videos (2026-10-14).** Food and content: six photos each; Space: Or's two videos (the
-   short one is the title film, ping-pong looped; the long one cut into three chapters — by the sea,
-   inside, sunset). The desktop markup holds the one list of media; phones build from it.
+   **Photos and videos (2026-10-14).** Food and content: seven photos each (Or, 2026-10-15); Space: Or's
+   two videos (the short one is the title film, ping-pong looped; the long one plays in full on desktop
+   and is cut into three chapters for the phone deck — by the sea, inside, sunset — kept in a
+   `<template>` so desktop loads none of them). The desktop markup holds the one list of media; phones
+   build from it.
    *Phones and tablets* — Or's pick, "living rows + flick deck" (JS sets `html.phone-media`): the rows
    stay as they were and, behind the chevron, the card's photos (or the title film) breathe and melt into
    the cream (a mask, not an overlay — no edge line); an open item ends, after its white box, with a flick
    deck of polaroids (the brand wave on each strip) that deals itself until touched; it opens on the photo
    the row was showing; Space's deck plays a chapter per card and deals the next when one ends. (Stories,
    a gallery strip and a photo ribbon were tried and dropped, 2026-10-14.)
-   *Desktop* — each card its own frame, on purpose (Or loves that they differ): content = cover (photos
-   sweep in behind a zig-zag edge, story bars, the icon on its edge), food = a fan of arches, Space = its
-   videos inside its own icon (the house, doors cut out).
+   *Desktop* — all three cards share the content card's cover (Or, 2026-10-15; a fan of arches for food
+   and the house icon as Space's frame were tried first): a wide frame across the card's top, the photos
+   sweep in behind a zig-zag edge, story bars count them, the icon sits in a cream ring on its edge, each
+   photo framed on its `data-focus`. A photo holds 3s. Space's cover plays the title film, then the full
+   tour (54s, Or, 2026-10-15: no chapters on desktop); a clip's end brings the next, its bar follows the
+   clip, the next one buffers while the current plays, and it keeps playing while the cards are open
+   (photos pause).
    **Never remove copy to fix layout** — Or wants all text kept; solve it with structure and spacing.
 4b. Testimonials + logos `#testimonials` — hidden until content
 5. Fit `#fit` — "יום אחד. בדיוק בשבילכם." + text + "מתאים במיוחד ל:" (the six types as rows: brand icon
@@ -112,7 +121,8 @@ logos, footer contact details. Switch on by removing `hidden` once real content 
    not buttons: Or asked (2026-10-13) that nothing here touches the planner, and the rows deliberately
    don't look like the planner's tiles. Phones: one column, full-width button; 600px: two columns in the
    text's 680px measure; from 900px the title is centred over both columns like every section title (Or,
-   2026-10-14), the text and the button sit on one side and "מתאים במיוחד ל:" (h3 size) with the list on
+   2026-10-14) — two equal columns, so the gap between them sits right under the title's centre, under the
+   wave (Or, 2026-10-15) — the text and the button sit on one side and "מתאים במיוחד ל:" (h3 size) with the list on
    the other, the text's first line on the list title's baseline, and the button on the last row's centre
    line (Or, 2026-10-14): its box is one row tall (`--fit-icon` + 2 × `--fit-row-pad`) at the bottom of
    its column. CTA "בואו ליצור את היום שלכם!" (the "!" by Or, 2026-10-14).
