@@ -18,7 +18,8 @@ packages, prices, early-bird offers, the "50 teams" counter and the security sit
 purpose — do not bring it back.
 
 **Goals, in order:**
-1. A perfect, high-quality website (current step — branch `venue-landing`).
+1. A perfect, high-quality website — **live since 2026-10-15** at b2b.levyam.com (`main`). Work continues
+   on branch `venue-landing`; merging it to `main` deploys.
 2. Integrate the page in a smart way under www.levyam.com (next step — not started).
 
 ---

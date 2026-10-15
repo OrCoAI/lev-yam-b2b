@@ -4,3 +4,9 @@
 node_modules/
 **/node_modules/
 .claude/
+
+# Or's raw uploads — the page uses clean-named copies and their builds (see CLAUDE.md)
+content/images/Content/
+content/images/Food/
+content/images/Space/
+content/images/WhatsApp Image *
